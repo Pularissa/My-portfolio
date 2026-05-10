@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Schibsted_Grotesk, Martian_Mono, Inter } from "next/font/google";
+import type { ReactNode } from "react";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Particles from "@/components/LightRays";
@@ -31,17 +32,18 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn("min-h-screen", "h-full", "antialiased", schibstedGrotesk.variable, martianMono.variable, kolkerBrush.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-screen relative overflow-hidden bg-background text-foreground">
         <div className="pointer-events-none absolute inset-0">
           <Particles
-            particleColors={["#ffffff"]}
+            particleColors={["#000000"]}
             particleCount={200}
             particleSpread={10}
             speed={0.1}

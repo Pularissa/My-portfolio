@@ -124,12 +124,18 @@ const Particles: React.FC<ParticlesProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
+    const testCanvas = document.createElement('canvas');
+    const testContext = testCanvas.getContext('webgl2', { alpha: true, depth: false }) || testCanvas.getContext('webgl', { alpha: true, depth: false });
+    if (!testContext) return;
+
     const renderer = new Renderer({
       dpr: pixelRatio,
       depth: false,
       alpha: true
     });
     const gl = renderer.gl;
+    if (!gl) return;
+
     container.appendChild(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
@@ -245,6 +251,7 @@ const Particles: React.FC<ParticlesProps> = ({
     particleCount,
     particleSpread,
     speed,
+    particleColors,
     moveParticlesOnHover,
     particleHoverFactor,
     alphaParticles,
@@ -255,7 +262,7 @@ const Particles: React.FC<ParticlesProps> = ({
     pixelRatio
   ]);
 
-  return <div ref={containerRef} className={`particles-container ${className}`} />;
+  return <div ref={containerRef} className={`particles-container ${className ?? ""}`.trim()} />;
 };
 
 export default Particles;
