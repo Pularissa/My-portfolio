@@ -43,13 +43,14 @@ body {
 /* LOGO */
 
 .logo {
-  font-size: 2rem;
-  font-weight: 500;
-  font-family: cursive;
-  font-style: italic;
+  font-family: var(--font-kolker);
+  font-size: 4rem;
+  font-weight: 400;
 
   color: white;
+
   cursor: pointer;
+  line-height: 1;
 }
 
 /* NAV LINKS */
@@ -309,5 +310,138 @@ body {
   .line2,
   .line3 {
     display: none;
+  }
+}
+
+
+.skills-section {
+  background: #0a0a0a;
+  padding: 120px 20px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skills-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Faint Grid Background */
+.skills-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(#222 1px, transparent 1px),
+    linear-gradient(90deg, #222 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Rows */
+.top-row, .bottom-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.bottom-row {
+  margin-top: -20px;
+}
+
+/* Skill Card */
+.skill-card {
+  background: #111111;
+  border: 1.5px solid #333;
+  border-radius: 14px;
+  padding: 22px 26px;
+  width: 280px;
+  transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+  border-color: #555;
+  transform: translateY(-6px);
+}
+
+/* Top-left special card */
+.top-left-extra {
+  margin-top: 60px;
+  position: relative;
+}
+
+.top-right {
+  margin-top: 30px;
+}
+
+/* Progress Bar Container */
+.bar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skill-name {
+  color: white;
+  font-size: 1.05rem;
+  min-width: 60px;
+  font-weight: 500;
+}
+
+/* Progress Bar */
+.progress-bar-bg {
+  flex: 1;
+  height: 5px;
+  background: #1f1f1f;
+  border-radius: 9999px;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #e5e5e5;
+  border-radius: 9999px;
+  transition: width 1.5s ease;
+}
+
+/* Percentages */
+.percent-right {
+  color: #ddd;
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 48px;
+  text-align: right;
+}
+
+.percent-left {
+  position: absolute;
+  left: -65px;
+  top: 28px;
+  color: #ddd;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1100px) {
+  .top-row, .bottom-row {
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+  .skill-card {
+    width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-section {
+    padding: 80px 10px;
+  }
+  .skill-card {
+    width: 100%;
+    max-width: 280px;
   }
 }

@@ -1,8 +1,14 @@
 import "./globals.css";
-import Hero from "../components/Hero";
+import { Kolker_Brush } from "next/font/google";
+
+const kolker = Kolker_Brush({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-kolker",
+});
 
 export const metadata = {
-  title: "Prisca Portfolio",
+  title: "PriPo Portfolio",
   description: "Portfolio Website",
 };
 
@@ -13,11 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="container">
-          <Hero />
-          {children}
-        </div>
+      <body className={kolker.variable}>
+        {children}
       </body>
     </html>
   );
