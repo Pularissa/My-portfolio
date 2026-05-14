@@ -7,7 +7,7 @@ export default function Hero() {
 
       {/* Navbar */}
       <nav className="navbar">
-        <div className="logo">Portfolio</div>
+        <div className="logo"><span className="logo-letter">P</span>riPo</div>
 
         <ul className="nav-links">
           <li><Link href="/">Home</Link></li>
