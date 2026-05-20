@@ -898,3 +898,359 @@ body {
   border-top-left-radius: 40px;
   border-bottom-left-radius: 40px;
 }
+
+/* ==========================================================================
+   Testimonial Section Global Styles
+   ========================================================================== */
+
+.ts-container {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 80px 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Section Header Layout */
+.ts-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 64px;
+}
+
+.ts-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Double Indicator Lines Graphic (Header and Card) */
+.ts-indicator-lines {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ts-line-short {
+  width: 12px;
+  height: 3px;
+  background-color: #4a4a4a;
+  border-radius: 2px;
+}
+
+.ts-line-long {
+  width: 24px;
+  height: 3px;
+  background-color: #4a4a4a;
+  border-radius: 2px;
+}
+
+/* Responsive Responsive Grid Setup */
+.ts-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 32px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+@media (min-width: 768px) {
+  .ts-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Individual Card Styling */
+.ts-card {
+  background-color: #000000;
+  border: 1px solid #262626;
+  border-radius: 24px;
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.ts-subheader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 48px;
+}
+
+.ts-role {
+  font-style: italic;
+  font-size: 0.875rem;
+  color: #8a8a8a;
+  margin: 0;
+}
+
+/* Quote Frame Container & Content */
+.ts-quote-body {
+  position: relative;
+  padding: 24px 0;
+  margin-top: auto;
+}
+
+.ts-text {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #b3b3b3;
+  margin: 0;
+  padding: 0 12px;
+}
+
+/* Decorative Framing Corners */
+.ts-corner-tr, .ts-corner-bl {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+}
+
+.ts-corner-tr {
+  top: 0;
+  right: 0;
+  border-top: 1.5px solid #ffffff;
+  border-right: 1.5px solid #ffffff;
+}
+
+.ts-corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1.5px solid #ffffff;
+  border-left: 1.5px solid #ffffff;
+}
+
+/* Concentric Offset Interlining for Corners */
+.ts-corner-tr::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-top: 1px solid #ffffff;
+  border-right: 1px solid #ffffff;
+  opacity: 0.4;
+}
+
+.ts-corner-bl::before {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-bottom: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  opacity: 0.4;
+}
+
+/* ==========================================================================
+   Contact & Footer Page Global Styles
+   ========================================================================== */
+
+.contact-page {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 100px 24px 40px 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Big Bold Headline Quotes */
+.contact-headline {
+  font-family: 'Fredoka', 'Arial Black', sans-serif; /* Thick, playful font geometry */
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 80px;
+  letter-spacing: -1px;
+}
+
+/* Central Content Wrapper Box */
+.contact-card {
+  background-color: #121212;
+  border: 1px solid #2c2c2c;
+  border-radius: 32px;
+  width: 100%;
+  max-width: 1000px;
+  padding: 48px;
+  box-sizing: border-box;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 850px) {
+  .contact-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+/* Form Styles */
+.contact-form h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  color: #8e8e93;
+  margin-bottom: 8px;
+}
+
+/* Minimalist border lines matching the image */
+.form-group input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #444446;
+  color: #ffffff;
+  padding: 8px 0;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  border-bottom-color: #ffffff;
+}
+
+/* White Solid Submit Button */
+.connect-btn {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.connect-btn:hover {
+  opacity: 0.9;
+}
+
+/* Mockup Showcase Column Container */
+.mockup-showcase {
+  background-color: #242426;
+  border-radius: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  height: 100%;
+  min-height: 320px;
+}
+
+.mockup-placeholder {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Footer & Social Section Links */
+.footer-section {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Watermark Background Title Text "Find me on" */
+.footer-watermark {
+  font-size: clamp(4rem, 12vw, 11rem);
+  font-weight: 900;
+  font-family: 'Times New Roman', Times, serif, Georgia;
+  color: #1a1a1a;
+  text-align: center;
+  line-height: 1;
+  user-select: none;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+/* Row wrapper layer over background text */
+.social-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 60px;
+  z-index: 2;
+}
+
+/* Pill Badges Buttons */
+.social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid #333336;
+  border-radius: 50px;
+  padding: 10px 24px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.social-pill:hover {
+  border-color: #ffffff;
+  background-color: #111112;
+}
+
+.social-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Minimalist copyright metadata texts layout */
+.copyright-bar {
+  font-size: 0.75rem;
+  color: #666666;
+  text-align: center;
+  letter-spacing: 0.5px;
+  border-top: 1px solid #1a1a1a;
+  width: 100%;
+  padding-top: 24px;
+}
