@@ -58,12 +58,12 @@ export default function ContactFooterPage() {
 
         {/* Interactive Overlay Layer Grid Buttons */}
         <div className="social-links-row">
-          <a href="mailto:your-email@example.com" className="social-pill">
+          <a href="mailto:iyonezalarissaprisca@gmail.com" className="social-pill">
             <span className="social-icon">✉</span> Email
           </a>
           
           <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-pill">
-            <span className="social-icon">Linked</span> Linkedin
+            <span className="social-icon">in</span> Linkedin
           </a>
 
           <a href="https://github.com" target="_blank" rel="noreferrer" className="social-pill">
