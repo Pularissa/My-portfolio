@@ -63,11 +63,11 @@ export default function ContactFooterPage() {
           </a>
           
           <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-pill">
-            <span className="social-icon">in</span> Linkedin
+            <span className="social-icon"><img src="../images/instagram.png" alt="LinkedIn" /></span> Linkedin
           </a>
 
           <a href="https://github.com" target="_blank" rel="noreferrer" className="social-pill">
-            <span className="social-icon">Git</span> Github
+            <span className="social-icon"><img src="../images/github.png" alt="GitHub" /></span> Github
           </a>
 
           <a href="#" className="social-pill">

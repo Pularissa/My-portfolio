@@ -333,10 +333,14 @@ body {
 
 /* skills section */
 
+/* ==========================================
+   1. LAYOUT & CONTAINER DEFINITIONS
+   ========================================== */
 .skills-section {
   width: 100%;
-  min-height: 100vh;
+  min-height: 200vh; /* Gives the page room to scroll so your scroll handler fires */
   background: #0a0a0a;
+  position: relative;
 }
 
 .banner {
@@ -344,70 +348,75 @@ body {
   height: 100vh;
   text-align: center;
   overflow: hidden;
-  position: relative;
+  position: sticky; /* Keeps the container locked in viewport while scrolling */
+  top: 0;
   background: #0a0a0a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 2000px; /* Enhances depth calculation for 3D elements */
 }
 
+/* ==========================================
+   2. THE 3D SLIDER (MANAGED BY REACT INLINE)
+   ========================================== */
 .banner .slider {
   position: absolute;
   width: 220px;
   height: 150px;
-  top: 10%;
+  top: 20%;
   left: calc(50% - 110px);
-
   transform-style: preserve-3d;
-  transform: perspective(1000px);
-
-  animation: autoRun 60s linear infinite;
-}
-
-@keyframes autoRun {
-  from {
-    transform: perspective(1000px) rotateX(-15deg) rotateY(0deg);
-  }
-  to {
-    transform: perspective(1000px) rotateX(-15deg) rotateY(360deg);
-  }
+  z-index: 3;
+  /* Smooths out the scroll updates from the mouse wheel */
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); 
+  will-change: transform;
 }
 
 .banner .slider .item {
   position: absolute;
   inset: 0;
-
-  transform:
-    rotateY(
-      calc(
-        (var(--position) - 1) *
-        (360 / var(--quantity)) * 1deg
-      )
-    )
-    translateZ(550px);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  /* Dynamically offsets cards based on --position and --quantity variables */
+  transform: 
+    rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) 
+    translateZ(650px); /* Expanded to 650px to beautifully accommodate 13 skills */
 }
 
+/* ==========================================
+   3. PREMIUM SKILL CARD & HOVER INTERACTION
+   ========================================== */
 .skill-card {
   width: 220px;
   padding: 18px;
   border-radius: 18px;
-
-  background: #111827;
-  border: 1px solid #1f2937;
-
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(31, 41, 55, 0.8);
+  backdrop-filter: blur(8px);
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.45),
-    0 0 15px rgba(59, 130, 246, 0.08);
-
-  transition: all 0.3s ease;
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 0px rgba(59, 130, 246, 0);
+  /* Uses translate3d for hardware acceleration */
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+              border-color 0.4s ease, 
+              box-shadow 0.4s ease, 
+              background 0.4s ease;
 }
 
-.skill-card:hover {
-  transform: translateY(-5px);
+/* Elegant card popout and neon glow on hover */
+.banner .slider .item:hover .skill-card {
+  transform: translate3d(0, -12px, 40px);
   border-color: #3b82f6;
+  background: rgba(17, 24, 39, 0.98);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(59, 130, 246, 0.25);
 }
 
+/* ==========================================
+   4. PROGRESS BARS & TYPOGRAPHY
+   ========================================== */
 .bar-container {
   display: flex;
   flex-direction: column;
@@ -416,7 +425,7 @@ body {
 
 .skill-name {
   color: #f9fafb;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   text-align: left;
 }
@@ -432,7 +441,9 @@ body {
 .progress-bar {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #eef2fa, #ffffff);
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  /* Animates on load since React specifies width directly inline */
+  transition: width 1.5s cubic-bezier(0.1, 1, 0.1, 1);
 }
 
 .percent-right {
@@ -442,97 +453,34 @@ body {
   text-align: right;
 }
 
-/* SECOND PART (FIXED DUPLICATE SECTION) */
-
-.banner .slider {
-  position: absolute;
-  width: 200px;
-  height: 250px;
-  top: 10%;
-  left: calc(50% - 100px);
-  transform-style: preserve-3d;
-  transform: perspective(1000px);
-  animation: autoRun 20s linear infinite;
-  z-index: 2;
-}
-
-@keyframes autoRun {
-  from {
-    transform: perspective(1000px) rotateX(-15deg) rotateY(0deg);
-  }
-  to {
-    transform: perspective(1000px) rotateX(-15deg) rotateY(360deg);
-  }
-}
-
-.banner .slider .item {
-  position: absolute;
-  inset: 0 0 0 0;
-  transform:
-    rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg))
-    translateZ(550px);
-}
-
-.banner .slider .item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+/* ==========================================
+   5. HERO ROBOT ENVIRONMENT
+   ========================================== */
 .banner .content {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1400px, 100vw);
-  height: max-content;
-  padding-bottom: 100px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.banner .content h1 {
-  font-family: 'Ica Rubrik Black';
-  font-size: 16em;
-  line-height: 1em;
-  color: #000;
-  position: relative;
-}
-
-.banner .content h1::after {
-  content: attr(data-content);
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  -webkit-text-stroke: 2px #d2d2d2;
-  color: transparent;
-}
-
-.banner .content .author {
-  font-family: 'Poppins';
-  text-align: right;
-  max-width: 400px;
-}
-
-.banner .content h2 {
-  font-size: 3em;
-}
-
-.banner .content .model {
-  background-image: url('../images/robot.png'); /* robot image added */
   width: 100%;
-  height: 75vh;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background-size: auto 130%;
-  background-repeat: no-repeat;
-  background-position: top center;
+  height: 100vh;
+  pointer-events: none; /* Allows mouse hovers to pass straight to cards */
   z-index: 1;
 }
 
+.banner .content .model {
+  width: 100%;
+  height: 80vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-size: auto 110%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  opacity: 0.5; /* Keeps the robot visible but cleanly behind the text/cards */
+  /* Combines your inline transform smoothly with scroll transitions */
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
+  will-change: transform;
+}
 
 
 /* ====================== PROJECTS PAGE ====================== */

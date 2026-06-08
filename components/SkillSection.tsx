@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const skillData = [
   { name: 'HTML', percent: 95 },
@@ -19,28 +19,45 @@ const skillData = [
 ];
 
 export default function SkillsSection() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // normalize scroll (0 → 1)
+  const progress = Math.min(scrollY / 800, 1);
+
+  const rotate = progress * 360;
+  const modelIndex = Math.floor(progress * 3); // image switch (0–2)
+
+  const models = [
+    '/images/robot1.png',
+    '/images/robot2.png',
+    '/images/robot3.png',
+  ];
+
   return (
     <section className="skills-section">
       <div className="banner">
 
-        {/* 3D SLIDER */}
+        {/* 3D SLIDER CONTROLLED BY SCROLL */}
         <div
           className="slider"
-          style={
-            {
-              '--quantity': skillData.length,
-            } as React.CSSProperties
-          }
+          style={{
+            transform: `perspective(1000px) rotateX(-15deg) rotateY(${rotate}deg)`,
+            '--quantity': skillData.length,
+          } as React.CSSProperties}
         >
           {skillData.map((skill, index) => (
             <div
               key={skill.name}
               className="item"
-              style={
-                {
-                  '--position': index + 1,
-                } as React.CSSProperties
-              }
+              style={{
+                '--position': index + 1,
+              } as React.CSSProperties}
             >
               <div className="skill-card">
                 <div className="bar-container">
@@ -53,18 +70,22 @@ export default function SkillsSection() {
                     />
                   </div>
 
-                  <span className="percent-right">
-                    {skill.percent}%
-                  </span>
+                  <span className="percent-right">{skill.percent}%</span>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* MODEL / ROBOT IMAGE LAYER (IMPORTANT FOR YOUR CSS) */}
+        {/* MODEL CHANGES ON SCROLL */}
         <div className="content">
-          <div className="model" />
+          <div
+            className="model"
+            style={{
+              backgroundImage: `url(${models[modelIndex]})`,
+              transform: `translateY(${progress * -50}px) scale(${1 + progress * 0.1})`,
+            }}
+          />
         </div>
 
       </div>
