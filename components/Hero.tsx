@@ -1,56 +1,100 @@
-import  Link  from "next/link";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Hero() {
   return (
     <section className="hero-section">
-      {/* Border */}
+      <div className="hero-glow" />
 
-      {/* Navbar */}
+      {/* ── Navbar ── */}
       <nav className="navbar">
-        <div className="logo"><span className="logo-letter">P</span>riPo</div>
+        <div className="logo">
+          <span>P</span>risca
+        </div>
 
         <ul className="nav-links">
           <li><Link href="/">Home</Link></li>
-          <li><Link href="/about">About me</Link></li>
-          <li><Link href="/blog">Blog</Link></li>
-          <li><Link href="/work">Work</Link></li>
-          <li><Link href="/find-me">Find me on</Link></li>
+          <li><Link href="#skills">Skills</Link></li>
+          <li><Link href="#projects">Projects</Link></li>
+          <li><Link href="#experience">Experience</Link></li>
+          <li><Link href="#contact">Contact</Link></li>
         </ul>
+
+        <a href="#contact" className="nav-cta">Let&apos;s talk</a>
       </nav>
 
-      {/* Background Glow */}
-      <div className="hero-glow"></div>
+      {/* ── Hero Body ── */}
+      <div className="hero-body">
 
-      {/* Decorative Lines */}
-      <div className="line line1"></div>
-      <div className="line line2"></div>
-      <div className="line line3"></div>
+        {/* Left — Text */}
+        <div className="hero-text">
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-line" />
+            <span className="hero-eyebrow-text">Software Developer</span>
+          </div>
 
-      {/* Floating Balls */}
-      <div className="ball ball1"></div>
-      <div className="ball ball2"></div>
+          <h1 className="hero-name">
+            Prisca
+            <em>Larissa.</em>
+          </h1>
 
-      {/* Hero Content */}
-      <div className="hero-content">
-        <h1>
-          Hello, I am Prisca
-          <br />
-          Larisse
-        </h1>
+          <p className="hero-tagline">
+            I craft thoughtful digital experiences — from elegant interfaces
+            to robust, scalable systems. Every line of code is purposeful.
+          </p>
 
-        <p>
-          A committed and skilled software
-          <br />
-          developer
-        </p>
+          <div className="hero-actions">
+            <a href="#projects" className="hero-btn-primary">View my work</a>
+            <a href="#contact" className="hero-btn-secondary">
+              Get in touch
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M7 17L17 7M17 7H7M17 7v10" />
+              </svg>
+            </a>
+          </div>
+        </div>
 
-        <button>Let&apos;s talk</button>
+        {/* Right — Photo */}
+        <div className="hero-visual">
+          <div className="hero-image-frame">
+            <div className="hero-deco-dot" />
+            <div className="hero-deco-dot" />
+            <Image
+              src="/images/me.png"
+              alt="Prisca Larissa"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="hero-image-overlay" />
+            <div className="hero-image-badge">
+              <div>
+                <div className="hero-badge-name">Prisca Larissa</div>
+                <div className="hero-badge-role">Software Developer</div>
+              </div>
+              <div style={{ color: "#c9a96e", fontSize: "1.3rem" }}>✦</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Bottom Text */}
-      <div className="bottom-about">
-        <span className="dash"></span>
-        <span>About me</span>
+      {/* ── Scroll indicator ── */}
+      <div className="hero-scroll">
+        <span className="hero-scroll-line" />
+        <span className="hero-scroll-text">Scroll to explore</span>
+      </div>
+
+      {/* ── Stats ── */}
+      <div className="hero-stats">
+        <div className="hero-stat-item">
+          <div className="hero-stat-number">3+</div>
+          <div className="hero-stat-label">Years exp.</div>
+        </div>
+        <div className="hero-stat-item">
+          <div className="hero-stat-number">12+</div>
+          <div className="hero-stat-label">Projects</div>
+        </div>
       </div>
     </section>
   );

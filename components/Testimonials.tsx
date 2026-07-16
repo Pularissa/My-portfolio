@@ -3,58 +3,64 @@ import React from 'react';
 const testimonials = [
   {
     id: 1,
-    name: "John Kate",
-    role: "Co-worker at KW",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut"
+    name: "Sarah Müller",
+    role: "Product Lead, KW Enterprise",
+    initials: "SM",
+    text: "Prisca delivered far beyond expectations. Her ability to translate complex requirements into a beautiful, intuitive interface is genuinely rare. The team was blown away.",
+    stars: 5,
   },
   {
     id: 2,
-    name: "John Kate",
-    role: "Co-worker at KW",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut"
+    name: "Daniel Osei",
+    role: "CTO, LogiTech Solutions",
+    initials: "DO",
+    text: "Working with Prisca was a pleasure from start to finish. She communicates clearly, writes clean maintainable code, and always ships on time. Highly recommend.",
+    stars: 5,
   },
   {
     id: 3,
-    name: "John Kate",
-    role: "Co-worker at KW",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut"
-  }
+    name: "Amara Diallo",
+    role: "Co-founder, EduBridge",
+    initials: "AD",
+    text: "Prisca built our entire front-end from scratch. The result is polished, accessible, and fast. She also brought thoughtful UX suggestions that improved the product greatly.",
+    stars: 5,
+  },
 ];
 
 export default function Testimonials() {
   return (
-    <section className="ts-container">
-      {/* Section Title */}
-      <div className="ts-header">
-        <div className="ts-indicator-lines">
-          <span className="ts-line-short"></span>
-          <span className="ts-line-long"></span>
-        </div>
-        <h2>Testimonies</h2>
-      </div>
+    <section className="testimonials-section">
+      <div className="testimonials-inner">
 
-      {/* Grid Layout Container */}
-      <div className="ts-grid">
-        {testimonials.map((item) => (
-          <div key={item.id} className="ts-card">
-            <h3 className="ts-name">{item.name}</h3>
-            
-            <div className="ts-subheader">
-              <div className="ts-indicator-lines">
-                <span className="ts-line-short"></span>
-                <span className="ts-line-long"></span>
-              </div>
-              <p className="ts-role">{item.role}</p>
-            </div>
-
-            {/* Quote with Nested UI Frame Lines */}
-            <div className="ts-quote-body">
-              <div className="ts-corner-tr"></div>
-              <p className="ts-text">{item.text}</p>
-              <div className="ts-corner-bl"></div>
-            </div>
+        {/* Header */}
+        <div className="testimonials-header">
+          <div className="section-label">
+            <span className="section-label-line" />
+            <span className="section-label-text">Testimonials</span>
           </div>
-        ))}
+          <h2 className="section-heading">
+            What people <em>say</em>
+          </h2>
+        </div>
+
+        {/* Grid */}
+        <div className="testimonials-grid">
+          {testimonials.map((item) => (
+            <div key={item.id} className="testimonial-card">
+              <div className="testimonial-avatar">{item.initials}</div>
+              <div className="testimonial-name">{item.name}</div>
+              <div className="testimonial-role">{item.role}</div>
+              <div className="testimonial-divider" />
+              <p className="testimonial-text">&ldquo;{item.text}&rdquo;</p>
+              <div className="testimonial-stars">
+                {Array.from({ length: item.stars }).map((_, i) => (
+                  <span key={i}>★</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

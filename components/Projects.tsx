@@ -1,4 +1,3 @@
-// components/Projects.tsx
 'use client';
 
 import Image from 'next/image';
@@ -7,125 +6,114 @@ import { useState } from 'react';
 const projects = [
   {
     id: 1,
-    title: "Project 1",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    techs: ["Next.js", "Java", "Python", "Solidity", "ML"],
+    number: "01",
+    title: "Transit Connect",
+    description:
+      "A real-time transit management platform that streamlines bus scheduling, passenger tracking, and route optimisation. Built with Next.js and a robust REST API layer.",
+    techs: ["Next.js", "TypeScript", "REST API", "Tailwind"],
     bgImage: "/images/bus.png",
-    fgImage: "/images/vr.png",
+    fgImage: "/images/me.png",
+    link: "#",
   },
   {
     id: 2,
-    title: "Project 2",
-    description: "Another amazing project with cutting-edge technologies and innovative solutions.",
-    techs: ["React", "TypeScript", "Tailwind", "Node.js"],
-    bgImage: "/images/vr.png",
-    fgImage: "/images/vr.png",
+    number: "02",
+    title: "Developer Portfolio",
+    description:
+      "A thoughtfully designed personal portfolio built with React and Next.js, showcasing projects and skills through a refined, minimal interface.",
+    techs: ["React", "Next.js", "TypeScript", "CSS"],
+    bgImage: "/images/me.png",
+    fgImage: "/images/bus.png",
+    link: "#",
   },
   {
     id: 3,
-    title: "Project 3",
-    description: "A groundbreaking project that revolutionizes the way we interact with technology.",
-    techs: ["Next.js", "Java", "Python", "Solidity", "ML"],
+    number: "03",
+    title: "Smart Analytics",
+    description:
+      "A data analytics dashboard powered by machine learning insights. Offers real-time reporting, trend prediction, and interactive visualisations.",
+    techs: ["Python", "ML", "React", "Node.js"],
     bgImage: "/images/bus.png",
-    fgImage: "/images/vr.png",
-  }
-  // Add more projects as needed
+    fgImage: "/images/me.png",
+    link: "#",
+  },
 ];
 
-export default function ProjectsPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentProject = projects[currentIndex];
+export default function Projects() {
+  const [current, setCurrent] = useState(0);
+  const project = projects[current];
 
   return (
-    <div className="projects-page min-h-screen bg-black text-white overflow-hidden">
-      <main>
-        {/* Section Header */}
-        <div className="section-header flex justify-center mb-16">
-          <div className="flex items-center gap-3">
-            <div className="header-line h-px w-8 bg-white/60" />
-            <h1 className="text-4xl md:text-5xl font-light tracking-tight">Projects</h1>
-            <div className="header-line h-px w-8 bg-white/60" />
+    <section id="projects" className="projects-section">
+      <div className="projects-inner">
+
+        {/* Header */}
+        <div className="projects-header">
+          <div className="section-label">
+            <span className="section-label-line" />
+            <span className="section-label-text">Portfolio</span>
           </div>
+          <h2 className="section-heading">
+            Featured <em>Projects</em>
+          </h2>
         </div>
 
-        {/* Project Showcase */}
-        <div className="project-grid grid lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Overlapping Images */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="images-wrapper relative w-full max-w-[520px] aspect-[4/3.1]">
-              
-              {/* Background Image */}
-              <div className="tech-bg absolute left-0 top-8 w-[70%] aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl rotate-[-8deg] z-10">
-                <Image
-                  src={currentProject.bgImage}
-                  alt={currentProject.title}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 520px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-transparent" />
-              </div>
+        {/* Showcase */}
+        <div className="project-showcase">
 
-              {/* Foreground Image */}
-              <div className="vr-photo absolute right-0 bottom-0 w-[68%] rounded-3xl overflow-hidden border border-white/10 shadow-2xl rotate-[6deg] z-20">
-                <Image
-                  src={currentProject.fgImage}
-                  alt={`${currentProject.title} demo`}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 520px"
-                />
-              </div>
+          {/* Stacked images */}
+          <div className="project-images">
+            <div className="project-img-back">
+              <Image src={project.bgImage} alt={project.title}
+                fill className="object-cover" sizes="340px" />
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(135deg,rgba(201,169,110,0.12) 0%,transparent 60%)',
+              }} />
+            </div>
+            <div className="project-img-front">
+              <Image src={project.fgImage} alt={`${project.title} detail`}
+                fill className="object-cover" sizes="320px" />
             </div>
           </div>
 
           {/* Content */}
-          <div className="project-content space-y-8">
-            <div>
-              <h2 className="text-3xl font-semibold mb-2">{currentProject.title}</h2>
-              <p className="text-lg text-gray-400 leading-relaxed">
-                {currentProject.description}
-              </p>
-            </div>
+          <div className="project-content">
+            <span className="project-number">Project {project.number}</span>
+            <h3 className="project-title">{project.title}</h3>
+            <p className="project-desc">{project.description}</p>
 
-            {/* Technologies */}
             <div>
-              <p className="tech-label uppercase text-xs tracking-widest text-gray-500 mb-4">
-                Technologies applied
-              </p>
-              <div className="tech-tags flex flex-wrap gap-3">
-                {currentProject.techs.map((tech) => (
-                  <span key={tech}>{tech}</span>
-                ))}
+              <p className="tech-label">Technologies</p>
+              <div className="tech-tags">
+                {project.techs.map((t) => <span key={t}>{t}</span>)}
               </div>
             </div>
 
-            {/* Demo Button */}
-            <a href="#" className="demo-button inline-flex items-center gap-2 group mt-4 text-sm font-medium text-white/90 hover:text-white transition">
-              Demo
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 group-hover:translate-x-0.5 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7-7 7" />
-              </svg>
-            </a>
+            <div className="project-actions" style={{ display: 'flex', gap: '12px' }}>
+              <a href={project.link} className="btn-demo">
+                View Project
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M7 17L17 7M17 7H7M17 7v10" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Pagination Dots */}
-        <div className="pagination flex justify-center mt-20">
+        {/* Pagination */}
+        <div className="projects-pagination">
           {projects.map((_, i) => (
-            <div
-              key={i}
-              onClick={() => setCurrentIndex(i)}
-              className={`dot w-3 h-3 rounded-full transition-all cursor-pointer ${
-                i === currentIndex ? 'active' : ''
-              }`}
+            <button key={i}
+              className={`proj-dot${i === current ? ' active' : ''}`}
+              onClick={() => setCurrent(i)}
+              aria-label={`Go to project ${i + 1}`}
             />
           ))}
         </div>
-      </main>
-    </div>
+
+      </div>
+    </section>
   );
 }

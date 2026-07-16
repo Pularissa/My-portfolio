@@ -10,10 +10,10 @@ export default function Home() {
     <main>
       <Hero />
       <SkillsSection />
-      <Projects/>
-      <Experience/>
-      <Testimonials/>
-      <ContactFooterPage/>
+      <Projects />
+      <Experience />
+      <Testimonials />
+      <ContactFooterPage />
     </main>
   );
 }
