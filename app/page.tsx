@@ -1,4 +1,6 @@
+import Intro from "../components/Intro";
 import Hero from "../components/Hero";
+import Marquee from "../components/Marquee";
 import SkillsSection from "../components/SkillSection";
 import Projects from "../components/Projects";
 import Experience from "../components/Experience";
@@ -7,13 +9,17 @@ import ContactFooterPage from "../components/Contact";
 
 export default function Home() {
   return (
-    <main>
-      <Hero />
-      <SkillsSection />
-      <Projects />
-      <Experience />
-      <Testimonials />
-      <ContactFooterPage />
-    </main>
+    <>
+      <Intro />
+      <main>
+        <Hero />
+        <Marquee />
+        <SkillsSection />
+        <Projects />
+        <Experience />
+        <Testimonials />
+        <ContactFooterPage />
+      </main>
+    </>
   );
 }

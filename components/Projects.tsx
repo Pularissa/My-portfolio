@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useScrollReveal } from './useScrollReveal';
 
 const projects = [
   {
@@ -31,7 +32,7 @@ const projects = [
     number: "03",
     title: "Smart Analytics",
     description:
-      "A data analytics dashboard powered by machine learning insights. Offers real-time reporting, trend prediction, and interactive visualisations.",
+      "A data analytics dashboard powered by machine learning insights. Real-time reporting, trend prediction, and interactive visualisations.",
     techs: ["Python", "ML", "React", "Node.js"],
     bgImage: "/images/bus.png",
     fgImage: "/images/me.png",
@@ -43,26 +44,43 @@ export default function Projects() {
   const [current, setCurrent] = useState(0);
   const project = projects[current];
 
+  const [headerRef, headerVisible] = useScrollReveal<HTMLDivElement>();
+  const [imgRef, imgVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
+  const [contentRef, contentVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
+
   return (
     <section id="projects" className="projects-section">
       <div className="projects-inner">
 
-        {/* Header */}
-        <div className="projects-header">
+        {/* Header — fade up */}
+        <div
+          ref={headerRef}
+          className="projects-header"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? 'translateY(0)' : 'translateY(40px)',
+            transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
+          }}
+        >
           <div className="section-label">
             <span className="section-label-line" />
             <span className="section-label-text">Portfolio</span>
           </div>
-          <h2 className="section-heading">
-            Featured <em>Projects</em>
-          </h2>
+          <h2 className="section-heading">Featured <em>Projects</em></h2>
         </div>
 
-        {/* Showcase */}
         <div className="project-showcase">
 
-          {/* Stacked images */}
-          <div className="project-images">
+          {/* Images — slide in from left */}
+          <div
+            ref={imgRef}
+            className="project-images"
+            style={{
+              opacity: imgVisible ? 1 : 0,
+              transform: imgVisible ? 'translateX(0) scale(1)' : 'translateX(-60px) scale(0.96)',
+              transition: 'opacity 0.9s ease 0.1s, transform 0.9s cubic-bezier(0.25,1,0.5,1) 0.1s',
+            }}
+          >
             <div className="project-img-back">
               <Image src={project.bgImage} alt={project.title}
                 fill className="object-cover" sizes="340px" />
@@ -77,8 +95,16 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Content */}
-          <div className="project-content">
+          {/* Content — slide in from right */}
+          <div
+            ref={contentRef}
+            className="project-content"
+            style={{
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? 'translateX(0)' : 'translateX(60px)',
+              transition: 'opacity 0.9s ease 0.2s, transform 0.9s cubic-bezier(0.25,1,0.5,1) 0.2s',
+            }}
+          >
             <span className="project-number">Project {project.number}</span>
             <h3 className="project-title">{project.title}</h3>
             <p className="project-desc">{project.description}</p>
@@ -86,23 +112,32 @@ export default function Projects() {
             <div>
               <p className="tech-label">Technologies</p>
               <div className="tech-tags">
-                {project.techs.map((t) => <span key={t}>{t}</span>)}
+                {project.techs.map((t, i) => (
+                  <span
+                    key={t}
+                    style={{
+                      opacity: contentVisible ? 1 : 0,
+                      transform: contentVisible ? 'translateY(0)' : 'translateY(12px)',
+                      transition: `opacity 0.5s ease ${0.3 + i * 0.08}s, transform 0.5s ease ${0.3 + i * 0.08}s`,
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </div>
 
-            <div className="project-actions" style={{ display: 'flex', gap: '12px' }}>
-              <a href={project.link} className="btn-demo">
-                View Project
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M7 17L17 7M17 7H7M17 7v10" />
-                </svg>
-              </a>
-            </div>
+            <a href={project.link} className="btn-demo">
+              View Project
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M7 17L17 7M17 7H7M17 7v10" />
+              </svg>
+            </a>
           </div>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination dots */}
         <div className="projects-pagination">
           {projects.map((_, i) => (
             <button key={i}

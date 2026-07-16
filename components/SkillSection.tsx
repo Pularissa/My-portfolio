@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useScrollReveal, useCountUp } from './useScrollReveal';
 
 const skillCategories = [
   {
@@ -8,11 +9,11 @@ const skillCategories = [
     label: 'Frontend',
     icon: '◈',
     skills: [
-      { name: 'React', percent: 92 },
-      { name: 'Next.js', percent: 85 },
-      { name: 'TypeScript', percent: 82 },
+      { name: 'React',        percent: 92 },
+      { name: 'Next.js',      percent: 85 },
+      { name: 'TypeScript',   percent: 82 },
       { name: 'Tailwind CSS', percent: 90 },
-      { name: 'HTML & CSS', percent: 95 },
+      { name: 'HTML & CSS',   percent: 95 },
     ],
   },
   {
@@ -21,10 +22,10 @@ const skillCategories = [
     icon: '◎',
     skills: [
       { name: 'Git & GitHub', percent: 88 },
-      { name: 'Figma', percent: 78 },
-      { name: 'REST APIs', percent: 84 },
-      { name: 'Node.js', percent: 76 },
-      { name: 'VS Code', percent: 95 },
+      { name: 'Figma',        percent: 78 },
+      { name: 'REST APIs',    percent: 84 },
+      { name: 'Node.js',      percent: 76 },
+      { name: 'VS Code',      percent: 95 },
     ],
   },
   {
@@ -32,11 +33,11 @@ const skillCategories = [
     label: 'Design & UX',
     icon: '◇',
     skills: [
-      { name: 'UI/UX Design', percent: 80 },
+      { name: 'UI/UX Design',      percent: 80 },
       { name: 'Responsive Design', percent: 90 },
-      { name: 'Accessibility', percent: 82 },
-      { name: 'Prototyping', percent: 75 },
-      { name: 'Design Systems', percent: 78 },
+      { name: 'Accessibility',     percent: 82 },
+      { name: 'Prototyping',       percent: 75 },
+      { name: 'Design Systems',    percent: 78 },
     ],
   },
 ];
@@ -45,8 +46,7 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
   const r = 26;
   const circ = 2 * Math.PI * r;
   const dash = animate ? (percent / 100) * circ : 0;
-  const gap = circ - dash;
-
+  const gap  = circ - dash;
   return (
     <svg width="68" height="68" viewBox="0 0 68 68" className="skill-arc-svg">
       <circle cx="34" cy="34" r={r} fill="none"
@@ -59,7 +59,7 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
       />
       <defs>
         <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#c9a96e" />
+          <stop offset="0%"   stopColor="#c9a96e" />
           <stop offset="100%" stopColor="#f0d89c" />
         </linearGradient>
       </defs>
@@ -71,10 +71,26 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
   );
 }
 
+/* Animated stat counter */
+function StatCounter({ target, label }: { target: number; label: string }) {
+  const [ref, visible] = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
+  const count = useCountUp(target, visible);
+  return (
+    <div ref={ref} className="sk-stat">
+      <span className="sk-stat-num">{count}+</span>
+      <span className="sk-stat-label">{label}</span>
+    </div>
+  );
+}
+
 export default function SkillsSection() {
   const [activeTab, setActiveTab] = useState('frontend');
-  const [animate, setAnimate] = useState(false);
+  const [animate, setAnimate]     = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  const [headerRef, headerVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.3 });
+  const [tabsRef,   tabsVisible]   = useScrollReveal<HTMLDivElement>({ threshold: 0.3 });
+  const [gridRef,   gridVisible]   = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -99,21 +115,37 @@ export default function SkillsSection() {
       <div className="sk-bg-grid" />
 
       <div className="sk-inner">
-        {/* Header */}
-        <div className="sk-header">
+
+        {/* Header — fade down */}
+        <div
+          ref={headerRef}
+          className="sk-header"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? 'translateY(0)' : 'translateY(-32px)',
+            transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
+          }}
+        >
           <div className="sk-eyebrow">
             <span className="sk-eyebrow-line" />
             <span className="sk-eyebrow-text">Expertise</span>
             <span className="sk-eyebrow-line" />
           </div>
           <h2 className="sk-title">Skills &amp; <em>Proficiency</em></h2>
-          <p className="sk-subtitle">
-            A curated set of tools and technologies I work with daily.
-          </p>
+          <p className="sk-subtitle">A curated set of tools and technologies I work with daily.</p>
         </div>
 
-        {/* Tabs */}
-        <div className="sk-tabs" role="tablist">
+        {/* Tabs — scale in */}
+        <div
+          ref={tabsRef}
+          className="sk-tabs"
+          role="tablist"
+          style={{
+            opacity: tabsVisible ? 1 : 0,
+            transform: tabsVisible ? 'scale(1)' : 'scale(0.94)',
+            transition: 'opacity 0.7s ease 0.1s, transform 0.7s cubic-bezier(0.25,1,0.5,1) 0.1s',
+          }}
+        >
           {skillCategories.map((cat) => (
             <button key={cat.id} role="tab"
               aria-selected={activeTab === cat.id}
@@ -125,11 +157,19 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        {/* Grid */}
-        <div className="sk-grid" role="tabpanel">
+        {/* Grid — staggered cards */}
+        <div ref={gridRef} className="sk-grid" role="tabpanel">
           {activeCategory.skills.map((skill, i) => (
-            <div key={skill.name} className="sk-card"
-              style={{ animationDelay: `${i * 80}ms` }}>
+            <div
+              key={skill.name}
+              className="sk-card"
+              style={{
+                opacity: gridVisible ? 1 : 0,
+                transform: gridVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.95)',
+                transition: `opacity 0.6s ease ${i * 90}ms, transform 0.6s cubic-bezier(0.25,1,0.5,1) ${i * 90}ms`,
+                animationDelay: `${i * 80}ms`,
+              }}
+            >
               <div className="sk-arc-wrap">
                 <SkillArc percent={skill.percent} animate={animate} />
               </div>
@@ -145,23 +185,15 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        {/* Stats row */}
+        {/* Stats — animated count-up */}
         <div className="sk-stats">
-          <div className="sk-stat">
-            <span className="sk-stat-num">13+</span>
-            <span className="sk-stat-label">Technologies</span>
-          </div>
+          <StatCounter target={13} label="Technologies" />
           <div className="sk-stat-divider" />
-          <div className="sk-stat">
-            <span className="sk-stat-num">3+</span>
-            <span className="sk-stat-label">Years of practice</span>
-          </div>
+          <StatCounter target={3}  label="Years of practice" />
           <div className="sk-stat-divider" />
-          <div className="sk-stat">
-            <span className="sk-stat-num">12+</span>
-            <span className="sk-stat-label">Projects shipped</span>
-          </div>
+          <StatCounter target={12} label="Projects shipped" />
         </div>
+
       </div>
     </section>
   );

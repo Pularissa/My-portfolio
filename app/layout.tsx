@@ -1,17 +1,20 @@
 import "./globals.css";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import ScrollProgress from "../components/ScrollProgress";
 
-const playfair = Playfair_Display({
+// Cormorant Garamond — elegant, organic serif. Feels human, editorial, not AI.
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
-  variable: "--font-playfair",
+  variable: "--font-serif",
 });
 
-const inter = Inter({
+// DM Sans — geometric humanist sans. Friendly, readable, not robotic.
+const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
-  variable: "--font-inter",
+  variable: "--font-sans",
 });
 
 export const metadata = {
@@ -19,14 +22,11 @@ export const metadata = {
   description: "Portfolio of Prisca Larisse, a committed and skilled software developer.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable}`}>
+      <body className={`${cormorant.variable} ${dmSans.variable}`}>
+        <ScrollProgress />
         {children}
       </body>
     </html>
