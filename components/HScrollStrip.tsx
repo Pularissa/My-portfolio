@@ -2,36 +2,35 @@
 import { useEffect, useRef } from 'react';
 
 const cards = [
-  { tag: 'Frontend',   title: 'React & Next.js' },
-  { tag: 'Styling',    title: 'Tailwind & CSS' },
-  { tag: 'Language',   title: 'TypeScript' },
-  { tag: 'Backend',    title: 'Node & REST APIs' },
-  { tag: 'Design',     title: 'Figma & UI/UX' },
-  { tag: 'Versioning', title: 'Git & GitHub' },
-  { tag: 'Other',      title: 'Python & ML basics' },
-  { tag: 'Practice',   title: 'Clean Architecture' },
+  { tag: 'Frontend',      title: 'React & Next.js' },
+  { tag: 'Styling',       title: 'Tailwind & CSS3' },
+  { tag: 'Language',      title: 'Java & JavaScript' },
+  { tag: 'Backend',       title: 'Spring Boot & Node.js' },
+  { tag: 'Database',      title: 'PostgreSQL & MySQL' },
+  { tag: 'Embedded',      title: 'Arduino & ESP8266' },
+  { tag: 'IoT Sensors',   title: 'DHT11, LM35, I2C' },
+  { tag: 'Tooling',       title: 'Git, Postman, Figma' },
+  { tag: 'Other',         title: 'Python & C++' },
+  { tag: 'Practice',      title: 'Agile & Clean Code' },
 ];
 
 export default function HScrollStrip() {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const trackRef   = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
-      const sec = sectionRef.current;
+      const sec   = sectionRef.current;
       const track = trackRef.current;
       if (!sec || !track) return;
 
-      const rect = sec.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // progress 0→1 as section moves through viewport
+      const rect     = sec.getBoundingClientRect();
+      const vh       = window.innerHeight;
       const progress = 1 - (rect.top + rect.height) / (vh + rect.height);
-      const clampedP = Math.min(Math.max(progress, 0), 1);
-
+      const clamped  = Math.min(Math.max(progress, 0), 1);
       const maxShift = track.scrollWidth - sec.offsetWidth;
-      track.style.transform = `translateX(-${clampedP * maxShift * 0.6}px)`;
+      track.style.transform = `translateX(-${clamped * maxShift * 0.6}px)`;
     };
-
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

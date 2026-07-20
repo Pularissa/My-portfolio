@@ -1,11 +1,11 @@
 export default function Marquee() {
   const items = [
-    "React", "Next.js", "TypeScript", "Tailwind CSS",
-    "Node.js", "Figma", "UI/UX", "REST APIs",
-    "Git", "Accessibility", "Clean Code", "Open to Work",
+    "React", "Next.js", "Java", "Spring Boot", "PostgreSQL",
+    "Node.js", "Arduino", "ESP8266", "Tailwind CSS",
+    "Git & GitHub", "Figma", "REST APIs",
+    "Python", "C++", "i18next", "Open to Internships",
   ];
 
-  // Double the list so it loops seamlessly
   const doubled = [...items, ...items];
 
   return (

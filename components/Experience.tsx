@@ -4,38 +4,48 @@ import { useScrollReveal } from './useScrollReveal';
 const experiences = [
   {
     id: "01",
-    company: "KW Enterprise",
-    role: "Frontend Developer",
+    company: "Rwanda Coding Academy",
+    role: "Software Programming & Embedded Systems Student",
     period: "2023 — Present",
-    description: "Led the redesign of the client portal, improving engagement by 40%. Delivered pixel-perfect, accessible interfaces using React and TypeScript.",
+    type: "Education",
+    description: "Studying software engineering and embedded systems at one of Rwanda's top coding academies. Building real-world projects spanning web apps, desktop software, IoT devices, and AI-assisted systems.",
   },
   {
     id: "02",
-    company: "Freelance",
-    role: "Full-Stack Developer",
-    period: "2022 — 2023",
-    description: "Delivered end-to-end web solutions for clients across logistics and education. Managed the full lifecycle from requirements through to deployment.",
+    company: "UmuhinziLink",
+    role: "Founder & Lead Developer",
+    period: "2024 — Present",
+    type: "Project",
+    description: "Designed and built a full-stack AgriTech platform connecting Rwandan farmers with buyers. Integrated AI farming advice, live market pricing, and digital payments using Next.js, Node.js, and PostgreSQL.",
   },
   {
     id: "03",
-    company: "Tech Bootcamp",
-    role: "Junior Developer",
-    period: "2021 — 2022",
-    description: "Intensive modern web development training. Shipped production-ready features in agile teams — React, Node.js, and database design.",
+    company: "YNT Rwanda",
+    role: "Frontend Developer",
+    period: "2024",
+    type: "Project",
+    description: "Developed a modern NGO website with multi-language support (i18next), membership registration, donation handling, and an events management system using React and Tailwind CSS.",
   },
   {
     id: "04",
-    company: "Personal Projects",
-    role: "Self-directed Learning",
-    period: "2020 — 2021",
-    description: "Explored Solidity, ML fundamentals, and mobile-first design. Built 8+ projects spanning different domains and stacks.",
+    company: "Independent Projects",
+    role: "Self-directed Developer",
+    period: "2023 — Present",
+    type: "Personal",
+    description: "Built 10+ projects across web (React, Spring Boot), desktop (Java Swing), and hardware (Arduino, ESP8266). Topics include traffic education, library management, IoT smart gardens, and personal safety apps.",
   },
 ];
 
 function TimelineItem({ exp, index }: { exp: typeof experiences[0]; index: number }) {
-  const [ref, visible] = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
+  const [ref, visible] = useScrollReveal<HTMLDivElement>({ threshold: 0.18 });
   const isEven = index % 2 === 0;
   const words = exp.description.split(' ');
+
+  const typeColor: Record<string, string> = {
+    Education: '#6ee7b7',
+    Project:   'var(--gold)',
+    Personal:  'rgba(245,240,235,0.45)',
+  };
 
   return (
     <div
@@ -50,45 +60,51 @@ function TimelineItem({ exp, index }: { exp: typeof experiences[0]; index: numbe
       <div className="timeline-node">{exp.id}</div>
       <div className="timeline-card">
 
-        {/* Company + period — clip reveal */}
         <div className="timeline-card-header">
           <div style={{ overflow: 'hidden' }}>
-            <h3 className="timeline-company"
-              style={{
-                transform: visible ? 'translateY(0)' : 'translateY(100%)',
-                transition: `transform 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 110 + 80}ms`,
-              }}
-            >{exp.company}</h3>
+            <h3 className="timeline-company" style={{
+              transform: visible ? 'translateY(0)' : 'translateY(100%)',
+              transition: `transform 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 110 + 80}ms`,
+            }}>
+              {exp.company}
+            </h3>
           </div>
-          <span className="timeline-period"
-            style={{
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+            <span className="timeline-period" style={{
               opacity: visible ? 1 : 0,
               transition: `opacity 0.6s ease ${index * 110 + 200}ms`,
-            }}
-          >{exp.period}</span>
+            }}>
+              {exp.period}
+            </span>
+            <span style={{
+              fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.14em',
+              textTransform: 'uppercase', color: typeColor[exp.type] ?? 'var(--gold)',
+              opacity: visible ? 0.9 : 0,
+              transition: `opacity 0.6s ease ${index * 110 + 240}ms`,
+            }}>
+              {exp.type}
+            </span>
+          </div>
         </div>
 
-        <p className="timeline-role"
-          style={{
-            opacity: visible ? 0.7 : 0,
-            transition: `opacity 0.6s ease ${index * 110 + 250}ms`,
-          }}
-        >{exp.role}</p>
+        <p className="timeline-role" style={{
+          opacity: visible ? 0.75 : 0,
+          transition: `opacity 0.6s ease ${index * 110 + 260}ms`,
+        }}>
+          {exp.role}
+        </p>
 
-        {/* Description — word-by-word stagger */}
+        {/* Word-by-word stagger */}
         <p className="timeline-desc" aria-label={exp.description}>
           {words.map((word, wi) => (
-            <span
-              key={wi}
-              style={{
-                display: 'inline-block',
-                marginRight: '0.3em',
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(10px)',
-                transition: `opacity 0.4s ease ${index * 110 + 300 + wi * 22}ms,
-                             transform 0.4s ease ${index * 110 + 300 + wi * 22}ms`,
-              }}
-            >
+            <span key={wi} style={{
+              display: 'inline-block',
+              marginRight: '0.28em',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(10px)',
+              transition: `opacity 0.4s ease ${index * 110 + 300 + wi * 18}ms,
+                           transform 0.4s ease ${index * 110 + 300 + wi * 18}ms`,
+            }}>
               {word}
             </span>
           ))}
@@ -101,29 +117,27 @@ function TimelineItem({ exp, index }: { exp: typeof experiences[0]; index: numbe
 
 export default function Experience() {
   const [headerRef, headerVisible] = useScrollReveal<HTMLDivElement>();
-  const [lineRef, lineVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
+  const [lineRef,   lineVisible]   = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
 
   return (
     <section id="experience" className="experience-section">
       <div className="experience-inner">
 
-        <div
-          ref={headerRef}
-          className="experience-header"
-          style={{
-            opacity: headerVisible ? 1 : 0,
-            transform: headerVisible ? 'translateY(0)' : 'translateY(36px)',
-            transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
-          }}
-        >
+        <div ref={headerRef} className="experience-header" style={{
+          opacity: headerVisible ? 1 : 0,
+          transform: headerVisible ? 'translateY(0)' : 'translateY(36px)',
+          transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
+        }}>
           <div className="section-label">
             <span className="section-label-line" />
-            <span className="section-label-text">Background</span>
+            <span className="section-label-text">Education & Experience</span>
           </div>
-          <h2 className="section-heading">Work <em>Experience</em></h2>
-
-          {/* Animated line draw */}
-          <div ref={lineRef} className="line-draw" style={{ marginTop: '24px', width: lineVisible ? '100%' : '0%', transition: 'width 1.2s cubic-bezier(0.25,1,0.5,1) 0.3s' }} />
+          <h2 className="section-heading">My <em>Journey</em></h2>
+          <div ref={lineRef} className="line-draw" style={{
+            marginTop: '24px',
+            width: lineVisible ? '100%' : '0%',
+            transition: 'width 1.2s cubic-bezier(0.25,1,0.5,1) 0.3s',
+          }} />
         </div>
 
         <div className="timeline">
@@ -131,6 +145,7 @@ export default function Experience() {
             <TimelineItem key={exp.id} exp={exp} index={i} />
           ))}
         </div>
+
       </div>
     </section>
   );

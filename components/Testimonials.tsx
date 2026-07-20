@@ -1,40 +1,35 @@
 'use client';
 import { useScrollReveal } from './useScrollReveal';
 
-const testimonials = [
+// Honest section — peer recognition and project context rather than invented company reviews
+const highlights = [
   {
     id: 1,
-    name: "Sarah Müller",
-    role: "Product Lead, KW Enterprise",
-    initials: "SM",
-    text: "Prisca delivered far beyond expectations. Her ability to translate complex requirements into a beautiful, intuitive interface is genuinely rare.",
-    stars: 5,
+    initials: "RCA",
+    name: "Rwanda Coding Academy",
+    role: "Student · Software & Embedded Systems",
+    text: "Enrolled in one of Rwanda's most rigorous technical programmes, studying software engineering and embedded systems, building 10+ real projects that solve community problems.",
+    tag: "Education",
   },
   {
     id: 2,
-    name: "Daniel Osei",
-    role: "CTO, LogiTech Solutions",
-    initials: "DO",
-    text: "Working with Prisca was a pleasure. She communicates clearly, writes clean maintainable code, and always ships on time. Highly recommend.",
-    stars: 5,
+    initials: "UL",
+    name: "UmuhinziLink",
+    role: "Founder & Lead Developer",
+    text: "Built a full AgriTech platform from scratch — connecting Rwandan smallholder farmers directly to buyers, with AI-powered advice and digital payment integration.",
+    tag: "Featured Project",
   },
   {
     id: 3,
-    name: "Amara Diallo",
-    role: "Co-founder, EduBridge",
-    initials: "AD",
-    text: "Prisca built our entire front-end from scratch. The result is polished, accessible, and fast — plus she brought great UX ideas that improved the product.",
-    stars: 5,
+    initials: "YNT",
+    name: "Youth for National Transformation",
+    role: "Frontend Developer · NGO Website",
+    text: "Delivered a complete organisational website with multi-language support, membership registration, events management, and a donation system.",
+    tag: "Civic Tech",
   },
 ];
 
-function TestimonialCard({
-  item,
-  index,
-}: {
-  item: (typeof testimonials)[0];
-  index: number;
-}) {
+function HighlightCard({ item, index }: { item: typeof highlights[0]; index: number }) {
   const [ref, visible] = useScrollReveal<HTMLDivElement>({ threshold: 0.15 });
 
   return (
@@ -50,19 +45,24 @@ function TestimonialCard({
       <div className="testimonial-avatar">{item.initials}</div>
       <div className="testimonial-name">{item.name}</div>
       <div className="testimonial-role">{item.role}</div>
-      <div className="testimonial-divider" />
-      <p className="testimonial-text">&ldquo;{item.text}&rdquo;</p>
-      <div className="testimonial-stars">
-        {Array.from({ length: item.stars }).map((_, i) => (
-          <span
-            key={i}
-            style={{
-              opacity: visible ? 1 : 0,
-              transition: `opacity 0.4s ease ${index * 140 + 300 + i * 60}ms`,
-            }}
-          >★</span>
-        ))}
+      <div style={{
+        display: 'inline-block', marginBottom: '20px',
+        padding: '3px 12px',
+        background: 'var(--gold-faint)',
+        border: '1px solid var(--gold-dim)',
+        borderRadius: '50px',
+        fontSize: '0.62rem',
+        fontWeight: 600,
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase' as const,
+        color: 'var(--gold)',
+        opacity: visible ? 1 : 0,
+        transition: `opacity 0.5s ease ${index * 140 + 200}ms`,
+      }}>
+        {item.tag}
       </div>
+      <div className="testimonial-divider" />
+      <p className="testimonial-text">{item.text}</p>
     </div>
   );
 }
@@ -74,25 +74,29 @@ export default function Testimonials() {
     <section className="testimonials-section">
       <div className="testimonials-inner">
 
-        <div
-          ref={headerRef}
-          className="testimonials-header"
-          style={{
-            opacity: headerVisible ? 1 : 0,
-            transform: headerVisible ? 'translateY(0)' : 'translateY(32px)',
-            transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
-          }}
-        >
+        <div ref={headerRef} className="testimonials-header" style={{
+          opacity: headerVisible ? 1 : 0,
+          transform: headerVisible ? 'translateY(0)' : 'translateY(32px)',
+          transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
+        }}>
           <div className="section-label">
             <span className="section-label-line" />
-            <span className="section-label-text">Testimonials</span>
+            <span className="section-label-text">Highlights</span>
           </div>
-          <h2 className="section-heading">What people <em>say</em></h2>
+          <h2 className="section-heading">
+            Where I&apos;ve <em>been</em>
+          </h2>
+          <p style={{
+            marginTop: '12px', fontSize: '0.95rem',
+            color: 'var(--white-dim)', maxWidth: '480px', lineHeight: 1.7,
+          }}>
+            Passionate about solving real-world problems with technology — from smart agriculture to civic tools and embedded systems.
+          </p>
         </div>
 
         <div className="testimonials-grid">
-          {testimonials.map((item, i) => (
-            <TestimonialCard key={item.id} item={item} index={i} />
+          {highlights.map((item, i) => (
+            <HighlightCard key={item.id} item={item} index={i} />
           ))}
         </div>
 
