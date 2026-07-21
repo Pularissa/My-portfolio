@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
-  experimental: {
-    turbopackFileSystemCacheForDev: true,
+  // Image optimization — allow the public/images folder
+  images: {
+    unoptimized: false,
   },
-  /* config options here */
+  // Ensure trailing slashes are consistent
+  trailingSlash: false,
 };
 
 export default nextConfig;

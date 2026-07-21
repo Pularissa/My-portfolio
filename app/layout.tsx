@@ -1,25 +1,27 @@
 import "./globals.css";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Cinzel, Poppins } from "next/font/google";
 import ScrollProgress from "../components/ScrollProgress";
+import SmoothScroll from "../components/SmoothScroll";
 
-// Cormorant Garamond — elegant, organic serif. Feels human, editorial, not AI.
-const cormorant = Cormorant_Garamond({
+// Cinzel — elegant, classical serif. Cinzel is uppercase-first,
+// perfect for PRISCA, section titles, and the logo mark.
+const cinzel = Cinzel({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "900"],
   variable: "--font-serif",
 });
 
-// DM Sans — geometric humanist sans. Friendly, readable, not robotic.
-const dmSans = DM_Sans({
+// Poppins — modern, geometric humanist. Clean and very readable
+// for body text, buttons, nav, forms, and cards.
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-sans",
 });
 
 export const metadata = {
-  title: "Prisca Larisse — Software Developer",
-  description: "Portfolio of Prisca Larisse, a Software Programming & Embedded Systems student at Rwanda Coding Academy.",
+  title: "Prisca Larissa — Software Developer",
+  description: "Portfolio of Prisca Larissa, a Software Programming & Embedded Systems student at Rwanda Coding Academy.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -30,7 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" href="/images/logo.png" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
       </head>
-      <body className={`${cormorant.variable} ${dmSans.variable}`}>
+      <body className={`${cinzel.variable} ${poppins.variable}`}>
+        <SmoothScroll />
         <ScrollProgress />
         {children}
       </body>

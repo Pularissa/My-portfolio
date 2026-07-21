@@ -1,19 +1,35 @@
 'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-const words = ["Developer", "Builder", "Problem Solver", "Student"];
+const words = ['Developer', 'Builder', 'Problem Solver', 'Student'];
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export default function Hero() {
-  const [wordIdx, setWordIdx]       = useState(0);
+  const [wordIdx, setWordIdx]         = useState(0);
   const [wordVisible, setWordVisible] = useState(true);
-  const [scrollY, setScrollY]       = useState(0);
-  const [entered, setEntered]       = useState(false);
+  const [entered, setEntered]         = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => { const t = setTimeout(() => setEntered(true), 80); return () => clearTimeout(t); }, []);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] });
 
+  // Parallax values
+  const rawGlowY  = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const rawOp     = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const rawScale  = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const rawTextY  = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
+  const rawPhotoY = useTransform(scrollYProgress, [0, 1], ['0%', '9%']);
+  const rawSkew   = useTransform(scrollYProgress, [0, 1], [0, -2]);
+
+  const glowY  = useSpring(rawGlowY,  { stiffness: 60, damping: 20 });
+  const fadeOp = useSpring(rawOp,     { stiffness: 60, damping: 20 });
+
+  // Mount entry
+  useEffect(() => { const t = setTimeout(() => setEntered(true), 100); return () => clearTimeout(t); }, []);
+
+  // Cycle words
   useEffect(() => {
     const iv = setInterval(() => {
       setWordVisible(false);
@@ -22,161 +38,167 @@ export default function Hero() {
     return () => clearInterval(iv);
   }, []);
 
-  useEffect(() => {
-    const fn = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', fn, { passive: true });
-    return () => window.removeEventListener('scroll', fn);
-  }, []);
-
-  const pText   = scrollY * 0.18;
-  const pPhoto  = scrollY * 0.09;
-  const pGlow   = scrollY * 0.28;
-  const opacity = Math.max(0, 1 - scrollY / 550);
-  const skewDeg = Math.min(scrollY * 0.008, 2);
-
   return (
-    <section className="hero-section" style={{ opacity }}>
-      <div className="hero-glow" style={{ transform: `translateY(${pGlow}px)` }} />
+    <motion.section ref={containerRef} className="hero-section" style={{ paddingTop: '88px', opacity: fadeOp }}>
+
+      {/* Parallax glow */}
+      <motion.div className="hero-glow" style={{ y: glowY, scale: rawScale }} />
 
       <div className="hero-corner hero-corner-tl" />
       <div className="hero-corner hero-corner-tr" />
       <div className="hero-corner hero-corner-bl" />
 
-      <nav className="navbar">
-        <div className="logo">
-          <Image
-            src="/images/logo.png"
-            alt="Prisca Larisse Logo"
-            width={52}
-            height={52}
-            className="logo-img"
-            priority
-          />
-        </div>
-        <ul className="nav-links">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="#skills">Skills</Link></li>
-          <li><Link href="#projects">Projects</Link></li>
-          <li><Link href="#experience">Education</Link></li>
-          <li><Link href="#contact">Contact</Link></li>
-        </ul>
-        <a href="#contact" className="nav-cta">Let&apos;s talk</a>
-      </nav>
+      {/* Skew on scroll exit */}
+      <motion.div className="hero-body" style={{ skewY: rawSkew }}>
 
-      <div className="hero-body" style={{ transform: `skewY(${-skewDeg}deg)` }}>
+        {/* Text — parallax */}
+        <motion.div className="hero-text" style={{ y: rawTextY }}>
 
-        <div className="hero-text" style={{ transform: `translateY(${pText}px)` }}>
-
-          <div className="hero-eyebrow" style={{
-            opacity: entered ? 1 : 0,
-            transform: entered ? 'translateY(0)' : 'translateY(12px)',
-            transition: 'opacity 0.7s ease 0.1s, transform 0.7s cubic-bezier(0.25,1,0.5,1) 0.1s',
-          }}>
+          {/* Eyebrow — fade up */}
+          <motion.div
+            className="hero-eyebrow"
+            initial={{ opacity: 0, y: 20 }}
+            animate={entered ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+          >
             <span className="hero-eyebrow-line" />
             <span className="hero-eyebrow-text">
               Software&nbsp;
-              <span className="hero-eyebrow-word" style={{
-                opacity: wordVisible ? 1 : 0,
-                transform: wordVisible ? 'translateY(0)' : 'translateY(6px)',
-              }}>
+              <motion.span
+                className="hero-eyebrow-word"
+                animate={{ opacity: wordVisible ? 1 : 0, y: wordVisible ? 0 : 6 }}
+                transition={{ duration: 0.3 }}
+              >
                 {words[wordIdx]}
-              </span>
+              </motion.span>
             </span>
-          </div>
+          </motion.div>
 
+          {/* Name — clip up */}
           <div style={{ overflow: 'hidden' }}>
-            <h1 className="hero-name" style={{
-              transform: entered ? 'translateY(0)' : 'translateY(100%)',
-              transition: 'transform 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s',
-            }}>
+            <motion.h1
+              className="hero-name"
+              initial={{ y: '105%' }}
+              animate={entered ? { y: '0%' } : {}}
+              transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
+            >
               <span className="hero-name-first">Prisca</span>
-              <em className="hero-name-last">Larisse.</em>
-            </h1>
+              <motion.em
+                className="hero-name-last"
+                initial={{ opacity: 0 }}
+                animate={entered ? { opacity: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.55 }}
+              >
+                Larissa.
+              </motion.em>
+            </motion.h1>
           </div>
 
-          <p className="hero-tagline" style={{
-            opacity: entered ? 1 : 0,
-            transform: entered ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.8s ease 0.45s, transform 0.8s cubic-bezier(0.25,1,0.5,1) 0.45s',
-          }}>
-            Software Programming &amp; Embedded Systems student at
-            Rwanda Coding Academy — building real solutions for real problems
-            across web, mobile, and hardware.
-          </p>
+          {/* Tagline */}
+          <motion.p
+            className="hero-tagline"
+            initial={{ opacity: 0, y: 28 }}
+            animate={entered ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.45, ease: EASE }}
+          >
+            Software Programming &amp; Embedded Systems student at Rwanda Coding
+            Academy — building real solutions for real problems across web, mobile,
+            and hardware.
+          </motion.p>
 
-          <div className="hero-available" style={{ opacity: entered ? 1 : 0, transition: 'opacity 0.7s ease 0.6s' }}>
+          {/* Available */}
+          <motion.div
+            className="hero-available"
+            initial={{ opacity: 0 }}
+            animate={entered ? { opacity: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.6 }}
+          >
             <span className="hero-available-dot" />
             Open to internships &amp; collaborative opportunities
-          </div>
+          </motion.div>
 
-          <div className="hero-actions" style={{
-            opacity: entered ? 1 : 0,
-            transform: entered ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 0.7s ease 0.7s, transform 0.7s ease 0.7s',
-          }}>
+          {/* CTAs — scale reveal */}
+          <motion.div
+            className="hero-actions"
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={entered ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.72, ease: EASE }}
+          >
             <a href="#projects" className="hero-btn-primary">View my projects</a>
             <a href="#contact" className="hero-btn-secondary">
               Get in touch
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="hero-visual" style={{
-          transform: `translateY(${pPhoto}px)`,
-          opacity: entered ? 1 : 0,
-          transition: 'opacity 1s ease 0.4s',
-        }}>
+        {/* Photo — parallax + blur reveal */}
+        <motion.div
+          className="hero-visual"
+          style={{ y: rawPhotoY }}
+          initial={{ opacity: 0, filter: 'blur(14px)', scale: 0.9 }}
+          animate={entered ? { opacity: 1, filter: 'blur(0px)', scale: 1 } : {}}
+          transition={{ duration: 1.1, delay: 0.4, ease: EASE }}
+        >
           <div className="hero-ring" />
           <div className="hero-image-frame">
             <div className="hero-deco-dot" />
             <div className="hero-deco-dot" />
-            <Image src="/images/me.png" alt="Prisca Larisse" fill className="object-cover" priority />
+            <Image src="/images/me.png" alt="Prisca Larissa" fill className="object-cover" priority />
             <div className="hero-image-overlay" />
             <div className="hero-image-badge">
               <div>
-                <div className="hero-badge-name">Prisca Larisse</div>
-                <div className="hero-badge-role">RCA · Software & Embedded Systems</div>
+                <div className="hero-badge-name">Prisca Larissa</div>
+                <div className="hero-badge-role">RCA · Software &amp; Embedded Systems</div>
               </div>
               <div className="hero-badge-icon">✦</div>
             </div>
           </div>
-          <div className="hero-float-card">
+
+          {/* Float card — rotation reveal */}
+          <motion.div
+            className="hero-float-card"
+            initial={{ opacity: 0, rotate: -12, scale: 0.85 }}
+            animate={entered ? { opacity: 1, rotate: 0, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
+          >
             <div className="hero-float-label">Currently building</div>
             <div className="hero-float-chips">
-              {["UmuhinziLink", "Next.js", "IoT"].map(t => (
+              {['UmuhinziLink', 'Next.js', 'IoT'].map(t => (
                 <span key={t} className="hero-float-chip">{t}</span>
               ))}
             </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
 
-      <div className="hero-bottom" style={{ opacity: entered ? 1 : 0, transition: 'opacity 0.8s ease 0.9s' }}>
+      </motion.div>
+
+      {/* Bottom stats */}
+      <motion.div
+        className="hero-bottom"
+        initial={{ opacity: 0 }}
+        animate={entered ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.9 }}
+      >
         <div className="hero-scroll">
           <span className="hero-scroll-line" />
           <span className="hero-scroll-text">Scroll to explore</span>
         </div>
         <div className="hero-stats">
-          <div className="hero-stat-item">
-            <div className="hero-stat-number">10+</div>
-            <div className="hero-stat-label">Projects</div>
-          </div>
-          <div className="hero-stat-sep" />
-          <div className="hero-stat-item">
-            <div className="hero-stat-number">6+</div>
-            <div className="hero-stat-label">Languages</div>
-          </div>
-          <div className="hero-stat-sep" />
-          <div className="hero-stat-item">
-            <div className="hero-stat-number">RCA</div>
-            <div className="hero-stat-label">Student</div>
-          </div>
+          {[['10+','Projects'],['6+','Languages'],['RCA','Student']].map(([n, l], i) => (
+            <div key={n} style={{ display: 'flex', alignItems: 'center' }}>
+              {i > 0 && <div className="hero-stat-sep" />}
+              <div className="hero-stat-item">
+                <div className="hero-stat-number">{n}</div>
+                <div className="hero-stat-label">{l}</div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </section>
+      </motion.div>
+
+    </motion.section>
   );
 }

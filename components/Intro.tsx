@@ -37,7 +37,7 @@ export default function Intro() {
         <div className="intro-mark">
           <Image
             src="/images/logo.png"
-            alt="Prisca Larisse Logo"
+            alt="Prisca Larissa Logo"
             width={100}
             height={100}
             priority
@@ -53,7 +53,7 @@ export default function Intro() {
         <div className="intro-name">
           <span className="intro-name-word">Prisca</span>
           <span className="intro-name-sep">·</span>
-          <span className="intro-name-word intro-name-italic">Larisse</span>
+          <span className="intro-name-word intro-name-italic">Larissa</span>
         </div>
 
         {/* Role */}

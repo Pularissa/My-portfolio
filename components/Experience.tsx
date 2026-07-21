@@ -1,5 +1,8 @@
 'use client';
-import { useScrollReveal } from './useScrollReveal';
+
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { FadeUp, LineDraw } from './ScrollAnimations';
 
 const experiences = [
   {
@@ -8,7 +11,7 @@ const experiences = [
     role: "Software Programming & Embedded Systems Student",
     period: "2023 — Present",
     type: "Education",
-    description: "Studying software engineering and embedded systems at one of Rwanda's top coding academies. Building real-world projects spanning web apps, desktop software, IoT devices, and AI-assisted systems.",
+    description: "Studying software engineering and embedded systems at one of Rwanda's top academies. Building real-world projects spanning web apps, desktop software, IoT devices, and AI-assisted systems.",
   },
   {
     id: "02",
@@ -16,7 +19,7 @@ const experiences = [
     role: "Founder & Lead Developer",
     period: "2024 — Present",
     type: "Project",
-    description: "Designed and built a full-stack AgriTech platform connecting Rwandan farmers with buyers. Integrated AI farming advice, live market pricing, and digital payments using Next.js, Node.js, and PostgreSQL.",
+    description: "Designed and built a full-stack AgriTech platform connecting Rwandan farmers with buyers. Integrated AI farming advice, live market pricing, and digital payments.",
   },
   {
     id: "03",
@@ -24,7 +27,7 @@ const experiences = [
     role: "Frontend Developer",
     period: "2024",
     type: "Project",
-    description: "Developed a modern NGO website with multi-language support (i18next), membership registration, donation handling, and an events management system using React and Tailwind CSS.",
+    description: "Developed a modern NGO website with multi-language support (i18next), membership registration, donation handling, and events management.",
   },
   {
     id: "04",
@@ -32,117 +35,119 @@ const experiences = [
     role: "Self-directed Developer",
     period: "2023 — Present",
     type: "Personal",
-    description: "Built 10+ projects across web (React, Spring Boot), desktop (Java Swing), and hardware (Arduino, ESP8266). Topics include traffic education, library management, IoT smart gardens, and personal safety apps.",
+    description: "Built 10+ projects across web (React, Spring Boot), desktop (Java Swing), and hardware (Arduino, ESP8266) — spanning traffic education, library management, IoT, and personal safety.",
   },
 ];
 
-function TimelineItem({ exp, index }: { exp: typeof experiences[0]; index: number }) {
-  const [ref, visible] = useScrollReveal<HTMLDivElement>({ threshold: 0.18 });
-  const isEven = index % 2 === 0;
-  const words = exp.description.split(' ');
+const typeColor: Record<string, string> = {
+  Education: '#6ee7b7',
+  Project:   'var(--gold)',
+  Personal:  'rgba(245,240,235,0.45)',
+};
 
-  const typeColor: Record<string, string> = {
-    Education: '#6ee7b7',
-    Project:   'var(--gold)',
-    Personal:  'rgba(245,240,235,0.45)',
-  };
+function TimelineCard({ exp, index }: { exp: typeof experiences[0]; index: number }) {
+  const ref  = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const isEven = index % 2 === 0;
 
   return (
-    <div
+    <motion.div
       ref={ref}
       className="timeline-item"
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateX(0)' : `translateX(${isEven ? '-52px' : '52px'})`,
-        transition: `opacity 0.75s ease ${index * 110}ms, transform 0.75s cubic-bezier(0.16,1,0.3,1) ${index * 110}ms`,
-      }}
+      initial={{ opacity: 0, x: isEven ? -60 : 60, filter: 'blur(6px)' }}
+      animate={inView ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+      transition={{ duration: 0.85, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="timeline-node">{exp.id}</div>
-      <div className="timeline-card">
+      <motion.div
+        className="timeline-node"
+        initial={{ scale: 0, rotate: -90 }}
+        animate={inView ? { scale: 1, rotate: 0 } : {}}
+        transition={{ duration: 0.6, delay: index * 0.12 + 0.2, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {exp.id}
+      </motion.div>
 
+      <div className="timeline-card">
         <div className="timeline-card-header">
           <div style={{ overflow: 'hidden' }}>
-            <h3 className="timeline-company" style={{
-              transform: visible ? 'translateY(0)' : 'translateY(100%)',
-              transition: `transform 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 110 + 80}ms`,
-            }}>
+            <motion.h3
+              className="timeline-company"
+              initial={{ y: '110%' }}
+              animate={inView ? { y: '0%' } : {}}
+              transition={{ duration: 0.65, delay: index * 0.12 + 0.15, ease: [0.16, 1, 0.3, 1] }}
+            >
               {exp.company}
-            </h3>
+            </motion.h3>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-            <span className="timeline-period" style={{
-              opacity: visible ? 1 : 0,
-              transition: `opacity 0.6s ease ${index * 110 + 200}ms`,
-            }}>
+            <motion.span
+              className="timeline-period"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.12 + 0.3 }}
+            >
               {exp.period}
-            </span>
-            <span style={{
-              fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: typeColor[exp.type] ?? 'var(--gold)',
-              opacity: visible ? 0.9 : 0,
-              transition: `opacity 0.6s ease ${index * 110 + 240}ms`,
-            }}>
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 0.9 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.12 + 0.38 }}
+              style={{ fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: typeColor[exp.type] }}
+            >
               {exp.type}
-            </span>
+            </motion.span>
           </div>
         </div>
 
-        <p className="timeline-role" style={{
-          opacity: visible ? 0.75 : 0,
-          transition: `opacity 0.6s ease ${index * 110 + 260}ms`,
-        }}>
+        <motion.p
+          className="timeline-role"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 0.75 } : {}}
+          transition={{ duration: 0.5, delay: index * 0.12 + 0.42 }}
+        >
           {exp.role}
-        </p>
+        </motion.p>
 
-        {/* Word-by-word stagger */}
+        {/* Word-stagger description */}
         <p className="timeline-desc" aria-label={exp.description}>
-          {words.map((word, wi) => (
-            <span key={wi} style={{
-              display: 'inline-block',
-              marginRight: '0.28em',
-              opacity: visible ? 1 : 0,
-              transform: visible ? 'translateY(0)' : 'translateY(10px)',
-              transition: `opacity 0.4s ease ${index * 110 + 300 + wi * 18}ms,
-                           transform 0.4s ease ${index * 110 + 300 + wi * 18}ms`,
-            }}>
+          {exp.description.split(' ').map((word, wi) => (
+            <motion.span
+              key={wi}
+              style={{ display: 'inline-block', marginRight: '0.28em' }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.35, delay: index * 0.12 + 0.5 + wi * 0.016, ease: 'easeOut' }}
+            >
               {word}
-            </span>
+            </motion.span>
           ))}
         </p>
-
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Experience() {
-  const [headerRef, headerVisible] = useScrollReveal<HTMLDivElement>();
-  const [lineRef,   lineVisible]   = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
-
   return (
     <section id="experience" className="experience-section">
       <div className="experience-inner">
 
-        <div ref={headerRef} className="experience-header" style={{
-          opacity: headerVisible ? 1 : 0,
-          transform: headerVisible ? 'translateY(0)' : 'translateY(36px)',
-          transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
-        }}>
+        {/* Header */}
+        <FadeUp className="experience-header">
           <div className="section-label">
             <span className="section-label-line" />
             <span className="section-label-text">Education & Experience</span>
           </div>
           <h2 className="section-heading">My <em>Journey</em></h2>
-          <div ref={lineRef} className="line-draw" style={{
-            marginTop: '24px',
-            width: lineVisible ? '100%' : '0%',
-            transition: 'width 1.2s cubic-bezier(0.25,1,0.5,1) 0.3s',
-          }} />
-        </div>
+          <div style={{ marginTop: '24px' }}>
+            <LineDraw />
+          </div>
+        </FadeUp>
 
+        {/* Timeline cards */}
         <div className="timeline">
           {experiences.map((exp, i) => (
-            <TimelineItem key={exp.id} exp={exp} index={i} />
+            <TimelineCard key={exp.id} exp={exp} index={i} />
           ))}
         </div>
 

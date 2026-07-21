@@ -56,7 +56,7 @@ export type Profile = {
 // ─── PROFILE ────────────────────────────────────────────────────────────────
 
 export const profile: Profile = {
-  name:      "Prisca Larisse",
+  name:      "Prisca Larissa",
   tagline:   "Software Programming & Embedded Systems student at Rwanda Coding Academy — building real solutions for real problems across web, mobile, and hardware.",
   school:    "Rwanda Coding Academy",
   location:  "Rwanda, Africa",
@@ -123,6 +123,14 @@ export const projects: Project[] = [
     techs: ["Java","Java Swing","JDBC","PostgreSQL"],
     highlights: ["Book & student management","Borrow/return tracking","Report generation"],
     bgImage: "/images/me.png", fgImage: "/images/bus.png", link: "#",
+  },
+  {
+    id: 7, number: "07", featured: false,
+    title: "pBeFree", subtitle: "Drug Prevention App",
+    description: "A youth-focused platform that helps prevent drug abuse by providing education, peer support, AI-powered counseling, and access to healthy activities — empowering young people to make better choices and build a drug-free future.",
+    techs: ["React.js","Node.js","Express.js","MongoDB","JWT","OpenAI API","Firebase","Google Maps API","Tailwind CSS"],
+    highlights: ["AI chatbot & personalized guidance","Find nearby rehab centres (Maps)","Push notifications & reminders"],
+    bgImage: "/images/bus.png", fgImage: "/images/me.png", link: "#",
   },
 ];
 

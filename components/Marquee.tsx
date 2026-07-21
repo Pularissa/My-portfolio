@@ -2,6 +2,7 @@ export default function Marquee() {
   const items = [
     "React", "Next.js", "Java", "Spring Boot", "PostgreSQL",
     "Node.js", "Arduino", "ESP8266", "Tailwind CSS",
+    "MongoDB", "OpenAI API", "Firebase", "Google Maps API",
     "Git & GitHub", "Figma", "REST APIs",
     "Python", "C++", "i18next", "Open to Internships",
   ];
