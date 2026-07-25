@@ -1,23 +1,71 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useEffect, useRef, useState } from 'react';
 
 export default function ScrollProgress() {
   const [pct, setPct] = useState(0);
+  const rafRef = useRef<number>(0);
+  const targetRef = useRef(0);
+  const currentRef = useRef(0);
 
   useEffect(() => {
     const onScroll = () => {
       const el = document.documentElement;
       const scrolled = el.scrollTop || document.body.scrollTop;
       const total = el.scrollHeight - el.clientHeight;
-      setPct(total > 0 ? (scrolled / total) * 100 : 0);
+      targetRef.current = total > 0 ? (scrolled / total) * 100 : 0;
     };
+
+    /* Smooth lerp animation for progress bar — buttery independent of Lenis */
+    const animate = () => {
+      const diff = targetRef.current - currentRef.current;
+      if (Math.abs(diff) > 0.01) {
+        currentRef.current += diff * 0.08;
+        setPct(currentRef.current);
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
+  const displayPct = Math.round(pct);
+  const isNearEnd = pct > 94;
+
   return (
-    <div className="scroll-progress-track">
-      <div className="scroll-progress-fill" style={{ width: `${pct}%` }} />
-    </div>
+    <>
+      {/* ↓10 / ↑10 — Scroll Progress Bar with gradient glow */}
+      <div className="scroll-progress-track" aria-hidden="true">
+        <div
+          className="scroll-progress-fill"
+          style={{ width: `${pct}%` }}
+        />
+        {/* Glow tip */}
+        <div
+          className="scroll-progress-tip"
+          style={{ left: `${pct}%` }}
+        />
+      </div>
+
+      {/* Floating percentage label */}
+      <div
+        className="scroll-progress-label"
+        style={{
+          opacity: pct > 2 ? 1 : 0,
+          transform: pct > 2 ? 'translateY(0)' : 'translateY(-6px)',
+        }}
+        aria-label={`Page scroll progress: ${displayPct}%`}
+      >
+        <span className="scroll-progress-pct">{displayPct}</span>
+        <span className="scroll-progress-sym">%</span>
+        {isNearEnd && <span className="scroll-progress-end">↓</span>}
+      </div>
+    </>
   );
 }

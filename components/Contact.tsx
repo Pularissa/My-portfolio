@@ -1,14 +1,12 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
 
 const formFields = [
-  { id: 'cf-name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                          required: true  },
-  { id: 'cf-email',   label: 'Email Address', type: 'email', ph: 'you@example.com',                    required: true  },
-  { id: 'cf-org',     label: 'Organisation',  type: 'text',  ph: 'Company, university, NGO…',          required: false },
-  { id: 'cf-subject', label: 'Subject',       type: 'text',  ph: 'Internship, collaboration, project…',required: true  },
+  { id: 'cf-name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                           required: true  },
+  { id: 'cf-email',   label: 'Email Address', type: 'email', ph: 'you@example.com',                     required: true  },
+  { id: 'cf-org',     label: 'Organisation',  type: 'text',  ph: 'Company, university, NGO…',           required: false },
+  { id: 'cf-subject', label: 'Subject',       type: 'text',  ph: 'Internship, collaboration, project…', required: true  },
 ];
 
 const infoItems = [
@@ -19,122 +17,59 @@ const infoItems = [
 ];
 
 export default function ContactFooterPage() {
-  const headerRef  = useRef(null);
-  const formRef    = useRef(null);
-  const infoRef    = useRef(null);
-  const footerRef  = useRef(null);
-
-  const headerInView  = useInView(headerRef,  { once: true, margin: '-60px' });
-  const formInView    = useInView(formRef,    { once: true, margin: '-60px' });
-  const infoInView    = useInView(infoRef,    { once: true, margin: '-60px' });
-  const footerInView  = useInView(footerRef,  { once: true, margin: '-60px' });
-
   return (
     <>
-      {/* ── Contact Section ── */}
       <section id="contact" className="contact-section">
         <div className="contact-inner">
 
-          {/* Header — Down #1 fade up */}
-          <motion.div
-            ref={headerRef}
-            className="contact-header"
-            initial={{ opacity: 0, y: 44 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
+          {/* #1 Fade up header */}
+          <div className="contact-header reveal">
             <div className="section-label">
               <span className="section-label-line" />
               <span className="section-label-text">Get in touch</span>
             </div>
-            <h2 className="section-heading">Let&apos;s <em>connect</em></h2>
+            <div className="clip-wrap">
+              <h2 className="section-heading reveal-clip">Let&apos;s <em>connect</em></h2>
+            </div>
             <p className="contact-headline">&ldquo;Not a quitter — just a doer.&rdquo;</p>
-          </motion.div>
+          </div>
 
           <div className="contact-grid">
 
-            {/* Form — Down #5 slide from left */}
-            <motion.form
-              ref={formRef}
-              onSubmit={e => e.preventDefault()}
-              initial={{ opacity: 0, x: -60 }}
-              animate={formInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            >
+            {/* #5 Slide from left */}
+            <form onSubmit={e => e.preventDefault()} className="reveal-left" style={{ transitionDelay: '100ms' }}>
               <p className="contact-form-heading">Reach out — I&apos;d love to hear from you</p>
-
-              {formFields.map((f, i) => (
-                <motion.div
-                  key={f.id}
-                  className="form-field"
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={formInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                >
+              {formFields.map(f => (
+                <div key={f.id} className="form-field">
                   <label htmlFor={f.id}>{f.label}</label>
                   <input type={f.type} id={f.id} placeholder={f.ph} required={f.required} />
-                </motion.div>
+                </div>
               ))}
-
-              <motion.div
-                className="form-field"
-                initial={{ opacity: 0, y: 18 }}
-                animate={formInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              >
+              <div className="form-field">
                 <label htmlFor="cf-message">Message</label>
                 <textarea id="cf-message" rows={5}
                   placeholder="Tell me about an internship, collaboration, or project opportunity…"
                   required />
-              </motion.div>
+              </div>
+              <button type="submit" className="contact-submit">Send Message</button>
+            </form>
 
-              <motion.button
-                type="submit"
-                className="contact-submit"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={formInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.02, backgroundColor: 'var(--gold)' }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Send Message
-              </motion.button>
-            </motion.form>
-
-            {/* Info — Down #5 slide from right */}
-            <motion.div
-              ref={infoRef}
-              className="contact-info"
-              initial={{ opacity: 0, x: 60 }}
-              animate={infoInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
+            {/* #5 Slide from right */}
+            <div className="contact-info reveal-right" style={{ transitionDelay: '200ms' }}>
               {infoItems.map((item, i) => (
                 <div key={item.label} style={{ display: 'contents' }}>
-                  <motion.div
-                    className="contact-info-item"
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={infoInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.55, delay: 0.2 + i * 0.09, ease: [0.16, 1, 0.3, 1] }}
-                  >
+                  <div className="contact-info-item">
                     <span className="contact-info-label">{item.label}</span>
                     <span className="contact-info-value">{item.value}</span>
-                  </motion.div>
+                  </div>
                   {i < infoItems.length - 1 && <div className="contact-info-divider" />}
                 </div>
               ))}
-
-              {/* Availability callout — Down #3 scale reveal */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={infoInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.65, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  marginTop: '8px', padding: '18px 20px',
-                  background: 'var(--gold-faint)', border: '1px solid var(--gold-dim)',
-                  borderRadius: 'var(--radius-md)',
-                }}
-              >
+              <div style={{
+                marginTop: '8px', padding: '18px 20px',
+                background: 'var(--gold-faint)', border: '1px solid var(--gold-dim)',
+                borderRadius: 'var(--radius-md)',
+              }}>
                 <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '8px' }}>
                   🎓 Currently
                 </div>
@@ -142,23 +77,16 @@ export default function ContactFooterPage() {
                   Student at <strong style={{ color: 'var(--white)' }}>Rwanda Coding Academy</strong> —
                   open to internships, graduate programmes, and meaningful collaborative projects.
                 </p>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
           </div>
         </div>
       </section>
 
-      {/* ── Footer — Down #1 fade up ── */}
-      <motion.footer
-        ref={footerRef}
-        className="footer"
-        initial={{ opacity: 0, y: 40 }}
-        animate={footerInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      >
+      {/* #1 Fade up footer */}
+      <footer className="footer reveal">
         <div className="footer-top">
-
           <div className="footer-brand">
             <div className="footer-logo">
               <Image src="/images/logo.png" alt="PL Logo" width={44} height={44}
@@ -191,7 +119,6 @@ export default function ContactFooterPage() {
               <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill">⌥ GitHub</a>
             </div>
           </div>
-
         </div>
 
         <div className="footer-divider" />
@@ -200,7 +127,7 @@ export default function ContactFooterPage() {
           <p className="footer-copy">© 2026 <span>Prisca Larissa</span>. All rights reserved.</p>
           <p className="footer-copy">🎓 Rwanda Coding Academy · Built with <span>Next.js</span></p>
         </div>
-      </motion.footer>
+      </footer>
     </>
   );
 }

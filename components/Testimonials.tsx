@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { useScrollReveal } from './useScrollReveal';
 
 const recommendations = [
   {
@@ -36,26 +35,19 @@ const recommendations = [
 ];
 
 export default function Testimonials() {
-  const [current, setCurrent] = useState(0);
-  const [paused, setPaused]   = useState(false);
+  const [current, setCurrent]     = useState(0);
+  const [paused, setPaused]       = useState(false);
   const [animating, setAnimating] = useState(false);
-
-  const [headerRef, headerVisible] = useScrollReveal<HTMLDivElement>();
-  const [bodyRef,   bodyVisible]   = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   const goTo = useCallback((idx: number) => {
     if (animating) return;
     setAnimating(true);
-    setTimeout(() => {
-      setCurrent(idx);
-      setAnimating(false);
-    }, 380);
+    setTimeout(() => { setCurrent(idx); setAnimating(false); }, 380);
   }, [animating]);
 
   const next = useCallback(() => goTo((current + 1) % recommendations.length), [current, goTo]);
   const prev = useCallback(() => goTo((current - 1 + recommendations.length) % recommendations.length), [current, goTo]);
 
-  // Auto-advance every 4 s, pause on hover
   useEffect(() => {
     if (paused) return;
     const t = setInterval(next, 4000);
@@ -68,34 +60,29 @@ export default function Testimonials() {
     <section className="testimonials-section">
       <div className="testimonials-inner">
 
-        {/* Header */}
-        <div ref={headerRef} className="testimonials-header" style={{
-          opacity: headerVisible ? 1 : 0,
-          transform: headerVisible ? 'translateY(0)' : 'translateY(32px)',
-          transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1)',
-        }}>
+        {/* #1 Fade up header */}
+        <div className="testimonials-header reveal">
           <div className="section-label">
             <span className="section-label-line" />
             <span className="section-label-text">Recommendations</span>
           </div>
-          <h2 className="section-heading">What peers <em>say</em></h2>
+          <div className="clip-wrap">
+            {/* #4 clip reveal heading */}
+            <h2 className="section-heading reveal-clip">What peers <em>say</em></h2>
+          </div>
           <p style={{ marginTop: '12px', fontSize: '0.9rem', color: 'var(--white-dim)', maxWidth: '500px', lineHeight: 1.75 }}>
             Words from classmates and collaborators at Rwanda Coding Academy.
           </p>
         </div>
 
-        {/* Carousel */}
+        {/* #3 Scale up carousel */}
         <div
-          ref={bodyRef}
+          className="reveal-scale"
+          style={{ transitionDelay: '150ms' }}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
-          style={{
-            opacity: bodyVisible ? 1 : 0,
-            transform: bodyVisible ? 'translateY(0)' : 'translateY(40px)',
-            transition: 'opacity 0.8s ease 0.15s, transform 0.8s cubic-bezier(0.25,1,0.5,1) 0.15s',
-          }}
         >
-          {/* Card */}
+          {/* #8 Blur-to-sharp on card swap */}
           <div style={{
             background: 'var(--surface)',
             border: '1px solid var(--border)',
@@ -106,10 +93,10 @@ export default function Testimonials() {
             position: 'relative',
             overflow: 'hidden',
             opacity: animating ? 0 : 1,
-            transform: animating ? 'translateY(16px) scale(0.98)' : 'translateY(0) scale(1)',
-            transition: 'opacity 0.35s ease, transform 0.35s ease',
+            filter: animating ? 'blur(8px)' : 'blur(0px)',
+            transform: animating ? 'scale(0.97)' : 'scale(1)',
+            transition: 'opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease',
           }}>
-            {/* Big decorative quote */}
             <span style={{
               position: 'absolute', top: '20px', right: '32px',
               fontFamily: 'var(--font-serif)', fontSize: '7rem',
@@ -117,7 +104,6 @@ export default function Testimonials() {
               pointerEvents: 'none', userSelect: 'none',
             }}>"</span>
 
-            {/* Avatar + name row */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '18px', marginBottom: '28px' }}>
               <div className="testimonial-avatar" style={{ flexShrink: 0 }}>{item.initials}</div>
               <div>
@@ -126,82 +112,42 @@ export default function Testimonials() {
               </div>
             </div>
 
-            {/* Quote */}
             <p className="testimonial-text" style={{ fontSize: '1rem', lineHeight: 1.85 }}>
               &ldquo;{item.text}&rdquo;
             </p>
 
-            {/* Stars */}
             <div className="testimonial-stars" style={{ marginTop: '28px' }}>
               {[1,2,3,4,5].map(s => <span key={s}>★</span>)}
             </div>
           </div>
 
           {/* Controls */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: '20px', marginTop: '36px',
-          }}>
-            {/* Prev */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginTop: '36px' }}>
             <button onClick={prev} aria-label="Previous"
-              style={{
-                width: '40px', height: '40px', borderRadius: '50%',
-                border: '1px solid var(--border-hover)', background: 'transparent',
-                color: 'var(--white-dim)', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.3s ease',
-              }}
+              style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--border-hover)', background: 'transparent', color: 'var(--white-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--gold)'; (e.currentTarget as HTMLButtonElement).style.color='var(--gold)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color='var(--white-dim)'; }}
-            >
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color='var(--white-dim)'; }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
 
-            {/* Dots */}
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               {recommendations.map((_, i) => (
-                <button key={i} onClick={() => goTo(i)} aria-label={`Go to ${recommendations[i].name}`}
-                  style={{
-                    width: i === current ? '24px' : '7px',
-                    height: '7px',
-                    borderRadius: '4px',
-                    background: i === current ? 'var(--gold)' : 'var(--border-hover)',
-                    border: 'none', cursor: 'pointer', padding: 0,
-                    transition: 'all 0.35s ease',
-                  }}
+                <button key={i} onClick={() => goTo(i)}
+                  style={{ width: i === current ? '24px' : '7px', height: '7px', borderRadius: '4px', background: i === current ? 'var(--gold)' : 'var(--border-hover)', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.35s ease' }}
                 />
               ))}
             </div>
 
-            {/* Next */}
             <button onClick={next} aria-label="Next"
-              style={{
-                width: '40px', height: '40px', borderRadius: '50%',
-                border: '1px solid var(--border-hover)', background: 'transparent',
-                color: 'var(--white-dim)', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.3s ease',
-              }}
+              style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--border-hover)', background: 'transparent', color: 'var(--white-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--gold)'; (e.currentTarget as HTMLButtonElement).style.color='var(--gold)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color='var(--white-dim)'; }}
-            >
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor='var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color='var(--white-dim)'; }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
 
-          {/* Auto/paused indicator */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: '6px', marginTop: '14px',
-            fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase',
-            color: 'var(--white-dim)', opacity: 0.45,
-          }}>
-            <span style={{
-              width: '5px', height: '5px', borderRadius: '50%',
-              background: paused ? 'var(--white-dim)' : 'var(--gold)',
-              boxShadow: paused ? 'none' : '0 0 6px rgba(201,169,110,0.6)',
-              transition: 'all 0.3s ease',
-            }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '14px', fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--white-dim)', opacity: 0.45 }}>
+            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: paused ? 'var(--white-dim)' : 'var(--gold)', boxShadow: paused ? 'none' : '0 0 6px rgba(201,169,110,0.6)', transition: 'all 0.3s ease' }} />
             {paused ? 'Paused' : 'Auto · 4s'}
           </div>
         </div>

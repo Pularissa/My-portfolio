@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
 
 const projects = [
   {
@@ -64,15 +63,10 @@ const projects = [
 ];
 
 export default function Projects() {
-  const [current, setCurrent]     = useState(0);
-  const [sliding, setSliding]     = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [sliding, setSliding] = useState(false);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
-  const [paused, setPaused]       = useState(false);
-
-  const headerRef    = useRef(null);
-  const showcaseRef  = useRef(null);
-  const headerInView   = useInView(headerRef,   { once: true, margin: '-60px' });
-  const showcaseInView = useInView(showcaseRef, { once: true, margin: '-80px' });
+  const [paused, setPaused] = useState(false);
 
   const goTo = useCallback((idx: number, dir: 'next' | 'prev' = 'next') => {
     if (sliding) return;
@@ -91,10 +85,10 @@ export default function Projects() {
   }, [paused, next]);
 
   const p = projects[current];
-  const exitX = direction === 'next' ? -60 : 60;
-  const entX  = direction === 'next' ?  60 : -60;
+  const exitX = direction === 'next' ? '-60px' : '60px';
+  const entX  = direction === 'next' ?  '60px' : '-60px';
 
-  const arrowBtn: React.CSSProperties = {
+  const arrowStyle: React.CSSProperties = {
     width: 44, height: 44, borderRadius: '50%',
     border: '1px solid var(--border-hover)', background: 'transparent',
     color: 'var(--white-dim)', cursor: 'pointer',
@@ -111,40 +105,33 @@ export default function Projects() {
     >
       <div className="projects-inner">
 
-        {/* ── Header — Down #1 Fade Up ── */}
-        <motion.div
-          ref={headerRef}
-          className="projects-header"
-          initial={{ opacity: 0, y: 44 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
+        {/* #1 Fade up header */}
+        <div className="projects-header reveal">
           <div className="section-label">
             <span className="section-label-line" />
             <span className="section-label-text">My Work</span>
           </div>
-          <h2 className="section-heading">Real <em>Projects</em></h2>
+          <div className="clip-wrap">
+            <h2 className="section-heading reveal-clip">Real <em>Projects</em></h2>
+          </div>
           <p style={{ marginTop: '12px', fontSize: '0.95rem', color: 'var(--white-dim)', maxWidth: '500px', lineHeight: 1.7 }}>
             10+ academic and personal projects built at Rwanda Coding Academy — solving real problems with real code.
           </p>
-        </motion.div>
+        </div>
 
-        {/* ── Showcase — Down #1 scale + slide in on enter ── */}
-        <motion.div
-          ref={showcaseRef}
-          className="project-showcase"
-          initial={{ opacity: 0, y: 56, scale: 0.97 }}
-          animate={showcaseInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {/* Images — Down #5 slide left/right on project change */}
-          <motion.div
+        {/* #3 Scale + #5 slide on project change */}
+        <div className="project-showcase reveal-scale" style={{ transitionDelay: '150ms' }}>
+
+          {/* Images — slide transition */}
+          <div
             className="project-images"
-            key={`img-${p.id}`}
-            initial={{ opacity: 0, x: entX, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: exitX, scale: 0.95 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              opacity: sliding ? 0 : 1,
+              transform: sliding ? `translateX(${exitX}) scale(0.96)` : 'translateX(0) scale(1)',
+              transition: sliding
+                ? 'opacity 0.4s ease, transform 0.4s ease'
+                : `opacity 0.5s ease, transform 0.5s ease`,
+            }}
           >
             <div className="project-img-back">
               <Image src={p.bgImage} alt={p.title} fill className="object-cover" sizes="340px" />
@@ -159,20 +146,20 @@ export default function Projects() {
                 background: 'var(--gold)', color: '#080808', fontSize: '0.6rem',
                 fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase',
                 padding: '5px 14px', borderRadius: '50px',
-              }}>
-                Featured
-              </div>
+              }}>Featured</div>
             )}
-          </motion.div>
+          </div>
 
-          {/* Content — Down #8 blur reveal + slide */}
-          <motion.div
+          {/* Content — opposite slide */}
+          <div
             className="project-content"
-            key={`content-${p.id}`}
-            initial={{ opacity: 0, x: -entX, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, x: -exitX }}
-            transition={{ duration: 0.58, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              opacity: sliding ? 0 : 1,
+              transform: sliding ? `translateX(${entX})` : 'translateX(0)',
+              transition: sliding
+                ? 'opacity 0.4s ease, transform 0.4s ease'
+                : 'opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s',
+            }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span className="project-number">Project {p.number}</span>
@@ -184,35 +171,19 @@ export default function Projects() {
             <h3 className="project-title">{p.title}</h3>
             <p className="project-desc">{p.description}</p>
 
-            {/* Highlights — Down #1 stagger */}
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {p.highlights.map((h, i) => (
-                <motion.li
-                  key={h}
-                  style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: 'var(--white-dim)' }}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.12 + i * 0.08 }}
-                >
+              {p.highlights.map((h) => (
+                <li key={h} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: 'var(--white-dim)' }}>
                   <span style={{ color: 'var(--gold)', fontSize: '0.5rem' }}>◆</span>
                   {h}
-                </motion.li>
+                </li>
               ))}
             </ul>
 
             <div>
               <p className="tech-label">Technologies</p>
               <div className="tech-tags">
-                {p.techs.map((t, i) => (
-                  <motion.span
-                    key={t}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, delay: 0.18 + i * 0.055 }}
-                  >
-                    {t}
-                  </motion.span>
-                ))}
+                {p.techs.map((t) => <span key={t}>{t}</span>)}
               </div>
             </div>
 
@@ -222,27 +193,24 @@ export default function Projects() {
                 <path d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        {/* ── Controls ── */}
+        {/* Controls */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '56px' }}>
-
-          {/* Arrows */}
           <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={prev} aria-label="Previous project" style={arrowBtn}
-              onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor='var(--gold)'; b.style.color='var(--gold)'; }}
-              onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor='var(--border-hover)'; b.style.color='var(--white-dim)'; }}>
+            <button onClick={prev} aria-label="Previous project" style={arrowStyle}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--gold)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--gold)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--white-dim)'; }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <button onClick={next} aria-label="Next project" style={arrowBtn}
-              onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor='var(--gold)'; b.style.color='var(--gold)'; }}
-              onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor='var(--border-hover)'; b.style.color='var(--white-dim)'; }}>
+            <button onClick={next} aria-label="Next project" style={arrowStyle}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--gold)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--gold)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-hover)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--white-dim)'; }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
 
-          {/* Dots */}
           <div className="projects-pagination">
             {projects.map((proj, i) => (
               <button key={i}
@@ -254,13 +222,12 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* Auto indicator */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--white-dim)', opacity: 0.5 }}>
-            <motion.span
-              animate={{ scale: paused ? 1 : [1, 1.4, 1], opacity: paused ? 0.4 : 0.9 }}
-              transition={{ repeat: Infinity, duration: 1.6 }}
-              style={{ width: 6, height: 6, borderRadius: '50%', background: paused ? 'var(--white-dim)' : 'var(--gold)', display: 'block', boxShadow: paused ? 'none' : '0 0 8px rgba(201,169,110,0.6)' }}
-            />
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%', display: 'block',
+              background: paused ? 'var(--white-dim)' : 'var(--gold)',
+              boxShadow: paused ? 'none' : '0 0 8px rgba(201,169,110,0.6)',
+            }} />
             {paused ? 'Paused' : 'Auto'}
           </div>
         </div>

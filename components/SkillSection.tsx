@@ -1,9 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { BlurReveal, StaggerContainer, StaggerItem } from './ScrollAnimations';
-import { useCountUp } from './useScrollReveal';
 
 const skillCategories = [
   {
@@ -57,8 +54,7 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
       <circle cx="34" cy="34" r={r} fill="none" stroke="url(#arcGrad)" strokeWidth="3"
         strokeLinecap="round" strokeDasharray={`${dash} ${circ - dash}`}
         strokeDashoffset={circ * 0.25}
-        style={{ transition: 'stroke-dasharray 1.3s cubic-bezier(0.16,1,0.3,1)' }}
-      />
+        style={{ transition: 'stroke-dasharray 1.3s cubic-bezier(0.16,1,0.3,1)' }} />
       <defs>
         <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#c9a96e" />
@@ -72,30 +68,10 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
   );
 }
 
-function StatCounter({ target, suffix = '+', label }: { target: number; suffix?: string; label: string }) {
-  const ref   = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const count  = useCountUp(target, inView);
-  return (
-    <motion.div
-      ref={ref}
-      className="sk-stat"
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <span className="sk-stat-num">{count}{suffix}</span>
-      <span className="sk-stat-label">{label}</span>
-    </motion.div>
-  );
-}
-
 export default function SkillsSection() {
   const [activeTab, setActiveTab] = useState('frontend');
   const [animate,   setAnimate]   = useState(false);
   const sectionRef  = useRef<HTMLElement>(null);
-  const headerRef   = useRef(null);
-  const headerInView = useInView(headerRef, { once: true, margin: '-60px' });
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -120,68 +96,65 @@ export default function SkillsSection() {
       <div className="sk-bg-grid" />
       <div className="sk-inner">
 
-        {/* Header — blur reveal */}
-        <BlurReveal>
-          <div ref={headerRef} className="sk-header">
-            <div className="sk-eyebrow">
-              <span className="sk-eyebrow-line" />
-              <span className="sk-eyebrow-text">Technical Skills</span>
-              <span className="sk-eyebrow-line" />
-            </div>
-            <h2 className="sk-title">Skills &amp; <em>Proficiency</em></h2>
-            <p className="sk-subtitle">Built across web, backend, and embedded systems — from React to Arduino.</p>
+        {/* #8 Blur reveal for header */}
+        <div className="sk-header reveal-blur">
+          <div className="sk-eyebrow">
+            <span className="sk-eyebrow-line" />
+            <span className="sk-eyebrow-text">Technical Skills</span>
+            <span className="sk-eyebrow-line" />
           </div>
-        </BlurReveal>
+          <div className="clip-wrap">
+            <h2 className="sk-title reveal-clip">Skills &amp; <em>Proficiency</em></h2>
+          </div>
+          <p className="sk-subtitle">Built across web, backend, and embedded systems — from React to Arduino.</p>
+        </div>
 
-        {/* Tabs — scale in */}
-        <motion.div
-          className="sk-tabs" role="tablist"
-          initial={{ opacity: 0, scale: 0.93 }}
-          animate={headerInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
+        {/* #3 Scale up for tabs */}
+        <div className="sk-tabs reveal-scale" role="tablist" style={{ transitionDelay: '100ms' }}>
           {skillCategories.map(cat => (
             <button key={cat.id} role="tab"
               aria-selected={activeTab === cat.id}
               className={`sk-tab${activeTab === cat.id ? ' sk-tab--active' : ''}`}
-              onClick={() => setActiveTab(cat.id)}
-            >
+              onClick={() => setActiveTab(cat.id)}>
               <span className="sk-tab-icon">{cat.icon}</span>{cat.label}
             </button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Grid — stagger + scale up each card */}
-        <StaggerContainer className="sk-grid" stagger={0.08}>
+        {/* #1 Staggered fade-up for skill cards */}
+        <div className="sk-grid stagger" role="tabpanel">
           {activeCategory.skills.map(skill => (
-            <StaggerItem key={skill.name}>
-              <motion.div
-                className="sk-card"
-                whileHover={{ y: -8, boxShadow: '0 20px 48px rgba(0,0,0,0.5), 0 0 28px rgba(201,169,110,0.1)' }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              >
-                <div className="sk-arc-wrap">
-                  <SkillArc percent={skill.percent} animate={animate} />
+            <div key={skill.name} className="sk-card reveal-scale">
+              <div className="sk-arc-wrap">
+                <SkillArc percent={skill.percent} animate={animate} />
+              </div>
+              <div className="sk-card-info">
+                <span className="sk-card-name">{skill.name}</span>
+                <div className="sk-bar-track">
+                  <div className="sk-bar-fill" style={{ width: animate ? `${skill.percent}%` : '0%' }} />
                 </div>
-                <div className="sk-card-info">
-                  <span className="sk-card-name">{skill.name}</span>
-                  <div className="sk-bar-track">
-                    <div className="sk-bar-fill" style={{ width: animate ? `${skill.percent}%` : '0%' }} />
-                  </div>
-                </div>
-                <div className="sk-card-glow" />
-              </motion.div>
-            </StaggerItem>
+              </div>
+              <div className="sk-card-glow" />
+            </div>
           ))}
-        </StaggerContainer>
+        </div>
 
-        {/* Stats — stagger count up */}
-        <div className="sk-stats">
-          <StatCounter target={10} label="Projects built" />
+        {/* #1 Staggered stats */}
+        <div className="sk-stats stagger">
+          <div className="sk-stat reveal">
+            <span className="sk-stat-num">10+</span>
+            <span className="sk-stat-label">Projects built</span>
+          </div>
           <div className="sk-stat-divider" />
-          <StatCounter target={6}  label="Languages used" />
+          <div className="sk-stat reveal">
+            <span className="sk-stat-num">6+</span>
+            <span className="sk-stat-label">Languages used</span>
+          </div>
           <div className="sk-stat-divider" />
-          <StatCounter target={20} label="Technologies" />
+          <div className="sk-stat reveal">
+            <span className="sk-stat-num">20+</span>
+            <span className="sk-stat-label">Technologies</span>
+          </div>
         </div>
 
       </div>
