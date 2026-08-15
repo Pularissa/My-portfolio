@@ -1,26 +1,28 @@
 /* =====================================================
    DESIGN SYSTEM — Prisca Larissa Portfolio
-   Palette: Deep black + warm ivory + soft gold accent
+   Palette: Black + White + Orange
+   Fonts:   Space Grotesk · Manrope · IBM Plex Mono
 ===================================================== */
 
 :root {
-  --black: #080808;
-  --surface: #111111;
-  --surface-2: #181818;
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.18);
-  --white: #f5f0eb;
-  --white-dim: rgba(245,240,235,0.55);
-  --white-faint: rgba(245,240,235,0.12);
-  --gold: #c9a96e;
-  --gold-dim: rgba(201,169,110,0.35);
-  --gold-faint: rgba(201,169,110,0.08);
-  --font-serif: var(--font-serif), 'Georgia', serif;
-  --font-sans: var(--font-sans), system-ui, sans-serif;
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 32px;
-  --transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --black:        #0D0D0D;
+  --surface:      #141414;
+  --surface-2:    #1C1C1C;
+  --border:       rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.22);
+  --white:        #F5F5F5;
+  --white-dim:    rgba(245,245,245,0.55);
+  --white-faint:  rgba(245,245,245,0.10);
+  --gold:         #F97316;
+  --gold-dim:     rgba(249,115,22,0.35);
+  --gold-faint:   rgba(249,115,22,0.09);
+  --font-serif:   var(--font-serif), 'Space Grotesk', system-ui, sans-serif;
+  --font-sans:    var(--font-sans),  'Manrope', system-ui, sans-serif;
+  --font-mono:    var(--font-mono),  'IBM Plex Mono', monospace;
+  --radius-sm:    10px;
+  --radius-md:    18px;
+  --radius-lg:    26px;
+  --transition:   0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1925,4 +1927,469 @@ main { padding-top: 0; }
     transform: none !important;
     filter: none !important;
   }
+}
+
+/* ============================================================
+   FONT SYSTEM — Space Grotesk + Manrope + IBM Plex Mono
+   Orange (#F97316) accent throughout
+============================================================ */
+
+/* ── Space Grotesk on all headings ── */
+h1, h2, h3, h4, h5, h6,
+.hero-name, .hero-badge-name,
+.section-heading, .sk-title,
+.project-title, .project-number,
+.timeline-company, .testimonial-name,
+.sticky-slide-title, .contact-form-heading,
+.footer-logo, .intro-name-word,
+.sk-stat-num, .hero-stat-number,
+.hscroll-card-title, .testimonial-avatar {
+  font-family: var(--font-serif) !important; /* Space Grotesk */
+  font-style: normal !important;
+  letter-spacing: -0.01em;
+}
+
+/* Hero name — big, tight */
+.hero-name {
+  font-size: clamp(3.2rem, 6.5vw, 5.8rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  text-transform: none !important;
+  line-height: 1.05 !important;
+}
+.hero-name em { font-style: normal !important; color: var(--gold); }
+
+/* Section headings */
+.section-heading {
+  font-size: clamp(2rem, 4vw, 3.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+.section-heading em { font-style: normal !important; color: var(--gold); }
+
+/* Skill title */
+.sk-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+.sk-title em { font-style: normal !important; color: var(--gold); }
+
+/* Project title */
+.project-title {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+
+/* Timeline company */
+.timeline-company {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+}
+
+/* Testimonial name */
+.testimonial-name {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+/* Stats */
+.sk-stat-num, .hero-stat-number {
+  font-weight: 700 !important;
+}
+
+/* Sticky title */
+.sticky-slide-title {
+  font-size: clamp(1.8rem, 3.5vw, 3rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+.sticky-slide-title em { font-style: normal !important; color: var(--gold); }
+
+/* Intro name */
+.intro-name-word {
+  font-size: 1.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+}
+.intro-name-italic { color: var(--gold) !important; }
+
+/* Footer logo text */
+.footer-logo-text {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+}
+
+/* ── IBM Plex Mono for technical labels ── */
+.section-label-text,
+.sk-eyebrow-text,
+.project-number,
+.timeline-period,
+.testimonial-role,
+.tech-label,
+.hero-eyebrow-text,
+.hero-scroll-text,
+.hero-stat-label,
+.hero-badge-role,
+.hero-float-label,
+.hscroll-card-tag,
+.sticky-slide-label,
+.contact-info-label,
+.footer-nav-title,
+.footer-copy,
+.intro-role,
+.marquee-item {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.04em;
+}
+
+/* ── Manrope for everything else ── */
+body, p, span, a, li, label,
+input, textarea, button,
+.hero-tagline, .hero-available,
+.nav-links a, .nav-cta,
+.hero-btn-primary, .hero-btn-secondary,
+.sk-subtitle, .sk-tab, .sk-card-name,
+.sk-stat-label, .project-desc,
+.tech-tags span, .btn-demo,
+.timeline-role, .timeline-desc,
+.testimonial-text, .contact-headline,
+.form-field label, .form-field input,
+.form-field textarea, .contact-submit,
+.contact-info-value, .footer-tagline,
+.footer-nav-links a, .social-pill,
+.sticky-slide-body {
+  font-family: var(--font-sans) !important; /* Manrope */
+}
+
+/* Body weight tuning */
+.hero-tagline, .project-desc,
+.timeline-desc, .testimonial-text,
+.sticky-slide-body { font-weight: 300; }
+
+.hero-btn-primary, .contact-submit,
+.nav-links a, .nav-cta { font-weight: 600; }
+
+/* Orange glows on hover */
+.hero-btn-primary:hover {
+  background: var(--gold) !important;
+  box-shadow: 0 0 32px rgba(249,115,22,0.35) !important;
+}
+.nav-cta:hover {
+  background: var(--gold) !important;
+  color: #fff !important;
+  border-color: var(--gold) !important;
+}
+.btn-demo:hover {
+  background: var(--gold) !important;
+  box-shadow: 0 12px 28px rgba(249,115,22,0.3) !important;
+}
+.contact-submit:hover {
+  background: var(--gold) !important;
+  box-shadow: 0 12px 32px rgba(249,115,22,0.25) !important;
+}
+
+/* Orange scroll progress bar */
+.scroll-progress-fill {
+  background: linear-gradient(90deg, var(--gold), #fb923c, var(--gold)) !important;
+}
+
+/* Orange available dot */
+.hero-available-dot {
+  background: var(--gold) !important;
+  box-shadow: 0 0 10px rgba(249,115,22,0.7) !important;
+}
+
+/* ============================================================
+   SCROLL ANIMATIONS — FINAL SMOOTH PASS
+   Tuned cubic-bezier curves for natural feel
+   Both DOWN (in-view) and UP (out-view) directions
+============================================================ */
+
+/* ── Shared easing ── */
+:root {
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo:   cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-smooth:    cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── 1. Fade up ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity   0.85s var(--ease-out-expo),
+    transform 0.85s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+.reveal.in-view  { opacity: 1; transform: translateY(0); }
+.reveal.out-view { opacity: 0; transform: translateY(48px); }
+
+/* ── Slide from left ── */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-56px);
+  transition:
+    opacity   0.85s var(--ease-out-expo),
+    transform 0.85s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+.reveal-left.in-view  { opacity: 1; transform: translateX(0); }
+.reveal-left.out-view { opacity: 0; transform: translateX(-56px); }
+
+/* ── Slide from right ── */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(56px);
+  transition:
+    opacity   0.85s var(--ease-out-expo),
+    transform 0.85s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+.reveal-right.in-view  { opacity: 1; transform: translateX(0); }
+.reveal-right.out-view { opacity: 0; transform: translateX(56px); }
+
+/* ── 3. Scale up ── */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88) translateY(24px);
+  transition:
+    opacity   0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+.reveal-scale.in-view  { opacity: 1; transform: scale(1) translateY(0); }
+.reveal-scale.out-view { opacity: 0; transform: scale(0.88) translateY(24px); }
+
+/* ── 8. Blur to sharp ── */
+.reveal-blur {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(24px);
+  transition:
+    opacity   0.9s var(--ease-out-expo),
+    filter    0.9s var(--ease-smooth),
+    transform 0.9s var(--ease-out-expo);
+  will-change: transform, opacity, filter;
+}
+.reveal-blur.in-view  { opacity: 1; filter: blur(0px); transform: translateY(0); }
+.reveal-blur.out-view { opacity: 0; filter: blur(14px); transform: translateY(24px); }
+
+/* ── 9. Rotation reveal ── */
+.reveal-rotate {
+  opacity: 0;
+  transform: rotate(-10deg) scale(0.88);
+  transition:
+    opacity   0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+  will-change: transform, opacity;
+}
+.reveal-rotate.in-view  { opacity: 1; transform: rotate(0deg) scale(1); }
+.reveal-rotate.out-view { opacity: 0; transform: rotate(-10deg) scale(0.88); }
+
+/* ── 10. Line draw ── */
+.reveal-line {
+  width: 0 !important;
+  transition: width 1.4s var(--ease-out-expo) 0.25s;
+  will-change: width;
+}
+.reveal-line.in-view  { width: 100% !important; }
+.reveal-line.out-view { width: 0 !important; }
+
+/* ── 4. Clip reveal (text exits upward) ── */
+.clip-wrap { overflow: hidden; display: block; }
+.reveal-clip {
+  transform: translateY(110%);
+  transition: transform 0.9s var(--ease-out-expo);
+  will-change: transform;
+}
+.reveal-clip.in-view  { transform: translateY(0); }
+.reveal-clip.out-view { transform: translateY(110%); }
+
+/* ── Stagger delays ── */
+.stagger > *:nth-child(1) { transition-delay: 0ms;   }
+.stagger > *:nth-child(2) { transition-delay: 110ms; }
+.stagger > *:nth-child(3) { transition-delay: 220ms; }
+.stagger > *:nth-child(4) { transition-delay: 330ms; }
+.stagger > *:nth-child(5) { transition-delay: 440ms; }
+.stagger > *:nth-child(6) { transition-delay: 550ms; }
+.stagger > *:nth-child(7) { transition-delay: 660ms; }
+
+/* ── 4. Word-split text stagger ── */
+.word-inner {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 0.7s var(--ease-out-expo),
+    opacity   0.7s ease;
+}
+
+/* ── Sticky section — framer-motion driven ── */
+.sticky-section { position: relative; background: var(--surface); }
+.sticky-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: center;
+  overflow: hidden;
+  padding: 0 72px;
+  gap: 60px;
+}
+.sticky-left {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.sticky-left-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sticky-right {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.sticky-slide-fm {
+  position: absolute;
+  max-width: 580px;
+}
+.sticky-slide-icon {
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.sticky-slide-number {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+}
+.sticky-slide-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+}
+.sticky-slide-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.sticky-slide-body {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--white-dim);
+  font-weight: 300;
+}
+.sticky-dots {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sticky-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--gold);
+}
+@media (max-width: 768px) {
+  .sticky-pin { grid-template-columns: 1fr; padding: 0 24px; }
+  .sticky-left { display: none; }
+  .sticky-dots { right: 20px; }
+}
+
+/* ── HScrollStrip extras ── */
+.hscroll-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 72px;
+  margin-bottom: 32px;
+}
+.hscroll-label-line { flex: 0 0 36px; height: 1px; background: var(--gold); opacity: 0.5; }
+.hscroll-label-text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+}
+.hscroll-label-hint {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--white-dim);
+  opacity: 0.45;
+}
+.hscroll-card-icon {
+  font-size: 1.6rem;
+  color: var(--gold);
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+.hscroll-card-num {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--gold);
+  opacity: 0.3;
+  letter-spacing: 0.1em;
+}
+
+/* ── Navbar smooth transitions ── */
+.navbar {
+  transition:
+    transform     0.45s var(--ease-out-expo),
+    background    0.45s ease,
+    padding-top   0.45s ease,
+    padding-bottom 0.45s ease,
+    box-shadow    0.45s ease;
+}
+.navbar.scrolled {
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(13,13,13,0.92) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+.navbar.nav-hidden { transform: translateY(-110%); }
+
+/* Smooth orange scroll-progress bar */
+.scroll-progress-fill {
+  background: linear-gradient(90deg, var(--gold) 0%, #fb923c 50%, var(--gold) 100%) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer-bar 2.5s linear infinite !important;
+  transition: width 0.06s linear !important;
 }
