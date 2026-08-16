@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 
 const words = ['Developer', 'Builder', 'Problem Solver', 'Student'];
 
@@ -91,7 +92,7 @@ export default function Hero() {
                 <div className="hero-badge-name">Prisca Larissa</div>
                 <div className="hero-badge-role">RCA · Software &amp; Embedded Systems</div>
               </div>
-              <div className="hero-badge-icon">✦</div>
+              <div className="hero-badge-icon"><Sparkles size={16} strokeWidth={1.5} /></div>
             </div>
           </div>
           <div className="hero-float-card reveal-rotate" style={{ transitionDelay: '300ms' }}>

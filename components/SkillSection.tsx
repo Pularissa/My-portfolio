@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Monitor, Server, Cpu, Wrench } from 'lucide-react';
 
 const skillCategories = [
   {
-    id: 'frontend', label: 'Frontend', icon: '◈',
+    id: 'frontend', label: 'Frontend', Icon: Monitor,
     skills: [
       { name: 'React.js',     percent: 88 },
       { name: 'Next.js',      percent: 84 },
@@ -14,7 +15,7 @@ const skillCategories = [
     ],
   },
   {
-    id: 'backend', label: 'Backend', icon: '◎',
+    id: 'backend', label: 'Backend', Icon: Server,
     skills: [
       { name: 'Java / Spring Boot', percent: 80 },
       { name: 'Node.js',            percent: 78 },
@@ -24,7 +25,7 @@ const skillCategories = [
     ],
   },
   {
-    id: 'embedded', label: 'Embedded & IoT', icon: '◆',
+    id: 'embedded', label: 'Embedded & IoT', Icon: Cpu,
     skills: [
       { name: 'Arduino / C++', percent: 80 },
       { name: 'ESP8266',       percent: 74 },
@@ -34,7 +35,7 @@ const skillCategories = [
     ],
   },
   {
-    id: 'tools', label: 'Tools & Design', icon: '◇',
+    id: 'tools', label: 'Tools & Design', Icon: Wrench,
     skills: [
       { name: 'Git & GitHub', percent: 88 },
       { name: 'Figma',        percent: 76 },
@@ -57,11 +58,11 @@ function SkillArc({ percent, animate }: { percent: number; animate: boolean }) {
         style={{ transition: 'stroke-dasharray 1.3s cubic-bezier(0.16,1,0.3,1)' }} />
       <defs>
         <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#c9a96e" />
-          <stop offset="100%" stopColor="#f0d89c" />
+          <stop offset="0%" stopColor="#F97316" />
+          <stop offset="100%" stopColor="#fb923c" />
         </linearGradient>
       </defs>
-      <text x="34" y="38" textAnchor="middle" fill="#c9a96e" fontSize="11" fontWeight="500" fontFamily="system-ui">
+      <text x="34" y="38" textAnchor="middle" fill="#F97316" fontSize="11" fontWeight="500" fontFamily="system-ui">
         {animate ? `${percent}%` : '0%'}
       </text>
     </svg>
@@ -116,7 +117,7 @@ export default function SkillsSection() {
               aria-selected={activeTab === cat.id}
               className={`sk-tab${activeTab === cat.id ? ' sk-tab--active' : ''}`}
               onClick={() => setActiveTab(cat.id)}>
-              <span className="sk-tab-icon">{cat.icon}</span>{cat.label}
+              <span className="sk-tab-icon"><cat.Icon size={14} strokeWidth={1.5} /></span>{cat.label}
             </button>
           ))}
         </div>

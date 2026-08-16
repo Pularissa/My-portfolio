@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { Star } from 'lucide-react';
 
 const recommendations = [
   {
@@ -117,7 +118,7 @@ export default function Testimonials() {
             </p>
 
             <div className="testimonial-stars" style={{ marginTop: '28px' }}>
-              {[1,2,3,4,5].map(s => <span key={s}>★</span>)}
+              {[1,2,3,4,5].map(s => <Star key={s} size={14} fill="var(--gold)" color="var(--gold)" strokeWidth={1} />)}
             </div>
           </div>
 

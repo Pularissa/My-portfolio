@@ -548,8 +548,8 @@ html, body {
 .testimonial-role { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 24px; }
 .testimonial-divider { width: 32px; height: 1px; background: var(--gold-dim); margin-bottom: 20px; }
 .testimonial-text { font-size: 0.9rem; line-height: 1.75; color: var(--white-dim); font-style: italic; }
-.testimonial-stars { display: flex; gap: 4px; margin-top: 24px; }
-.testimonial-stars span { color: var(--gold); font-size: 0.75rem; opacity: 0.85; }
+.testimonial-stars { display: flex; gap: 4px; margin-top: 24px; align-items: center; }
+.testimonial-stars svg { opacity: 0.9; }
 @media (max-width: 900px) { .testimonials-inner { padding: 0 28px; } .testimonials-grid { grid-template-columns: 1fr; } }
 @media (min-width: 601px) and (max-width: 900px) { .testimonials-grid { grid-template-columns: 1fr 1fr; } }
 
@@ -957,7 +957,8 @@ html, body {
 }
 
 .marquee-dot {
-  font-size: 0.55rem;
+  display: flex;
+  align-items: center;
   color: var(--gold);
   opacity: 0.6;
 }
@@ -2121,98 +2122,105 @@ input, textarea, button,
   --ease-smooth:    cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* ── 1. Fade up ── */
-.reveal {
+/* ── Reveal classes only hide when JS is loaded ── */
+/* Without .js-ready on body, everything stays visible */
+body:not(.js-ready) .reveal,
+body:not(.js-ready) .reveal-left,
+body:not(.js-ready) .reveal-right,
+body:not(.js-ready) .reveal-scale,
+body:not(.js-ready) .reveal-blur,
+body:not(.js-ready) .reveal-rotate,
+body:not(.js-ready) .reveal-clip,
+body:not(.js-ready) .reveal-line {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  width: 100% !important;
+}
+
+/* ── Scroll reveal: ONLY hide elements after JS is ready ──
+   This prevents blank pages when JS hasn't run yet.
+   The body gets .js-ready added by ScrollObserver on mount. */
+
+/* Without JS ready — everything visible */
+.reveal, .reveal-left, .reveal-right,
+.reveal-scale, .reveal-blur, .reveal-rotate,
+.reveal-line, .reveal-clip {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* With JS ready — apply hidden states */
+body.js-ready .reveal {
   opacity: 0;
   transform: translateY(48px);
-  transition:
-    opacity   0.85s var(--ease-out-expo),
-    transform 0.85s var(--ease-out-expo);
+  transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+              transform 0.85s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal.in-view  { opacity: 1; transform: translateY(0); }
-.reveal.out-view { opacity: 0; transform: translateY(48px); }
-
-/* ── Slide from left ── */
-.reveal-left {
+body.js-ready .reveal-left {
   opacity: 0;
-  transform: translateX(-56px);
-  transition:
-    opacity   0.85s var(--ease-out-expo),
-    transform 0.85s var(--ease-out-expo);
+  transform: translateX(-52px);
+  transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+              transform 0.85s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal-left.in-view  { opacity: 1; transform: translateX(0); }
-.reveal-left.out-view { opacity: 0; transform: translateX(-56px); }
-
-/* ── Slide from right ── */
-.reveal-right {
+body.js-ready .reveal-right {
   opacity: 0;
-  transform: translateX(56px);
-  transition:
-    opacity   0.85s var(--ease-out-expo),
-    transform 0.85s var(--ease-out-expo);
+  transform: translateX(52px);
+  transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+              transform 0.85s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal-right.in-view  { opacity: 1; transform: translateX(0); }
-.reveal-right.out-view { opacity: 0; transform: translateX(56px); }
-
-/* ── 3. Scale up ── */
-.reveal-scale {
+body.js-ready .reveal-scale {
   opacity: 0;
-  transform: scale(0.88) translateY(24px);
-  transition:
-    opacity   0.8s var(--ease-out-expo),
-    transform 0.8s var(--ease-out-expo);
+  transform: scale(0.9) translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+              transform 0.8s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal-scale.in-view  { opacity: 1; transform: scale(1) translateY(0); }
-.reveal-scale.out-view { opacity: 0; transform: scale(0.88) translateY(24px); }
-
-/* ── 8. Blur to sharp ── */
-.reveal-blur {
+body.js-ready .reveal-blur {
   opacity: 0;
-  filter: blur(14px);
-  transform: translateY(24px);
-  transition:
-    opacity   0.9s var(--ease-out-expo),
-    filter    0.9s var(--ease-smooth),
-    transform 0.9s var(--ease-out-expo);
+  filter: blur(12px);
+  transform: translateY(20px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              filter 0.9s ease,
+              transform 0.9s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity, filter;
 }
-.reveal-blur.in-view  { opacity: 1; filter: blur(0px); transform: translateY(0); }
-.reveal-blur.out-view { opacity: 0; filter: blur(14px); transform: translateY(24px); }
-
-/* ── 9. Rotation reveal ── */
-.reveal-rotate {
+body.js-ready .reveal-rotate {
   opacity: 0;
-  transform: rotate(-10deg) scale(0.88);
-  transition:
-    opacity   0.8s var(--ease-out-expo),
-    transform 0.8s var(--ease-out-expo);
+  transform: rotate(-10deg) scale(0.9);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+              transform 0.8s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal-rotate.in-view  { opacity: 1; transform: rotate(0deg) scale(1); }
-.reveal-rotate.out-view { opacity: 0; transform: rotate(-10deg) scale(0.88); }
-
-/* ── 10. Line draw ── */
-.reveal-line {
+body.js-ready .reveal-line {
   width: 0 !important;
-  transition: width 1.4s var(--ease-out-expo) 0.25s;
+  transition: width 1.4s cubic-bezier(0.16,1,0.3,1) 0.2s;
   will-change: width;
 }
-.reveal-line.in-view  { width: 100% !important; }
-.reveal-line.out-view { width: 0 !important; }
-
-/* ── 4. Clip reveal (text exits upward) ── */
-.clip-wrap { overflow: hidden; display: block; }
-.reveal-clip {
+body.js-ready .clip-wrap { overflow: hidden; display: block; }
+body.js-ready .reveal-clip {
   transform: translateY(110%);
-  transition: transform 0.9s var(--ease-out-expo);
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
   will-change: transform;
 }
-.reveal-clip.in-view  { transform: translateY(0); }
-.reveal-clip.out-view { transform: translateY(110%); }
+
+/* ── In-view: all reveal classes become visible ── */
+body.js-ready .reveal.in-view,
+body.js-ready .reveal-left.in-view,
+body.js-ready .reveal-right.in-view,
+body.js-ready .reveal-scale.in-view,
+body.js-ready .reveal-blur.in-view,
+body.js-ready .reveal-rotate.in-view {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+body.js-ready .reveal-line.in-view  { width: 100% !important; }
+body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
 
 /* ── Stagger delays ── */
 .stagger > *:nth-child(1) { transition-delay: 0ms;   }
@@ -2223,17 +2231,8 @@ input, textarea, button,
 .stagger > *:nth-child(6) { transition-delay: 550ms; }
 .stagger > *:nth-child(7) { transition-delay: 660ms; }
 
-/* ── 4. Word-split text stagger ── */
-.word-inner {
-  display: inline-block;
-  transform: translateY(100%);
-  opacity: 0;
-  transition:
-    transform 0.7s var(--ease-out-expo),
-    opacity   0.7s ease;
-}
 
-/* ── Sticky section — framer-motion driven ── */
+/* ── Sticky About — Full redesign with visible content ── */
 .sticky-section { position: relative; background: var(--surface); }
 .sticky-pin {
   position: sticky;
@@ -2246,40 +2245,97 @@ input, textarea, button,
   padding: 0 72px;
   gap: 60px;
 }
+
+/* Ambient background glow */
+.sticky-bg-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 20% 50%, rgba(249,115,22,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(255,255,255,0.02) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Top-left eyebrow label */
+.sticky-eyebrow {
+  position: absolute;
+  top: 48px;
+  left: 72px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 10;
+}
+.sticky-eyebrow-line {
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+  display: block;
+}
+.sticky-eyebrow-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.75;
+}
+
 .sticky-left {
   position: relative;
   height: 100%;
   display: flex;
   align-items: center;
+  z-index: 2;
 }
 .sticky-left-item {
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
+
+/* Icon ring container */
+.sticky-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .sticky-right {
   position: relative;
   height: 100%;
   display: flex;
   align-items: center;
+  z-index: 2;
 }
 .sticky-slide-fm {
   position: absolute;
   max-width: 580px;
 }
-.sticky-slide-icon {
-  font-size: 2rem;
-  color: var(--gold);
-  margin-bottom: 8px;
+
+/* Ghost number behind title */
+.sticky-ghost-num {
+  font-family: var(--font-serif);
+  font-size: clamp(5rem, 10vw, 9rem);
+  font-weight: 900;
+  color: var(--white);
+  opacity: 0.04;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: -2rem;
+  user-select: none;
+  pointer-events: none;
 }
-.sticky-slide-number {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--gold);
-  letter-spacing: 0.2em;
-  opacity: 0.7;
-}
+
 .sticky-slide-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -2302,6 +2358,34 @@ input, textarea, button,
   color: var(--white-dim);
   font-weight: 300;
 }
+
+/* Scroll hint */
+.sticky-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.sticky-hint-line {
+  width: 40px;
+  height: 1px;
+  background: var(--white-dim);
+  display: block;
+}
+.sticky-hint-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white-dim);
+}
+
+/* Dots */
 .sticky-dots {
   position: absolute;
   right: 48px;
@@ -2310,6 +2394,7 @@ input, textarea, button,
   display: flex;
   flex-direction: column;
   gap: 10px;
+  z-index: 10;
 }
 .sticky-dot {
   width: 6px;
@@ -2317,10 +2402,13 @@ input, textarea, button,
   border-radius: 3px;
   background: var(--gold);
 }
+
 @media (max-width: 768px) {
-  .sticky-pin { grid-template-columns: 1fr; padding: 0 24px; }
+  .sticky-pin { grid-template-columns: 1fr; padding: 60px 24px 0; align-content: center; }
   .sticky-left { display: none; }
   .sticky-dots { right: 20px; }
+  .sticky-eyebrow { left: 24px; }
+  .sticky-scroll-hint { left: 24px; }
 }
 
 /* ── HScrollStrip extras ── */
@@ -2393,3 +2481,110 @@ input, textarea, button,
   animation: shimmer-bar 2.5s linear infinite !important;
   transition: width 0.06s linear !important;
 }
+
+/* ============================================================
+   STICKY ABOUT — CANONICAL (overrides all previous blocks)
+============================================================ */
+.sticky-section {
+  position: relative;
+  background: var(--surface) !important;
+}
+.sticky-pin {
+  position: sticky !important;
+  top: 0 !important;
+  height: 100vh !important;
+  display: grid !important;
+  grid-template-columns: 200px 1fr !important;
+  align-items: center !important;
+  padding: 0 72px !important;
+  gap: 64px !important;
+  overflow: hidden !important;
+}
+.sticky-left {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 28px !important;
+  position: relative !important;
+  height: auto !important;
+}
+.sticky-left-item {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.sticky-slide-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+.sticky-slide-label {
+  font-family: var(--font-mono) !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--gold) !important;
+  opacity: 0.8 !important;
+  margin-bottom: 0 !important;
+}
+.sticky-right {
+  position: relative !important;
+  height: 320px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.sticky-slide-fm {
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  height: 100% !important;
+}
+.sticky-slide-title {
+  font-family: var(--font-serif) !important;
+  font-size: clamp(1.9rem, 3.5vw, 3rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: none !important;
+  line-height: 1.18 !important;
+  color: var(--white) !important;
+  margin-bottom: 20px !important;
+}
+.sticky-slide-body {
+  font-size: 1rem !important;
+  line-height: 1.78 !important;
+  color: var(--white-dim) !important;
+  font-weight: 300 !important;
+  max-width: 540px !important;
+}
+.sticky-dots {
+  position: absolute !important;
+  right: 28px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  z-index: 10 !important;
+}
+.sticky-dot {
+  width: 6px !important;
+  border-radius: 3px !important;
+  background: var(--gold) !important;
+  transition: height 0.4s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.4s ease !important;
+}
+@media (max-width: 768px) {
+  .sticky-pin {
+    grid-template-columns: 1fr !important;
+    padding: 0 24px !important;
+    gap: 32px !important;
+  }
+  .sticky-left  { display: none !important; }
+  .sticky-right { height: 260px !important; }
+  .sticky-dots  { right: 16px !important; }
+}
+
+/* Social pill icon alignment */
+.social-pill svg { flex-shrink: 0; }

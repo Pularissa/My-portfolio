@@ -1,3 +1,5 @@
+import { Sparkles } from 'lucide-react';
+
 export default function Marquee() {
   const items = [
     "React", "Next.js", "Java", "Spring Boot", "PostgreSQL",
@@ -14,7 +16,7 @@ export default function Marquee() {
       <div className="marquee-track">
         {doubled.map((item, i) => (
           <span key={i} className="marquee-item">
-            <span className="marquee-dot">✦</span>
+            <span className="marquee-dot"><Sparkles size={9} strokeWidth={1.5} /></span>
             {item}
           </span>
         ))}

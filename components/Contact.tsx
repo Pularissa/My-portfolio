@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
+import { Mail, Link2, GitBranch, GraduationCap } from 'lucide-react';
 
 const formFields = [
   { id: 'cf-name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                           required: true  },
@@ -70,8 +71,8 @@ export default function ContactFooterPage() {
                 background: 'var(--gold-faint)', border: '1px solid var(--gold-dim)',
                 borderRadius: 'var(--radius-md)',
               }}>
-                <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '8px' }}>
-                  🎓 Currently
+                <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <GraduationCap size={13} strokeWidth={1.5} /> Currently
                 </div>
                 <p style={{ fontSize: '0.88rem', color: 'var(--white-dim)', lineHeight: 1.65 }}>
                   Student at <strong style={{ color: 'var(--white)' }}>Rwanda Coding Academy</strong> —
@@ -114,9 +115,15 @@ export default function ContactFooterPage() {
           <div>
             <p className="footer-nav-title">Find me on</p>
             <div className="footer-socials">
-              <a href="mailto:iyonezalarissaprisca@gmail.com" className="social-pill">✉ Email</a>
-              <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill">in LinkedIn</a>
-              <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill">⌥ GitHub</a>
+              <a href="mailto:iyonezalarissaprisca@gmail.com" className="social-pill">
+                <Mail size={14} strokeWidth={1.5} /> Email
+              </a>
+              <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill">
+                <Link2 size={14} strokeWidth={1.5} /> LinkedIn
+              </a>
+              <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill">
+                <GitBranch size={14} strokeWidth={1.5} /> GitHub
+              </a>
             </div>
           </div>
         </div>
@@ -125,7 +132,7 @@ export default function ContactFooterPage() {
 
         <div className="footer-bottom">
           <p className="footer-copy">© 2026 <span>Prisca Larissa</span>. All rights reserved.</p>
-          <p className="footer-copy">🎓 Rwanda Coding Academy · Built with <span>Next.js</span></p>
+          <p className="footer-copy" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><GraduationCap size={12} strokeWidth={1.5} color="var(--gold)" /> Rwanda Coding Academy · Built with <span>Next.js</span></p>
         </div>
       </footer>
     </>

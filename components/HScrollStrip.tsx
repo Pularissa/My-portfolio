@@ -1,101 +1,56 @@
 'use client';
-
 import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { Monitor, Palette, Code, Server, Database, Cpu, Wifi, Wrench, Terminal, CheckSquare } from 'lucide-react';
 
 const cards = [
-  { tag: 'Frontend',    title: 'React & Next.js',        icon: '⬡' },
-  { tag: 'Styling',     title: 'Tailwind & CSS3',         icon: '◈' },
-  { tag: 'Language',    title: 'Java & JavaScript',       icon: '◎' },
-  { tag: 'Backend',     title: 'Spring Boot & Node.js',   icon: '◆' },
-  { tag: 'Database',    title: 'PostgreSQL & MySQL',      icon: '◇' },
-  { tag: 'Embedded',    title: 'Arduino & ESP8266',       icon: '⬟' },
-  { tag: 'IoT Sensors', title: 'DHT11, LM35, I2C',       icon: '◉' },
-  { tag: 'Tooling',     title: 'Git, Postman, Figma',    icon: '⬢' },
-  { tag: 'Other',       title: 'Python & C++',            icon: '◫' },
-  { tag: 'Practice',    title: 'Agile & Clean Code',      icon: '◭' },
+  { tag: 'Frontend',    title: 'React & Next.js',      Icon: Monitor },
+  { tag: 'Styling',     title: 'Tailwind & CSS3',       Icon: Palette },
+  { tag: 'Language',    title: 'Java & JavaScript',     Icon: Code },
+  { tag: 'Backend',     title: 'Spring Boot & Node.js', Icon: Server },
+  { tag: 'Database',    title: 'PostgreSQL & MySQL',    Icon: Database },
+  { tag: 'Embedded',    title: 'Arduino & ESP8266',     Icon: Cpu },
+  { tag: 'IoT Sensors', title: 'DHT11, LM35, I2C',     Icon: Wifi },
+  { tag: 'Tooling',     title: 'Git, Postman, Figma',  Icon: Wrench },
+  { tag: 'Other',       title: 'Python & C++',          Icon: Terminal },
+  { tag: 'Practice',    title: 'Agile & Clean Code',    Icon: CheckSquare },
 ];
 
 export default function HScrollStrip() {
-  const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef   = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const track   = trackRef.current;
-    if (!section || !track) return;
-
-    /* ↓5 / ↑5 — Horizontal scroll driven by vertical scroll via GSAP ScrollTrigger */
-    const totalShift = track.scrollWidth - section.clientWidth;
-
-    const tween = gsap.to(track, {
-      x: -totalShift,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${totalShift * 1.2}`,
-        pin: true,
-        scrub: 1.2,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    /* ↓5 — Staggered card reveal as they enter horizontal view */
-    const cardEls = track.querySelectorAll<HTMLElement>('.hscroll-card');
-    const cardTweens: gsap.core.Tween[] = [];
-    cardEls.forEach((card, i) => {
-      const t = gsap.fromTo(
-        card,
-        { opacity: 0, y: 32, scale: 0.88 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: `top+=${i * 60} top`,
-            end:   `top+=${i * 60 + 200} top`,
-            scrub: 0.8,
-          },
-        }
-      );
-      cardTweens.push(t);
-    });
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-      cardTweens.forEach((t) => {
-        t.scrollTrigger?.kill();
-        t.kill();
-      });
-      ScrollTrigger.refresh();
+    const onScroll = () => {
+      const sec   = sectionRef.current;
+      const track = trackRef.current;
+      if (!sec || !track) return;
+      const rect     = sec.getBoundingClientRect();
+      const vh       = window.innerHeight;
+      const progress = 1 - (rect.top + rect.height) / (vh + rect.height);
+      const clamped  = Math.min(Math.max(progress, 0), 1);
+      const maxShift = track.scrollWidth - sec.offsetWidth;
+      track.style.transform = `translateX(-${clamped * maxShift * 0.65}px)`;
     };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    /* ↓5 — Horizontal scroll section */
-    <div ref={sectionRef} className="hscroll-section" aria-label="Technology strip">
-      {/* Section label */}
+    <div ref={sectionRef} className="hscroll-section">
       <div className="hscroll-label">
         <span className="hscroll-label-line" />
         <span className="hscroll-label-text">Tech Stack</span>
-        <span className="hscroll-label-hint">→ scroll to explore</span>
+        <span className="hscroll-label-hint">— scroll to explore</span>
       </div>
-
-      <div ref={trackRef} className="hscroll-track">
-        {cards.map((c, i) => (
-          <div key={i} className="hscroll-card" style={{ opacity: 0 }}>
+      <div ref={trackRef} className="hscroll-track" style={{ transition: 'transform 0.12s linear' }}>
+        {cards.map(({ tag, title, Icon }, i) => (
+          <div key={i} className="hscroll-card">
             <div className="hscroll-card-glow" />
-            <div className="hscroll-card-icon">{c.icon}</div>
-            <p className="hscroll-card-tag">{c.tag}</p>
-            <p className="hscroll-card-title">{c.title}</p>
+            <div className="hscroll-card-icon">
+              <Icon size={24} strokeWidth={1.5} color="var(--gold)" />
+            </div>
+            <p className="hscroll-card-tag">{tag}</p>
+            <p className="hscroll-card-title">{title}</p>
             <div className="hscroll-card-num">{String(i + 1).padStart(2, '0')}</div>
           </div>
         ))}
