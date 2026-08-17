@@ -44,8 +44,7 @@ export default function ScrollObserver() {
     const navbar   = () => document.querySelector('.navbar')    as HTMLElement | null;
     let lastY = window.scrollY;
 
-    const onScroll = () => {
-      const y = window.scrollY;
+    const onScroll = ({ scroll: y }: { scroll: number }) => {
       const g = heroGlow();
       const r = heroRing();
       const n = navbar();
@@ -62,14 +61,19 @@ export default function ScrollObserver() {
       lastY = y;
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const onLenisScroll = (e: Event) => onScroll({ scroll: (e as CustomEvent<{ scroll: number }>).detail.scroll });
+    window.addEventListener('lenis:scroll', onLenisScroll);
+
+    const nativeScroll = () => onScroll({ scroll: window.scrollY });
+    window.addEventListener('scroll', nativeScroll, { passive: true });
 
     return () => {
       clearTimeout(timer);
       document.body.classList.remove('js-ready');
       enterObs?.disconnect();
       mutObs?.disconnect();
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('lenis:scroll', onLenisScroll);
+      window.removeEventListener('scroll', nativeScroll);
     };
   }, []);
 

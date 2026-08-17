@@ -20,19 +20,29 @@ export default function HScrollStrip() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => {
+    const compute = (scroll: number) => {
       const sec   = sectionRef.current;
       const track = trackRef.current;
       if (!sec || !track) return;
-      const rect     = sec.getBoundingClientRect();
+      const top      = sec.offsetTop;
+      const secH     = sec.offsetHeight;
       const vh       = window.innerHeight;
-      const progress = 1 - (rect.top + rect.height) / (vh + rect.height);
+      const progress = (scroll - top + vh) / (secH + vh);
       const clamped  = Math.min(Math.max(progress, 0), 1);
       const maxShift = track.scrollWidth - sec.offsetWidth;
       track.style.transform = `translateX(-${clamped * maxShift * 0.65}px)`;
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+
+    const onLenisScroll = (e: Event) => compute((e as CustomEvent<{ scroll: number }>).detail.scroll);
+    window.addEventListener('lenis:scroll', onLenisScroll);
+
+    const onNativeScroll = () => compute(window.scrollY);
+    window.addEventListener('scroll', onNativeScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('lenis:scroll', onLenisScroll);
+      window.removeEventListener('scroll', onNativeScroll);
+    };
   }, []);
 
   return (

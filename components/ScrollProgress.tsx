@@ -9,11 +9,10 @@ export default function ScrollProgress() {
   const currentRef = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    const onScroll = ({ scroll }: { scroll: number }) => {
       const el = document.documentElement;
-      const scrolled = el.scrollTop || document.body.scrollTop;
       const total = el.scrollHeight - el.clientHeight;
-      targetRef.current = total > 0 ? (scrolled / total) * 100 : 0;
+      targetRef.current = total > 0 ? (scroll / total) * 100 : 0;
     };
 
     /* Smooth lerp animation for progress bar — buttery independent of Lenis */
@@ -26,11 +25,17 @@ export default function ScrollProgress() {
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
     rafRef.current = requestAnimationFrame(animate);
 
+    const onLenisScroll = (e: Event) => onScroll((e as CustomEvent<{ scroll: number }>).detail.scroll);
+    window.addEventListener('lenis:scroll', onLenisScroll);
+
+    const nativeScroll = () => onScroll(window.scrollY);
+    window.addEventListener('scroll', nativeScroll, { passive: true });
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('lenis:scroll', onLenisScroll);
+      window.removeEventListener('scroll', nativeScroll);
       cancelAnimationFrame(rafRef.current);
     };
   }, []);

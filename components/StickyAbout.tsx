@@ -29,101 +29,118 @@ const slides = [
 export default function StickyAbout() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      const el = sectionRef.current;
-      if (!el) return;
-      const rect     = el.getBoundingClientRect();
-      const total    = el.offsetHeight - window.innerHeight;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const compute = (scroll: number) => {
+      const top    = el.offsetTop;
+      const total  = el.offsetHeight - window.innerHeight;
       if (total <= 0) return;
-      const scrolled = Math.max(0, -rect.top);
-
-      // Mark as entered when section is in view
-      if (scrolled > 0) setEntered(true);
-
-      const p = Math.min(scrolled / total, 0.999);
-      setActive(Math.min(Math.floor(p * slides.length), slides.length - 1));
+      const scrolled = Math.max(0, scroll - top);
+      const p   = Math.min(scrolled / total, 0.999);
+      const idx = Math.min(Math.floor(p * slides.length), slides.length - 1);
+      setActive(idx);
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+
+    /* Listen to lenis:scroll — dispatched by LenisProvider on every Lenis tick.
+       This works regardless of React effect execution order (child before parent). */
+    const onLenisScroll = (e: Event) => compute((e as CustomEvent<{ scroll: number }>).detail.scroll);
+    window.addEventListener('lenis:scroll', onLenisScroll);
+
+    /* Native scroll fallback (also fires initial call for current position) */
+    const onNativeScroll = () => compute(window.scrollY);
+    window.addEventListener('scroll', onNativeScroll, { passive: true });
+    onNativeScroll();
+
+    return () => {
+      window.removeEventListener('lenis:scroll', onLenisScroll);
+      window.removeEventListener('scroll', onNativeScroll);
+    };
   }, []);
 
   return (
-    <div ref={sectionRef} className="sticky-section" style={{ height: `${slides.length * 100}vh` }}>
-      <div className="sticky-pin">
+    <div ref={sectionRef} className="sa-section" style={{ height: `${slides.length * 100}vh` }}>
+      <div className="sa-pin">
 
-        {/* Ambient background glow */}
-        <div className="sticky-bg-glow" />
+        {/* Background glow */}
+        <div className="sa-bg-glow" />
 
-        {/* Section label — top left */}
-        <div className="sticky-eyebrow">
-          <span className="sticky-eyebrow-line" />
-          <span className="sticky-eyebrow-text">About Me</span>
+        {/* Eyebrow */}
+        <div className="sa-eyebrow">
+          <span className="sa-eyebrow-line" />
+          <span className="sa-eyebrow-text">About Me</span>
         </div>
 
-        {/* Left panel — step indicators */}
-        <div className="sticky-left">
-          {slides.map(({ Icon, label }, i) => (
-            <div key={i} className="sticky-left-item" style={{
-              opacity:   active === i ? 1 : 0.15,
-              transform: active === i ? 'translateX(0)' : 'translateX(-12px)',
-              transition: 'opacity 0.55s ease, transform 0.55s ease',
-            }}>
-              <div className="sticky-icon-ring" style={{
-                background: active === i ? 'var(--gold-faint)' : 'transparent',
-                borderColor: active === i ? 'var(--gold-dim)' : 'rgba(255,255,255,0.08)',
-                transition: 'background 0.4s ease, border-color 0.4s ease',
-              }}>
-                <Icon size={22} color="var(--gold)" strokeWidth={1.5} />
+        {/* Main grid */}
+        <div className="sa-grid">
+
+          {/* LEFT — nav steps */}
+          <div className="sa-left">
+            {slides.map(({ Icon, label }, i) => (
+              <button
+                key={i}
+                className={`sa-step${active === i ? ' sa-step--active' : ''}`}
+                onClick={() => {
+                  const el = sectionRef.current;
+                  if (!el) return;
+                  const total = el.offsetHeight - window.innerHeight;
+                  const targetScroll = el.offsetTop + (i / slides.length) * total;
+                  /* Use Lenis scroll if available, otherwise native */
+                  const lenis = getLenis();
+                  if (lenis) lenis.scrollTo(targetScroll, { duration: 1.2 });
+                  else window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                }}
+              >
+                <span className="sa-step-ring">
+                  <Icon size={18} strokeWidth={1.5} />
+                </span>
+                <span className="sa-step-label">{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* RIGHT — all slides stacked, active one visible */}
+          <div className="sa-right">
+            {slides.map(({ Icon, label, title, titleAccent, body }, i) => (
+              <div
+                key={i}
+                className={`sa-slide${active === i ? ' sa-slide--active' : ''}`}
+                aria-hidden={active !== i}
+              >
+                <div className="sa-ghost-num">0{i + 1}</div>
+                <div className="sa-icon-wrap">
+                  <Icon size={28} strokeWidth={1.5} color="var(--gold)" />
+                </div>
+                <div className="sa-step-tag">{label}</div>
+                <h2 className="sa-title">
+                  {title}{' '}
+                  <span className="sa-title-accent">{titleAccent}</span>
+                </h2>
+                <p className="sa-body">{body}</p>
+
+                {/* Progress bar */}
+                <div className="sa-progress">
+                  {slides.map((_, j) => (
+                    <div
+                      key={j}
+                      className={`sa-prog-dot${active === j ? ' sa-prog-dot--active' : ''}`}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="sticky-slide-label">{label}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Right panel — content */}
-        <div className="sticky-right">
-          {slides.map(({ title, titleAccent, body }, i) => (
-            <div key={i} className="sticky-slide-fm" style={{
-              opacity:       active === i ? 1 : 0,
-              transform:     active === i ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)',
-              filter:        active === i ? 'blur(0px)' : 'blur(8px)',
-              transition:    'opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease',
-              pointerEvents: active === i ? 'auto' : 'none',
-            }}>
-              {/* Large ghost number */}
-              <div className="sticky-ghost-num">0{i + 1}</div>
-              <h2 className="sticky-slide-title">
-                {title} <span style={{ color: 'var(--gold)' }}>{titleAccent}</span>
-              </h2>
-              <p className="sticky-slide-body">{body}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Progress dots */}
-        <div className="sticky-dots">
-          {slides.map((_, i) => (
-            <div key={i} className="sticky-dot" style={{
-              height:     active === i ? '22px' : '6px',
-              opacity:    active === i ? 1 : 0.28,
-              background: 'var(--gold)',
-              transition: 'height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease',
-            }} />
-          ))}
-        </div>
-
-        {/* Scroll hint — fade out after entering */}
-        <div className="sticky-scroll-hint" style={{
-          opacity: active === 0 && !entered ? 0.5 : active === 0 ? 0.35 : 0,
-          transition: 'opacity 0.5s ease',
-        }}>
-          <span className="sticky-hint-line" />
-          <span className="sticky-hint-text">Scroll to explore</span>
-        </div>
+        {/* Scroll hint */}
+        {active < slides.length - 1 && (
+          <div className="sa-hint">
+            <span className="sa-hint-line" />
+            <span className="sa-hint-text">Scroll to continue</span>
+          </div>
+        )}
 
       </div>
     </div>
