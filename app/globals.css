@@ -2483,18 +2483,19 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
 }
 
 /* ============================================================
-   STICKY ABOUT — NEW sa-* component styles
+   STICKY ABOUT — scroll-driven slides
 ============================================================ */
 .sa-section { position: relative; background: var(--surface); }
 
 .sa-pin {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
-  padding: 0 72px;
+  padding: 100px 72px 80px;
 }
 
 .sa-bg-glow {
@@ -2532,17 +2533,17 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   z-index: 2;
   display: grid;
   grid-template-columns: 220px 1fr;
-  gap: 72px;
-  align-items: center;
+  gap: 48px;
+  align-items: start;
   width: 100%;
 }
 
-/* LEFT — step navigation */
 .sa-left {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
+
 .sa-step {
   display: flex;
   align-items: center;
@@ -2552,7 +2553,6 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   cursor: pointer;
   padding: 10px 14px;
   border-radius: 12px;
-  transition: background 0.25s ease;
   text-align: left;
   opacity: 0.25;
   transform: translateX(-10px);
@@ -2563,8 +2563,9 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   transform: translateX(0);
   background: rgba(249,115,22,0.06);
 }
-.sa-step:hover { opacity: 0.6; }
+.sa-step:hover { opacity: 0.65; }
 .sa-step--active:hover { opacity: 1; }
+
 .sa-step-ring {
   width: 44px;
   height: 44px;
@@ -2575,12 +2576,14 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   justify-content: center;
   color: var(--gold);
   flex-shrink: 0;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.25s ease;
 }
+.sa-step:hover .sa-step-ring { transform: scale(1.06); }
 .sa-step--active .sa-step-ring {
   border-color: rgba(249,115,22,0.35);
   background: rgba(249,115,22,0.08);
 }
+
 .sa-step-label {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -2590,49 +2593,62 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   line-height: 1.4;
 }
 
-/* RIGHT — active content */
 .sa-right {
   position: relative;
-  padding-top: 20px;
-  min-height: 420px;
+  min-height: 380px;
 }
 
-/* Slide stack — all slides absolutely positioned in fixed-height container */
 .sa-slide {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   opacity: 0;
+  visibility: hidden;
   z-index: 1;
-  transform: translateY(20px);
+  transform: translateY(16px);
   transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
-              transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+              transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+              visibility 0.45s;
   pointer-events: none;
-  user-select: none;
 }
 .sa-slide--active {
   opacity: 1;
+  visibility: visible;
   z-index: 2;
   transform: translateY(0);
   pointer-events: auto;
-  user-select: auto;
 }
 
+.sa-ghost-wrap {
+  position: absolute;
+  top: -28px;
+  left: -20px;
+  width: 120px;
+  height: 120px;
+}
+.sa-progress-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 .sa-ghost-num {
   position: absolute;
-  top: -20px;
-  left: -10px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-serif);
-  font-size: clamp(6rem, 12vw, 11rem);
+  font-size: clamp(4rem, 8vw, 6rem);
   font-weight: 900;
   color: var(--white);
-  opacity: 0.03;
+  opacity: 0.04;
   line-height: 1;
   letter-spacing: -0.04em;
   user-select: none;
-  pointer-events: none;
+  will-change: transform;
 }
+
 .sa-icon-wrap {
   display: inline-flex;
   align-items: center;
@@ -2643,7 +2659,9 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   border: 1px solid rgba(249,115,22,0.3);
   background: rgba(249,115,22,0.07);
   margin-bottom: 18px;
+  will-change: transform;
 }
+
 .sa-step-tag {
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -2653,6 +2671,7 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   opacity: 0.75;
   margin-bottom: 14px;
 }
+
 .sa-title {
   font-family: var(--font-serif);
   font-size: clamp(2rem, 4vw, 3.2rem);
@@ -2663,16 +2682,16 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   margin-bottom: 22px;
 }
 .sa-title-accent { color: var(--gold); }
+
 .sa-body {
   font-size: 1rem;
   line-height: 1.78;
   color: var(--white-dim);
   font-weight: 300;
   max-width: 540px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
-/* Progress dots */
 .sa-progress {
   display: flex;
   align-items: center;
@@ -2683,14 +2702,23 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   height: 6px;
   border-radius: 3px;
   background: rgba(249,115,22,0.3);
-  transition: width 0.4s cubic-bezier(0.16,1,0.3,1), background 0.3s ease;
+  transition: background 0.3s ease;
 }
 .sa-prog-dot--active {
-  width: 28px;
   background: var(--gold);
 }
 
-/* Scroll hint */
+.sa-slide-bar {
+  height: 2px;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, var(--gold), #fb923c);
+  transform-origin: left center;
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
 .sa-hint {
   position: absolute;
   bottom: 36px;
@@ -2700,10 +2728,8 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   gap: 12px;
   z-index: 10;
   pointer-events: none;
-  animation: sa-hint-fade 1.5s ease-in-out infinite alternate;
 }
-@keyframes sa-hint-fade { from { opacity: 0.3; } to { opacity: 0.7; } }
-.sa-hint-line { width: 40px; height: 1px; background: var(--white-dim); display: block; opacity: 0.4; }
+.sa-hint-line { width: 40px; height: 1px; background: var(--white-dim); opacity: 0.4; }
 .sa-hint-text {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -2712,19 +2738,27 @@ body.js-ready .reveal-clip.in-view  { transform: translateY(0); }
   color: var(--white-dim);
   opacity: 0.6;
 }
+.sa-hint-keys {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  opacity: 0.45;
+}
 
 @media (max-width: 900px) {
-  .sa-pin { padding: 0 40px; }
-  .sa-grid { grid-template-columns: 160px 1fr; gap: 40px; }
+  .sa-pin { padding: 88px 40px 72px; }
+  .sa-grid { grid-template-columns: 160px 1fr; gap: 32px; }
   .sa-eyebrow { left: 40px; }
   .sa-hint { left: 40px; }
 }
 @media (max-width: 680px) {
-  .sa-pin { padding: 80px 24px 0; align-items: flex-start; }
-  .sa-grid { grid-template-columns: 1fr; gap: 32px; }
+  .sa-pin { padding: 88px 24px 72px; }
+  .sa-grid { grid-template-columns: 1fr; gap: 24px; }
   .sa-left { display: none; }
   .sa-eyebrow { left: 24px; top: 28px; }
   .sa-hint { left: 24px; bottom: 24px; }
+  .sa-hint-keys { display: none; }
 }
 
 /* Social pill icon alignment */

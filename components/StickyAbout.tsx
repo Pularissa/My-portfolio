@@ -1,6 +1,8 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { User, Code2, Rocket } from 'lucide-react';
+import { getLenis } from '../lib/lenisInstance';
 
 const slides = [
   {
@@ -26,72 +28,208 @@ const slides = [
   },
 ];
 
+function viewportHeight() {
+  return window.visualViewport?.height ?? window.innerHeight;
+}
+
+function WordStagger({
+  text,
+  active,
+  slideIndex,
+  className,
+}: {
+  text: string;
+  active: number;
+  slideIndex: number;
+  className?: string;
+}) {
+  const [inView, setInView] = useState(active === slideIndex);
+
+  useEffect(() => {
+    if (active !== slideIndex) {
+      setInView(false);
+      return;
+    }
+    setInView(false);
+    const id = requestAnimationFrame(() => setInView(true));
+    return () => cancelAnimationFrame(id);
+  }, [active, slideIndex, text]);
+
+  return (
+    <span className={`word-stagger${inView ? ' in' : ''}${className ? ` ${className}` : ''}`}>
+      {text.split(' ').map((word, i) => (
+        <span key={`${word}-${i}`} style={{ transitionDelay: `${i * 45}ms` }}>
+          {word}{'\u00a0'}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function ProgressRing({ progress }: { progress: number }) {
+  const r = 52;
+  const size = 120;
+  const circ = 2 * Math.PI * r;
+  const dash = Math.min(Math.max(progress, 0), 1) * circ;
+
+  return (
+    <svg
+      className="sa-progress-ring"
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      aria-hidden
+    >
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={r}
+        fill="none"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="1.5"
+      />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={r}
+        fill="none"
+        stroke="var(--gold)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeDasharray={`${dash} ${circ - dash}`}
+        transform={`rotate(-90 ${size / 2} ${size / 2})`}
+      />
+    </svg>
+  );
+}
+
 export default function StickyAbout() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [slideProgress, setSlideProgress] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  const activeRef = useRef(0);
+
+  const scrollToSlide = useCallback((i: number) => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const total = el.offsetHeight - viewportHeight();
+    const targetScroll = el.offsetTop + (i / slides.length) * total;
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(targetScroll, { duration: 1.1 });
+    else window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
 
-    const compute = (scroll: number) => {
-      const top    = el.offsetTop;
-      const total  = el.offsetHeight - window.innerHeight;
+    const compute = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = viewportHeight();
+      const total = el.offsetHeight - vh;
       if (total <= 0) return;
-      const scrolled = Math.max(0, scroll - top);
-      const p   = Math.min(scrolled / total, 0.999);
-      const idx = Math.min(Math.floor(p * slides.length), slides.length - 1);
+
+      const scrolled = Math.max(0, -rect.top);
+      const p = Math.min(scrolled / total, 0.999);
+      const raw = p * slides.length;
+      const idx = Math.min(Math.floor(raw), slides.length - 1);
+      const frac = raw - idx;
+
       setActive(idx);
+      setSlideProgress(frac);
+      setPinned(rect.top <= 0 && rect.bottom >= vh);
     };
 
-    /* Listen to lenis:scroll — dispatched by LenisProvider on every Lenis tick.
-       This works regardless of React effect execution order (child before parent). */
-    const onLenisScroll = (e: Event) => compute((e as CustomEvent<{ scroll: number }>).detail.scroll);
-    window.addEventListener('lenis:scroll', onLenisScroll);
+    const onScroll = () => compute();
 
-    /* Native scroll fallback (also fires initial call for current position) */
-    const onNativeScroll = () => compute(window.scrollY);
-    window.addEventListener('scroll', onNativeScroll, { passive: true });
-    onNativeScroll();
+    window.addEventListener('lenis:scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    window.visualViewport?.addEventListener('resize', onScroll);
+
+    let lenisCleanup: (() => void) | undefined;
+    const attachLenis = () => {
+      const lenis = getLenis();
+      if (!lenis) return false;
+      lenis.on('scroll', onScroll);
+      lenisCleanup = () => lenis.off('scroll', onScroll);
+      return true;
+    };
+
+    let pollId: ReturnType<typeof setInterval> | undefined;
+    if (!attachLenis()) {
+      pollId = setInterval(() => {
+        if (attachLenis()) clearInterval(pollId);
+      }, 50);
+      setTimeout(() => clearInterval(pollId), 3000);
+    }
+
+    compute();
 
     return () => {
-      window.removeEventListener('lenis:scroll', onLenisScroll);
-      window.removeEventListener('scroll', onNativeScroll);
+      clearInterval(pollId);
+      window.removeEventListener('lenis:scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      window.visualViewport?.removeEventListener('resize', onScroll);
+      lenisCleanup?.();
     };
   }, []);
 
-  return (
-    <div ref={sectionRef} className="sa-section" style={{ height: `${slides.length * 100}vh` }}>
-      <div className="sa-pin">
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!pinned) return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-        {/* Background glow */}
+      let next: number | null = null;
+      if (e.key === 'ArrowDown' || e.key === 'j' || e.key === 'J') next = activeRef.current + 1;
+      if (e.key === 'ArrowUp' || e.key === 'k' || e.key === 'K') next = activeRef.current - 1;
+
+      if (next === null) return;
+      next = Math.max(0, Math.min(slides.length - 1, next));
+      if (next === activeRef.current) return;
+
+      e.preventDefault();
+      scrollToSlide(next);
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [pinned, scrollToSlide]);
+
+  const iconY = (1 - slideProgress) * -20;
+  const ghostY = slideProgress * 28;
+
+  return (
+    <div
+      ref={sectionRef}
+      id="about"
+      className="sa-section"
+      style={{ height: `${slides.length * 100}vh` }}
+    >
+      <div className="sa-pin">
         <div className="sa-bg-glow" />
 
-        {/* Eyebrow */}
         <div className="sa-eyebrow">
           <span className="sa-eyebrow-line" />
           <span className="sa-eyebrow-text">About Me</span>
         </div>
 
-        {/* Main grid */}
         <div className="sa-grid">
-
-          {/* LEFT — nav steps */}
           <div className="sa-left">
             {slides.map(({ Icon, label }, i) => (
               <button
-                key={i}
+                key={label}
+                type="button"
                 className={`sa-step${active === i ? ' sa-step--active' : ''}`}
-                onClick={() => {
-                  const el = sectionRef.current;
-                  if (!el) return;
-                  const total = el.offsetHeight - window.innerHeight;
-                  const targetScroll = el.offsetTop + (i / slides.length) * total;
-                  /* Use Lenis scroll if available, otherwise native */
-                  const lenis = getLenis();
-                  if (lenis) lenis.scrollTo(targetScroll, { duration: 1.2 });
-                  else window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-                }}
+                onClick={() => scrollToSlide(i)}
+                aria-current={active === i ? 'step' : undefined}
               >
                 <span className="sa-step-ring">
                   <Icon size={18} strokeWidth={1.5} />
@@ -101,47 +239,77 @@ export default function StickyAbout() {
             ))}
           </div>
 
-          {/* RIGHT — all slides stacked, active one visible */}
           <div className="sa-right">
-            {slides.map(({ Icon, label, title, titleAccent, body }, i) => (
-              <div
-                key={i}
-                className={`sa-slide${active === i ? ' sa-slide--active' : ''}`}
-                aria-hidden={active !== i}
-              >
-                <div className="sa-ghost-num">0{i + 1}</div>
-                <div className="sa-icon-wrap">
-                  <Icon size={28} strokeWidth={1.5} color="var(--gold)" />
-                </div>
-                <div className="sa-step-tag">{label}</div>
-                <h2 className="sa-title">
-                  {title}{' '}
-                  <span className="sa-title-accent">{titleAccent}</span>
-                </h2>
-                <p className="sa-body">{body}</p>
-
-                {/* Progress bar */}
-                <div className="sa-progress">
-                  {slides.map((_, j) => (
+            {slides.map(({ Icon, label, title, titleAccent, body }, i) => {
+              const isActive = active === i;
+              return (
+                <div
+                  key={label}
+                  className={`sa-slide${isActive ? ' sa-slide--active' : ''}`}
+                  aria-hidden={!isActive}
+                >
+                  <div className="sa-ghost-wrap">
+                    {isActive && <ProgressRing progress={slideProgress} />}
                     <div
-                      key={j}
-                      className={`sa-prog-dot${active === j ? ' sa-prog-dot--active' : ''}`}
-                    />
-                  ))}
+                      className="sa-ghost-num"
+                      style={{ transform: isActive ? `translateY(${ghostY}px)` : undefined }}
+                    >
+                      0{i + 1}
+                    </div>
+                  </div>
+
+                  <div
+                    className="sa-icon-wrap"
+                    style={{ transform: isActive ? `translateY(${iconY}px)` : undefined }}
+                  >
+                    <Icon size={28} strokeWidth={1.5} color="var(--gold)" />
+                  </div>
+
+                  <div className="sa-step-tag">{label}</div>
+
+                  <h2 className="sa-title">
+                    <WordStagger text={title} active={active} slideIndex={i} />
+                    {' '}
+                    <span className="sa-title-accent">
+                      <WordStagger text={titleAccent} active={active} slideIndex={i} />
+                    </span>
+                  </h2>
+
+                  <p className="sa-body">
+                    <WordStagger text={body} active={active} slideIndex={i} />
+                  </p>
+
+                  <div className="sa-progress">
+                    {slides.map((_, j) => (
+                      <div
+                        key={j}
+                        className={`sa-prog-dot${active === j ? ' sa-prog-dot--active' : ''}`}
+                        style={
+                          active === j
+                            ? { width: `${6 + slideProgress * 22}px` }
+                            : undefined
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  <div
+                    className="sa-slide-bar"
+                    style={{ transform: `scaleX(${isActive ? slideProgress : 0})` }}
+                  />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Scroll hint */}
         {active < slides.length - 1 && (
           <div className="sa-hint">
             <span className="sa-hint-line" />
             <span className="sa-hint-text">Scroll to continue</span>
+            <span className="sa-hint-keys">↑↓ or J K</span>
           </div>
         )}
-
       </div>
     </div>
   );
