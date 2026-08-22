@@ -41,11 +41,7 @@ export default function Intro() {
             width={100}
             height={100}
             priority
-            style={{
-              objectFit: 'contain',
-              borderRadius: '50%',
-              filter: 'drop-shadow(0 0 18px rgba(201,169,110,0.55))',
-            }}
+            className="intro-logo-img"
           />
         </div>
 

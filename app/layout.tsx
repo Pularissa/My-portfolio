@@ -29,12 +29,12 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" href="/images/logo.png" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable}`}>
+      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable}`} suppressHydrationWarning>
         <LenisProvider>
           <ScrollProgress />
           <ScrollObserver />
