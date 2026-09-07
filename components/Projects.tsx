@@ -5,86 +5,106 @@ import { useState, useEffect, useCallback } from 'react';
 
 const projects = [
   {
-    id: 1, number: "01", featured: true,
+    id: 1, number: "01", featured: true, category: "Main",
     title: "UmuhinziLink", subtitle: "AgriTech Platform",
     description: "A digital platform connecting Rwandan smallholder farmers directly with buyers — cutting out middlemen, improving market access, and delivering AI-powered farming advice, live market prices, and digital payment support.",
     techs: ["Next.js", "React", "Node.js", "PostgreSQL", "Tailwind CSS", "AI Integration"],
     highlights: ["Farmer & buyer marketplace", "AI farming assistant", "Secure auth & payments"],
-    bgImage: "/images/bus.png", fgImage: "/images/me.png", link: "#",
+    bgImage: "/images/umuhinzilink.png", fgImage: "/images/umuhinzilink.png", link: "#",
   },
   {
-    id: 2, number: "02", featured: false,
+    id: 2, number: "02", featured: false, category: "Main",
     title: "YNT Rwanda", subtitle: "NGO Website",
     description: "A modern website for Youth for National Transformation Rwanda — showcasing the organisation's mission, managing memberships, collecting donations, publishing events, and supporting multi-language audiences.",
     techs: ["React.js", "Tailwind CSS", "React Router", "i18next", "JavaScript"],
     highlights: ["Multi-language (i18next)", "Membership & donations", "Events management"],
-    bgImage: "/images/me.png", fgImage: "/images/bus.png", link: "#",
+    bgImage: "/images/ynt.png", fgImage: "/images/ynt.png", link: "#",
   },
   {
-    id: 3, number: "03", featured: false,
+    id: 3, number: "03", featured: false, category: "Main",
     title: "Hotel & Flight Booking", subtitle: "Full-Stack App",
     description: "A full-stack booking application letting users search, book, and manage hotel and flight reservations with secure authentication, booking history, and automated scheduler reports.",
     techs: ["Spring Boot", "Java", "PostgreSQL", "Hibernate", "REST API"],
     highlights: ["Hotel & flight search", "User auth & history", "Scheduler reports"],
-    bgImage: "/images/bus.png", fgImage: "/images/me.png", link: "#",
+    bgImage: "/images/hotelandflight.png", fgImage: "/images/hotelandflight.png", link: "#",
   },
   {
-    id: 4, number: "04", featured: false,
-    title: "Smart Garden Monitor", subtitle: "IoT / Embedded System",
+    id: 4, number: "04", featured: false, category: "School",
+    title: "Smart Garden Monitor", subtitle: "School Project",
     description: "An embedded IoT solution monitoring environmental conditions for smart farming — tracking temperature, humidity, and soil conditions with real-time LCD display and ESP8266 WiFi connectivity.",
     techs: ["Arduino", "C++", "DHT11", "LM35", "LCD I2C", "ESP8266"],
     highlights: ["Real-time sensor readings", "LCD display", "IoT connectivity"],
-    bgImage: "/images/me.png", fgImage: "/images/bus.png", link: "#",
+    bgImage: "/images/smartgarden.png", fgImage: "/images/smartgarden.png", link: "#",
   },
   {
-    id: 5, number: "05", featured: false,
-    title: "Rwanda Traffic Signs", subtitle: "Educational Platform",
+    id: 5, number: "05", featured: false, category: "School",
+    title: "Rwanda Traffic Signs", subtitle: "School Project",
     description: "An interactive learning platform helping learner drivers prepare for Rwanda driving theory exams — with hundreds of traffic sign questions, practice mode, quiz mode, score tracking, and instant feedback.",
     techs: ["React", "JavaScript", "CSS"],
     highlights: ["Hundreds of questions", "Practice & quiz modes", "Score tracking"],
-    bgImage: "/images/bus.png", fgImage: "/images/me.png", link: "#",
+    bgImage: "/images/traffic.png", fgImage: "/images/traffic.png", link: "#",
   },
   {
-    id: 6, number: "06", featured: false,
-    title: "Library Management System", subtitle: "Desktop Application",
+    id: 6, number: "06", featured: false, category: "School",
+    title: "Library Management System", subtitle: "School Project",
     description: "A desktop application for managing books, borrowing, returns, and student records — with full search functionality and report generation, built with Java Swing and PostgreSQL.",
     techs: ["Java", "Java Swing", "JDBC", "PostgreSQL"],
     highlights: ["Book & student management", "Borrow/return tracking", "Report generation"],
-    bgImage: "/images/me.png", fgImage: "/images/bus.png", link: "#",
+    bgImage: "/images/robot.png", fgImage: "/images/robot.png", link: "#",
   },
   {
-    id: 7, number: "07", featured: false,
+    id: 7, number: "07", featured: false, category: "Main",
     title: "pBeFree", subtitle: "Drug Prevention App",
-    description: "A youth-focused platform helping prevent drug abuse through education, peer support, AI-powered counseling, and access to healthy activities — empowering young people to build a drug-free future.",
+    description: "A youth-focused platform helping prevent drug abuse through education, peer support, AI-powered counseling, and access to healthy activities — empowering young processor to build a drug-free future.",
     techs: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "OpenAI API", "Firebase", "Google Maps API", "Tailwind CSS"],
     highlights: ["AI chatbot & personalized guidance", "Find nearby rehab centres (Maps)", "Push notifications & reminders"],
-    bgImage: "/images/bus.png", fgImage: "/images/me.png", link: "#",
+    bgImage: "/images/Befree.png", fgImage: "/images/Befree.png", link: "#",
+  },
+  {
+    id: 8, number: "08", featured: true, category: "Main",
+    title: "Rwanda E-Pharmacy", subtitle: "Healthcare Platform",
+    description: "A comprehensive digital pharmacy platform for Rwanda, enabling users to order medications online, consult with pharmacists, and manage prescriptions securely.",
+    techs: ["React", "Next.js", "Node.js", "Tailwind CSS"],
+    highlights: ["Online medication ordering", "Prescription management", "Secure checkout"],
+    bgImage: "/images/rwandaepharmacy.png", fgImage: "/images/rwandaepharmacy.png", link: "#",
   },
 ];
 
 export default function Projects() {
+  const [activeCategory, setActiveCategory] = useState<'All Projects' | 'Main Projects' | 'School Projects'>('Main Projects');
+  
+  const filteredProjects = projects.filter(p => 
+    activeCategory === 'All Projects' ? true : 
+    activeCategory === 'Main Projects' ? p.category === 'Main' : 
+    p.category === 'School'
+  );
+
   const [current, setCurrent] = useState(0);
   const [sliding, setSliding] = useState(false);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
   const [paused, setPaused] = useState(false);
 
+  useEffect(() => {
+    setCurrent(0);
+  }, [activeCategory]);
+
   const goTo = useCallback((idx: number, dir: 'next' | 'prev' = 'next') => {
-    if (sliding) return;
+    if (sliding || filteredProjects.length <= 1) return;
     setDirection(dir);
     setSliding(true);
     setTimeout(() => { setCurrent(idx); setSliding(false); }, 480);
-  }, [sliding]);
+  }, [sliding, filteredProjects.length]);
 
-  const next = useCallback(() => goTo((current + 1) % projects.length, 'next'), [current, goTo]);
-  const prev = useCallback(() => goTo((current - 1 + projects.length) % projects.length, 'prev'), [current, goTo]);
+  const next = useCallback(() => goTo((current + 1) % filteredProjects.length, 'next'), [current, goTo, filteredProjects.length]);
+  const prev = useCallback(() => goTo((current - 1 + filteredProjects.length) % filteredProjects.length, 'prev'), [current, goTo, filteredProjects.length]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || filteredProjects.length <= 1) return;
     const t = setInterval(next, 3000);
     return () => clearInterval(t);
-  }, [paused, next]);
+  }, [paused, next, filteredProjects.length]);
 
-  const p = projects[current];
+  const p = filteredProjects[current];
   const exitX = direction === 'next' ? '-60px' : '60px';
   const entX  = direction === 'next' ?  '60px' : '-60px';
 
@@ -95,6 +115,17 @@ export default function Projects() {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     transition: 'all 0.3s ease',
   };
+
+  const tabStyle = (isActive: boolean): React.CSSProperties => ({
+    padding: '8px 16px',
+    borderRadius: '20px',
+    border: `1px solid ${isActive ? 'var(--gold)' : 'var(--border)'}`,
+    background: isActive ? 'var(--gold-faint)' : 'transparent',
+    color: isActive ? 'var(--gold)' : 'var(--white-dim)',
+    fontSize: '0.8rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+  });
 
   return (
     <section
@@ -117,10 +148,17 @@ export default function Projects() {
           <p style={{ marginTop: '12px', fontSize: '0.95rem', color: 'var(--white-dim)', maxWidth: '500px', lineHeight: 1.7 }}>
             10+ academic and personal projects built at Rwanda Coding Academy — solving real problems with real code.
           </p>
+          
+          <div style={{ display: 'flex', gap: '12px', marginTop: '24px', flexWrap: 'wrap' }}>
+            <button type="button" style={tabStyle(activeCategory === 'All Projects')} onClick={() => setActiveCategory('All Projects')}>All Projects</button>
+            <button type="button" style={tabStyle(activeCategory === 'Main Projects')} onClick={() => setActiveCategory('Main Projects')}>Main Projects</button>
+            <button type="button" style={tabStyle(activeCategory === 'School Projects')} onClick={() => setActiveCategory('School Projects')}>School Projects</button>
+          </div>
         </div>
 
         {/* #3 Scale + #5 slide on project change */}
-        <div className="project-showcase reveal-scale" style={{ transitionDelay: '150ms' }}>
+        {p && (
+        <div className="project-showcase reveal-scale" style={{ transitionDelay: '150ms', marginTop: '40px' }}>
 
           {/* Images — slide transition */}
           <div
@@ -195,6 +233,7 @@ export default function Projects() {
             </a>
           </div>
         </div>
+        )}
 
         {/* Controls */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '56px' }}>
@@ -212,8 +251,8 @@ export default function Projects() {
           </div>
 
           <div className="projects-pagination">
-            {projects.map((proj, i) => (
-              <button key={i}
+            {filteredProjects.map((proj, i) => (
+              <button key={proj.id}
                 className={`proj-dot${i === current ? ' active' : ''}`}
                 onClick={() => goTo(i, i > current ? 'next' : 'prev')}
                 aria-label={`Go to project: ${proj.title}`}

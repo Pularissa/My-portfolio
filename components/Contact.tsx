@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { Mail, Link2, GitBranch, GraduationCap } from 'lucide-react';
 
 const formFields = [
-  { id: 'cf-name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                           required: true  },
-  { id: 'cf-email',   label: 'Email Address', type: 'email', ph: 'you@example.com',                     required: true  },
-  { id: 'cf-org',     label: 'Organisation',  type: 'text',  ph: 'Company, university, NGO…',           required: false },
-  { id: 'cf-subject', label: 'Subject',       type: 'text',  ph: 'Internship, collaboration, project…', required: true  },
+  { id: 'cf-name',    name: 'name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                           required: true  },
+  { id: 'cf-email',   name: 'email',   label: 'Email Address', type: 'email', ph: 'you@example.com',                     required: true  },
+  { id: 'cf-org',     name: 'org',     label: 'Organisation',  type: 'text',  ph: 'Company, university, NGO…',           required: false },
+  { id: 'cf-subject', name: 'subject', label: 'Subject',       type: 'text',  ph: 'Internship, collaboration, project…', required: true  },
 ];
 
 const infoItems = [
@@ -18,6 +18,20 @@ const infoItems = [
 ];
 
 export default function ContactFooterPage() {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const subject = formData.get('subject') as string;
+    const body = formData.get('message') as string;
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    
+    const mailtoLink = `mailto:iyonezalarissaprisca@gmail.com?subject=${encodeURIComponent(subject || 'New Contact Request')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${body}`)}`;
+    window.location.href = mailtoLink;
+    
+    (e.target as HTMLFormElement).reset();
+  };
+
   return (
     <>
       <section id="contact" className="contact-section">
@@ -38,17 +52,17 @@ export default function ContactFooterPage() {
           <div className="contact-grid">
 
             {/* #5 Slide from left */}
-            <form onSubmit={e => e.preventDefault()} className="reveal-left" style={{ transitionDelay: '100ms' }}>
+            <form onSubmit={handleSubmit} className="reveal-left" style={{ transitionDelay: '100ms' }}>
               <p className="contact-form-heading">Reach out — I&apos;d love to hear from you</p>
               {formFields.map(f => (
                 <div key={f.id} className="form-field">
                   <label htmlFor={f.id}>{f.label}</label>
-                  <input type={f.type} id={f.id} placeholder={f.ph} required={f.required} />
+                  <input type={f.type} id={f.id} name={f.name} placeholder={f.ph} required={f.required} />
                 </div>
               ))}
               <div className="form-field">
                 <label htmlFor="cf-message">Message</label>
-                <textarea id="cf-message" rows={5}
+                <textarea id="cf-message" name="message" rows={5}
                   placeholder="Tell me about an internship, collaboration, or project opportunity…"
                   required />
               </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Code2, Rocket } from 'lucide-react';
 
 const slides = [
@@ -29,6 +29,14 @@ const slides = [
 
 export default function StickyAbout() {
   const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % slides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   const slide = slides[active];
   const Icon = slide.Icon;
 

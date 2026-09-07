@@ -5,9 +5,9 @@
 ===================================================== */
 
 :root {
-  --black:        #0D0D0D;
-  --surface:      #141414;
-  --surface-2:    #1C1C1C;
+  --black:        #042f2e;
+  --surface:      #134e4a;
+  --surface-2:    #115e59;
   --border:       rgba(255,255,255,0.08);
   --border-hover: rgba(255,255,255,0.22);
   --white:        #F5F5F5;
@@ -492,6 +492,10 @@ html, body {
 .project-images { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1; }
 .project-img-back { position: absolute; left: 0; top: 24px; width: 68%; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); transform: rotate(-7deg); z-index: 1; transition: transform var(--transition); }
 .project-img-front { position: absolute; right: 0; bottom: 0; width: 65%; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); transform: rotate(5deg); z-index: 2; transition: transform var(--transition); }
+
+.project-img-back img, .project-img-front img { filter: grayscale(100%); transition: filter var(--transition); }
+.project-images:hover .project-img-back img, .project-images:hover .project-img-front img { filter: grayscale(0%); }
+
 .project-images:hover .project-img-back { transform: rotate(-10deg) scale(1.02); }
 .project-images:hover .project-img-front { transform: rotate(7deg) scale(1.02); }
 .project-content { display: flex; flex-direction: column; gap: 28px; }
