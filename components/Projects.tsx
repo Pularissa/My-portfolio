@@ -10,7 +10,7 @@ const projects = [
     description: "A digital platform connecting Rwandan smallholder farmers directly with buyers — cutting out middlemen, improving market access, and delivering AI-powered farming advice, live market prices, and digital payment support.",
     techs: ["Next.js", "React", "Node.js", "PostgreSQL", "Tailwind CSS", "AI Integration"],
     highlights: ["Farmer & buyer marketplace", "AI farming assistant", "Secure auth & payments"],
-    bgImage: "/images/umuhinzilink.png", fgImage: "/images/umuhinzilink.png", link: "#",
+    bgImage: "/images/umuhinzilink.png", fgImage: "/images/umuhinzilink2.png", link: "#",
   },
   {
     id: 2, number: "02", featured: false, category: "Main",
@@ -26,7 +26,7 @@ const projects = [
     description: "A full-stack booking application letting users search, book, and manage hotel and flight reservations with secure authentication, booking history, and automated scheduler reports.",
     techs: ["Spring Boot", "Java", "PostgreSQL", "Hibernate", "REST API"],
     highlights: ["Hotel & flight search", "User auth & history", "Scheduler reports"],
-    bgImage: "/images/hotelandflight.png", fgImage: "/images/hotelandflight.png", link: "#",
+    bgImage: "/images/hotelandflight.png", fgImage: "/images/hotelandflight2.png", link: "#",
   },
   {
     id: 4, number: "04", featured: false, category: "School",
@@ -34,7 +34,7 @@ const projects = [
     description: "An embedded IoT solution monitoring environmental conditions for smart farming — tracking temperature, humidity, and soil conditions with real-time LCD display and ESP8266 WiFi connectivity.",
     techs: ["Arduino", "C++", "DHT11", "LM35", "LCD I2C", "ESP8266"],
     highlights: ["Real-time sensor readings", "LCD display", "IoT connectivity"],
-    bgImage: "/images/smartgarden.png", fgImage: "/images/smartgarden.png", link: "#",
+    bgImage: "/images/smartgarden.png", fgImage: "/images/smartgarden2.png", link: "#",
   },
   {
     id: 5, number: "05", featured: false, category: "School",
@@ -42,7 +42,7 @@ const projects = [
     description: "An interactive learning platform helping learner drivers prepare for Rwanda driving theory exams — with hundreds of traffic sign questions, practice mode, quiz mode, score tracking, and instant feedback.",
     techs: ["React", "JavaScript", "CSS"],
     highlights: ["Hundreds of questions", "Practice & quiz modes", "Score tracking"],
-    bgImage: "/images/traffic.png", fgImage: "/images/traffic.png", link: "#",
+    bgImage: "/images/traffic.png", fgImage: "/images/traffic2.png", link: "#",
   },
   {
     id: 6, number: "06", featured: false, category: "School",

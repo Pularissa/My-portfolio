@@ -1,32 +1,27 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Link2, GitBranch, GraduationCap } from 'lucide-react';
+import { Mail, GitBranch } from 'lucide-react';
+// Actually, let's just use lucide-react Link icon or generic for Course Networking
+import { Link2, Link as LinkIcon, Briefcase } from 'lucide-react';
 
 const formFields = [
-  { id: 'cf-name',    name: 'name',    label: 'Full Name',     type: 'text',  ph: 'Your name',                           required: true  },
-  { id: 'cf-email',   name: 'email',   label: 'Email Address', type: 'email', ph: 'you@example.com',                     required: true  },
-  { id: 'cf-org',     name: 'org',     label: 'Organisation',  type: 'text',  ph: 'Company, university, NGO…',           required: false },
-  { id: 'cf-subject', name: 'subject', label: 'Subject',       type: 'text',  ph: 'Internship, collaboration, project…', required: true  },
-];
-
-const infoItems = [
-  { label: 'Email',         value: 'iyonezalarissaprisca@gmail.com' },
-  { label: 'Based in',      value: 'Rwanda, Africa' },
-  { label: 'Looking for',   value: 'Internships · Grad programmes · Collaboration' },
-  { label: 'Response time', value: 'Within 24 hours' },
+  { id: 'cf-name',    name: 'name',    label: 'Name',        type: 'text',  ph: 'Name',        required: true  },
+  { id: 'cf-org',     name: 'org',     label: 'Company',     type: 'text',  ph: 'Company',     required: false },
+  { id: 'cf-message', name: 'message', label: 'Description', type: 'text',  ph: 'Description', required: true  },
+  { id: 'cf-budget',  name: 'budget',  label: 'Budget',      type: 'text',  ph: 'Budget',      required: false },
 ];
 
 export default function ContactFooterPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const subject = formData.get('subject') as string;
-    const body = formData.get('message') as string;
     const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
+    const company = formData.get('org') as string;
+    const message = formData.get('message') as string;
+    const budget = formData.get('budget') as string;
     
-    const mailtoLink = `mailto:iyonezalarissaprisca@gmail.com?subject=${encodeURIComponent(subject || 'New Contact Request')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${body}`)}`;
+    const mailtoLink = `mailto:iyonezalarissaprisca@gmail.com?subject=New Contact from ${name}&body=${encodeURIComponent(`Name: ${name}\nCompany: ${company}\nBudget: ${budget}\n\nDescription:\n${message}`)}`;
     window.location.href = mailtoLink;
     
     (e.target as HTMLFormElement).reset();
@@ -37,118 +32,62 @@ export default function ContactFooterPage() {
       <section id="contact" className="contact-section">
         <div className="contact-inner">
 
-          {/* #1 Fade up header */}
           <div className="contact-header reveal">
-            <div className="section-label">
-              <span className="section-label-line" />
-              <span className="section-label-text">Get in touch</span>
-            </div>
-            <div className="clip-wrap">
-              <h2 className="section-heading reveal-clip">Let&apos;s <em>connect</em></h2>
-            </div>
-            <p className="contact-headline">&ldquo;Not a quitter — just a doer.&rdquo;</p>
+            <h2 className="contact-headline">"Not a quitter just a doer"</h2>
           </div>
 
-          <div className="contact-grid">
-
-            {/* #5 Slide from left */}
-            <form onSubmit={handleSubmit} className="reveal-left" style={{ transitionDelay: '100ms' }}>
-              <p className="contact-form-heading">Reach out — I&apos;d love to hear from you</p>
-              {formFields.map(f => (
-                <div key={f.id} className="form-field">
-                  <label htmlFor={f.id}>{f.label}</label>
-                  <input type={f.type} id={f.id} name={f.name} placeholder={f.ph} required={f.required} />
+          <div className="contact-card reveal">
+            <div className="contact-form-side">
+              <h3 className="contact-form-heading">What's your deal</h3>
+              
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div style={{ flex: 1 }}>
+                  {formFields.map(f => (
+                    <div key={f.id} className="form-field">
+                      <label htmlFor={f.id}>{f.label}</label>
+                      <input type={f.type} id={f.id} name={f.name} placeholder={f.label} required={f.required} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-              <div className="form-field">
-                <label htmlFor="cf-message">Message</label>
-                <textarea id="cf-message" name="message" rows={5}
-                  placeholder="Tell me about an internship, collaboration, or project opportunity…"
-                  required />
-              </div>
-              <button type="submit" className="contact-submit">Send Message</button>
-            </form>
-
-            {/* #5 Slide from right */}
-            <div className="contact-info reveal-right" style={{ transitionDelay: '200ms' }}>
-              {infoItems.map((item, i) => (
-                <div key={item.label} style={{ display: 'contents' }}>
-                  <div className="contact-info-item">
-                    <span className="contact-info-label">{item.label}</span>
-                    <span className="contact-info-value">{item.value}</span>
-                  </div>
-                  {i < infoItems.length - 1 && <div className="contact-info-divider" />}
-                </div>
-              ))}
-              <div style={{
-                marginTop: '8px', padding: '18px 20px',
-                background: 'var(--gold-faint)', border: '1px solid var(--gold-dim)',
-                borderRadius: 'var(--radius-md)',
-              }}>
-                <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <GraduationCap size={13} strokeWidth={1.5} /> Currently
-                </div>
-                <p style={{ fontSize: '0.88rem', color: 'var(--white-dim)', lineHeight: 1.65 }}>
-                  Student at <strong style={{ color: 'var(--white)' }}>Rwanda Coding Academy</strong> —
-                  open to internships, graduate programmes, and meaningful collaborative projects.
-                </p>
-              </div>
+                
+                <button type="submit" className="contact-submit">Connect</button>
+              </form>
             </div>
 
+            <div className="contact-image-side">
+              <Image 
+                src="/images/port.png" 
+                alt="Mockup Placeholder" 
+                fill 
+                style={{ objectFit: 'cover', opacity: 0.8 }} 
+              />
+            </div>
           </div>
+
+          <div className="contact-socials-row reveal">
+            <a href="mailto:iyonezalarissaprisca@gmail.com" className="social-pill-btn">
+              <Mail size={14} /> Email
+            </a>
+            <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill-btn">
+              <Link2 size={14} /> Linked in
+            </a>
+            <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill-btn">
+              <GitBranch size={14} /> Linked in
+            </a>
+            <a href="#" className="social-pill-btn">
+              <Briefcase size={14} /> Course Networking
+            </a>
+          </div>
+
+          <div className="footer-bottom">
+            <p className="footer-copy">@copyright| portfolii.com|</p>
+            <p className="footer-copy">Made with unity</p>
+          </div>
+
         </div>
+
+        <div className="find-me-bg">Find me on</div>
       </section>
-
-      {/* #1 Fade up footer */}
-      <footer className="footer reveal">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <div className="footer-logo">
-              <Image src="/images/logo.png" alt="PL Logo" width={44} height={44}
-                style={{ objectFit: 'contain', borderRadius: '50%', filter: 'drop-shadow(0 0 6px rgba(201,169,110,0.3))' }} />
-            </div>
-            <p style={{ marginTop: '4px', fontFamily: 'var(--font-serif)', fontSize: '1rem', color: 'var(--white)', letterSpacing: '0.04em' }}>
-              Prisca Larissa
-            </p>
-            <p className="footer-tagline">
-              Software &amp; Embedded Systems student at RCA — building real things for real people.
-            </p>
-          </div>
-
-          <div>
-            <p className="footer-nav-title">Navigation</p>
-            <ul className="footer-nav-links">
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="#skills">Skills</Link></li>
-              <li><Link href="#projects">Projects</Link></li>
-              <li><Link href="#experience">Journey</Link></li>
-              <li><Link href="#contact">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="footer-nav-title">Find me on</p>
-            <div className="footer-socials">
-              <a href="mailto:iyonezalarissaprisca@gmail.com" className="social-pill">
-                <Mail size={14} strokeWidth={1.5} /> Email
-              </a>
-              <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill">
-                <Link2 size={14} strokeWidth={1.5} /> LinkedIn
-              </a>
-              <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill">
-                <GitBranch size={14} strokeWidth={1.5} /> GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="footer-divider" />
-
-        <div className="footer-bottom">
-          <p className="footer-copy">© 2026 <span>Prisca Larissa</span>. All rights reserved.</p>
-          <p className="footer-copy" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><GraduationCap size={12} strokeWidth={1.5} color="var(--gold)" /> Rwanda Coding Academy · Built with <span>Next.js</span></p>
-        </div>
-      </footer>
     </>
   );
 }
