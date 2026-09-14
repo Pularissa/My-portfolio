@@ -1,15 +1,13 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, GitBranch } from 'lucide-react';
-// Actually, let's just use lucide-react Link icon or generic for Course Networking
-import { Link2, Link as LinkIcon, Briefcase } from 'lucide-react';
+import { Mail, Linkedin, Github, Twitter, Instagram, GraduationCap } from 'lucide-react';
 
 const formFields = [
-  { id: 'cf-name',    name: 'name',    label: 'Name',        type: 'text',  ph: 'Name',        required: true  },
-  { id: 'cf-org',     name: 'org',     label: 'Company',     type: 'text',  ph: 'Company',     required: false },
-  { id: 'cf-message', name: 'message', label: 'Description', type: 'text',  ph: 'Description', required: true  },
-  { id: 'cf-budget',  name: 'budget',  label: 'Budget',      type: 'text',  ph: 'Budget',      required: false },
+  { id: 'cf-name', name: 'name', label: 'Name', type: 'text', ph: 'Name', required: true },
+  { id: 'cf-org', name: 'org', label: 'Company', type: 'text', ph: 'Company', required: false },
+  { id: 'cf-message', name: 'message', label: 'Description', type: 'text', ph: 'Description', required: true },
+  { id: 'cf-budget', name: 'budget', label: 'Budget', type: 'text', ph: 'Budget', required: false },
 ];
 
 export default function ContactFooterPage() {
@@ -20,10 +18,10 @@ export default function ContactFooterPage() {
     const company = formData.get('org') as string;
     const message = formData.get('message') as string;
     const budget = formData.get('budget') as string;
-    
+
     const mailtoLink = `mailto:iyonezalarissaprisca@gmail.com?subject=New Contact from ${name}&body=${encodeURIComponent(`Name: ${name}\nCompany: ${company}\nBudget: ${budget}\n\nDescription:\n${message}`)}`;
     window.location.href = mailtoLink;
-    
+
     (e.target as HTMLFormElement).reset();
   };
 
@@ -39,7 +37,7 @@ export default function ContactFooterPage() {
           <div className="contact-card reveal">
             <div className="contact-form-side">
               <h3 className="contact-form-heading">What's your deal</h3>
-              
+
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ flex: 1 }}>
                   {formFields.map(f => (
@@ -49,17 +47,17 @@ export default function ContactFooterPage() {
                     </div>
                   ))}
                 </div>
-                
+
                 <button type="submit" className="contact-submit">Connect</button>
               </form>
             </div>
 
             <div className="contact-image-side">
-              <Image 
-                src="/images/port.png" 
-                alt="Mockup Placeholder" 
-                fill 
-                style={{ objectFit: 'cover', opacity: 0.8 }} 
+              <Image
+                src="/images/port.png"
+                alt="Mockup Placeholder"
+                fill
+                style={{ objectFit: 'cover', opacity: 0.8 }}
               />
             </div>
           </div>
@@ -69,13 +67,19 @@ export default function ContactFooterPage() {
               <Mail size={14} /> Email
             </a>
             <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill-btn">
-              <Link2 size={14} /> Linked in
+              <Linkedin size={14} /> Linked in
             </a>
             <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill-btn">
-              <GitBranch size={14} /> Linked in
+              <Github size={14} /> Github
             </a>
             <a href="#" className="social-pill-btn">
-              <Briefcase size={14} /> Course Networking
+              <GraduationCap size={14} /> Course Networking
+            </a>
+            <a href="#" className="social-pill-btn">
+              <Twitter size={14} /> Twitter
+            </a>
+            <a href="#" className="social-pill-btn">
+              <Instagram size={14} /> Instagram
             </a>
           </div>
 

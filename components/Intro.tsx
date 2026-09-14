@@ -35,14 +35,8 @@ export default function Intro() {
 
         {/* Real PL logo */}
         <div className="intro-mark" style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'center', marginBottom: '20px' }}>
-          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '80px', position: 'relative', zIndex: 10, paddingLeft: '8px', lineHeight: 1 }}>
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <span style={{ display: 'block', width: '40px', height: '40px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -45%)', zIndex: -1 }} />
-              P
-            </span>
-            risca
-          </span>
-          <div style={{ position: 'absolute', bottom: '22px', left: '-4px', right: '-4px', height: '3px', backgroundColor: '#0ea5e9', zIndex: 20 }} />
+          <div style={{ width: '56px', height: '56px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, marginLeft: '-12px' }} />
+          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '80px', position: 'relative', zIndex: 10, paddingLeft: '8px', lineHeight: 1 }}>Prisca</span>
         </div>
 
         {/* Name */}

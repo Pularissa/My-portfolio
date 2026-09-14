@@ -18,18 +18,20 @@ const cards = [
 export default function HScrollStrip() {
   const trackRef   = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const compute = (scroll: number) => {
       const sec   = sectionRef.current;
       const track = trackRef.current;
-      if (!sec || !track) return;
+      const vp    = viewportRef.current;
+      if (!sec || !track || !vp) return;
       const top      = sec.offsetTop;
       const secH     = sec.offsetHeight;
       const vh       = window.innerHeight;
       const progress = (scroll - top + vh) / (secH + vh);
       const clamped  = Math.min(Math.max(progress, 0), 1);
-      const maxShift = track.scrollWidth - sec.offsetWidth;
+      const maxShift = track.scrollWidth - vp.offsetWidth;
       track.style.transform = `translateX(-${clamped * maxShift * 0.65}px)`;
     };
 
@@ -47,13 +49,15 @@ export default function HScrollStrip() {
 
   return (
     <div ref={sectionRef} className="hscroll-section">
-      <div className="hscroll-label">
-        <span className="hscroll-label-line" />
-        <span className="hscroll-label-text">Tech Stack</span>
-        <span className="hscroll-label-hint">— scroll to explore</span>
-      </div>
-      <div ref={trackRef} className="hscroll-track" style={{ transition: 'transform 0.12s linear' }}>
-        {cards.map(({ tag, title, Icon }, i) => (
+      <div className="hscroll-inner">
+        <div className="hscroll-label">
+          <span className="hscroll-label-line" />
+          <span className="hscroll-label-text">Tech Stack</span>
+          <span className="hscroll-label-hint">— scroll to explore</span>
+        </div>
+        <div className="hscroll-viewport" ref={viewportRef}>
+          <div ref={trackRef} className="hscroll-track" style={{ transition: 'transform 0.12s linear' }}>
+            {cards.map(({ tag, title, Icon }, i) => (
           <div key={i} className="hscroll-card">
             <div className="hscroll-card-glow" />
             <div className="hscroll-card-icon">
@@ -64,6 +68,8 @@ export default function HScrollStrip() {
             <div className="hscroll-card-num">{String(i + 1).padStart(2, '0')}</div>
           </div>
         ))}
+      </div>
+      </div>
       </div>
     </div>
   );

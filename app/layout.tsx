@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Space_Grotesk, Manrope, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, Manrope, IBM_Plex_Mono, Bagel_Fat_One } from "next/font/google";
 import ScrollProgress from "../components/ScrollProgress";
 import ScrollObserver from "../components/ScrollObserver";
 import LenisProvider  from "../components/LenisProvider";
@@ -8,6 +8,12 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-serif",
+});
+
+const bagelFatOne = Bagel_Fat_One({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-bagel",
 });
 
 const manrope = Manrope({
@@ -34,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" href="/images/logo.png" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable}`} suppressHydrationWarning>
+      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable} ${bagelFatOne.variable}`} suppressHydrationWarning>
         <LenisProvider>
           <ScrollProgress />
           <ScrollObserver />
