@@ -27,9 +27,10 @@ export default function Hero() {
       <div className="hero-corner hero-corner-bl" />
 
       <nav className="navbar">
-        <div className="logo">
-          <Image src="/images/logo.png" alt="Prisca Larissa Logo" width={52} height={52} className="logo-img" priority />
-        </div>
+        <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', position: 'relative', textDecoration: 'none' }}>
+          <div style={{ width: '46px', height: '46px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '-6px', top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
+          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '64px', position: 'relative', zIndex: 10, paddingLeft: '4px', lineHeight: 1 }}>Prisca</span>
+        </Link>
         <ul className="nav-links">
           <li><Link href="/">Home</Link></li>
           <li><Link href="#skills">Skills</Link></li>

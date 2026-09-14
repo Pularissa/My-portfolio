@@ -34,15 +34,9 @@ export default function Intro() {
       <div className={`intro-content${phase === 'reveal' ? ' intro-content-exit' : ''}`}>
 
         {/* Real PL logo */}
-        <div className="intro-mark">
-          <Image
-            src="/images/logo.png"
-            alt="Prisca Larissa Logo"
-            width={100}
-            height={100}
-            priority
-            className="intro-logo-img"
-          />
+        <div className="intro-mark" style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'center', marginBottom: '20px' }}>
+          <div style={{ width: '56px', height: '56px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, marginLeft: '-12px' }} />
+          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '80px', position: 'relative', zIndex: 10, paddingLeft: '8px', lineHeight: 1 }}>Prisca</span>
         </div>
 
         {/* Name */}

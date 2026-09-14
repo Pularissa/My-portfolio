@@ -1,4 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kolker+Brush&display=swap');
+
+.kolker-font {
+  font-family: 'Kolker Brush', cursive !important;
+}
+
+.blend-difference {
+  mix-blend-mode: difference;
+}
 
 /* =====================================================
    DESIGN SYSTEM — Prisca Larissa Portfolio
