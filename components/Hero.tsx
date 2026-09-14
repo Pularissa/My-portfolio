@@ -28,8 +28,14 @@ export default function Hero() {
 
       <nav className="navbar">
         <Link href="/" className="logo" style={{ display: 'flex', alignItems: 'center', position: 'relative', textDecoration: 'none' }}>
-          <div style={{ width: '46px', height: '46px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '-6px', top: '50%', transform: 'translateY(-50%)', zIndex: 0 }} />
-          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '64px', position: 'relative', zIndex: 10, paddingLeft: '4px', lineHeight: 1 }}>Prisca</span>
+          <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '64px', position: 'relative', zIndex: 10, paddingLeft: '4px', lineHeight: 1 }}>
+            <span style={{ position: 'relative', display: 'inline-block' }}>
+              <span style={{ display: 'block', width: '34px', height: '34px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -45%)', zIndex: -1 }} />
+              P
+            </span>
+            risca
+          </span>
+          <div style={{ position: 'absolute', bottom: '18px', left: '-2px', right: '-4px', height: '2px', backgroundColor: '#0ea5e9', zIndex: 20 }} />
         </Link>
         <ul className="nav-links">
           <li><Link href="/">Home</Link></li>
