@@ -1,7 +1,8 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Linkedin, Github, Twitter, Instagram, GraduationCap } from 'lucide-react';
+import { Mail, GraduationCap } from 'lucide-react';
+import { FaInstagram, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
 
 const formFields = [
   { id: 'cf-name', name: 'name', label: 'Name', type: 'text', ph: 'Name', required: true },
@@ -67,19 +68,19 @@ export default function ContactFooterPage() {
               <Mail size={14} /> Email
             </a>
             <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill-btn">
-              <Linkedin size={14} /> Linked in
+              <FaLinkedin size={14} /> Linked in
             </a>
             <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill-btn">
-              <Github size={14} /> Github
+              <FaGithub size={14} /> Github
             </a>
             <a href="#" className="social-pill-btn">
               <GraduationCap size={14} /> Course Networking
             </a>
             <a href="#" className="social-pill-btn">
-              <Twitter size={14} /> Twitter
+              <FaTwitter size={14} /> Twitter
             </a>
             <a href="#" className="social-pill-btn">
-              <Instagram size={14} /> Instagram
+              <FaInstagram size={14} /> Instagram
             </a>
           </div>
 
