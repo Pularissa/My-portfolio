@@ -68,18 +68,18 @@ export default function ContactFooterPage() {
               <Mail size={14} /> Email
             </a>
             <a href="https://www.linkedin.com/in/larissa-prisca-18496a330/" target="_blank" rel="noreferrer" className="social-pill-btn">
-              <FaLinkedin size={14} /> Linked in
+              <FaLinkedin size={14} /> LinkedIn
             </a>
             <a href="https://github.com/Pularissa" target="_blank" rel="noreferrer" className="social-pill-btn">
               <FaGithub size={14} /> Github
             </a>
-            <a href="#" className="social-pill-btn">
-              <GraduationCap size={14} /> Course Networking
+            <a href="https://www.thecn.com/PL762" className="social-pill-btn">
+              <GraduationCap size={14} /> CN
             </a>
             <a href="#" className="social-pill-btn">
               <FaTwitter size={14} /> Twitter
             </a>
-            <a href="#" className="social-pill-btn">
+            <a href="https://www.instagram.com/p.u_l.a/" className="social-pill-btn">
               <FaInstagram size={14} /> Instagram
             </a>
           </div>

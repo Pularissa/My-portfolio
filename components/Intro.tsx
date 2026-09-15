@@ -39,12 +39,6 @@ export default function Intro() {
           <span className="kolker-font blend-difference" style={{ color: 'white', fontSize: '80px', position: 'relative', zIndex: 10, paddingLeft: '8px', lineHeight: 1 }}>Prisca</span>
         </div>
 
-        {/* Name */}
-        <div className="intro-name">
-          <span className="intro-name-word">Prisca</span>
-          <span className="intro-name-sep">·</span>
-          <span className="intro-name-word intro-name-italic">Larissa</span>
-        </div>
 
         {/* Role */}
         <div className="intro-role">Software &amp; Embedded Systems Developer</div>
