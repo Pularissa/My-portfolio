@@ -10,7 +10,7 @@ const projects = [
     description: "A digital platform connecting Rwandan smallholder farmers directly with buyers — cutting out middlemen, improving market access, and delivering AI-powered farming advice, live market prices, and digital payment support.",
     techs: ["Next.js", "React", "Node.js", "PostgreSQL", "Tailwind CSS", "AI Integration"],
     highlights: ["Farmer & buyer marketplace", "AI farming assistant", "Secure auth & payments"],
-    bgImage: "/images/umuhinzilink.png", fgImage: "/images/umuhinzilink2.png", link: "#",
+    bgImage: "/images/umuhinzilink.png", fgImage: "/images/umuhinzilink.png", link: "#",
   },
   {
     id: 2, number: "02", featured: false, category: "Main",
@@ -18,7 +18,7 @@ const projects = [
     description: "A modern website for Youth for National Transformation Rwanda — showcasing the organisation's mission, managing memberships, collecting donations, publishing events, and supporting multi-language audiences.",
     techs: ["React.js", "Tailwind CSS", "React Router", "i18next", "JavaScript"],
     highlights: ["Multi-language (i18next)", "Membership & donations", "Events management"],
-    bgImage: "/images/ynt.png", fgImage: "/images/ynt.png", link: "https://github.com/Pularissa/YNT",
+    bgImage: "/images/ynt.png", fgImage: "/images/ynt2.png", link: "https://github.com/Pularissa/YNT",
   },
   {
     id: 3, number: "03", featured: false, category: "Main",
@@ -50,7 +50,7 @@ const projects = [
     description: "A desktop application for managing books, borrowing, returns, and student records — with full search functionality and report generation, built with Java Swing and PostgreSQL.",
     techs: ["Java", "Java Swing", "JDBC", "PostgreSQL"],
     highlights: ["Book & student management", "Borrow/return tracking", "Report generation"],
-    bgImage: "/images/robot.png", fgImage: "/images/robot.png", link: "https://github.com/Pularissa/LibrarySystem",
+    bgImage: "/images/robot.png", fgImage: "/images/robot2.png", link: "https://github.com/Pularissa/LibrarySystem",
   },
   {
     id: 7, number: "07", featured: false, category: "Main",
@@ -58,7 +58,7 @@ const projects = [
     description: "A youth-focused platform helping prevent drug abuse through education, peer support, AI-powered counseling, and access to healthy activities — empowering young processor to build a drug-free future.",
     techs: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "OpenAI API", "Firebase", "Google Maps API", "Tailwind CSS"],
     highlights: ["AI chatbot & personalized guidance", "Find nearby rehab centres (Maps)", "Push notifications & reminders"],
-    bgImage: "/images/Befree.png", fgImage: "/images/Befree.png", link: "https://github.com/Pularissa/BeFree-React",
+    bgImage: "/images/Befree.png", fgImage: "/images/Befree2.png", link: "https://github.com/Pularissa/BeFree-React",
   },
   {
     id: 8, number: "08", featured: true, category: "Main",
@@ -66,7 +66,7 @@ const projects = [
     description: "A comprehensive digital pharmacy platform for Rwanda, enabling users to order medications online, consult with pharmacists, and manage prescriptions securely.",
     techs: ["React", "Next.js", "Node.js", "Tailwind CSS"],
     highlights: ["Online medication ordering", "Prescription management", "Secure checkout"],
-    bgImage: "/images/rwandaepharmacy.png", fgImage: "/images/rwandaepharmacy.png", link: "https://github.com/Pularissa/E-pharmacy",
+    bgImage: "/images/rwandaepharmacy.png", fgImage: "/images/rwandaepharmacy2.png", link: "https://github.com/Pularissa/E-pharmacy",
   },
   {
     id: 9, number: "09", featured: false, category: "Main",
@@ -74,7 +74,7 @@ const projects = [
     description: "A comprehensive digital application for car rentals, allowing users to browse available vehicles, book them for specific dates, and manage their reservations seamlessly.",
     techs: ["JavaScript"],
     highlights: ["Browse vehicles", "Manage bookings", "User reservations"],
-    bgImage: "/images/hotelandflight.png", fgImage: "/images/hotelandflight2.png", link: "https://github.com/Pularissa/car-renting",
+    bgImage: "/images/bus.png", fgImage: "/images/bus2.png", link: "https://github.com/Pularissa/car-renting",
   },
 ];
 

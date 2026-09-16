@@ -575,7 +575,7 @@ html, body {
 
 .contact-header { margin-bottom: 60px; text-align: center; }
 .contact-headline { 
-  font-family: var(--font-bagel), cursive; 
+  font-family: var(--font-oi), cursive; 
   font-size: clamp(3.5rem, 7vw, 6rem); 
   font-weight: 400; 
   color: #ffffff; 

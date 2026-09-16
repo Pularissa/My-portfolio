@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Space_Grotesk, Manrope, IBM_Plex_Mono, Bagel_Fat_One } from "next/font/google";
+import { Space_Grotesk, Manrope, IBM_Plex_Mono, Bagel_Fat_One, Oi } from "next/font/google";
 import ScrollProgress from "../components/ScrollProgress";
 import ScrollObserver from "../components/ScrollObserver";
 import LenisProvider  from "../components/LenisProvider";
@@ -28,6 +28,12 @@ const ibmMono = IBM_Plex_Mono({
   variable: "--font-mono",
 });
 
+const oiFont = Oi({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-oi",
+});
+
 export const metadata = {
   title: "Prisca Larissa — Software Developer",
   description: "Portfolio of Prisca Larissa, a Software Programming & Embedded Systems student at Rwanda Coding Academy.",
@@ -40,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" href="/images/logo.png" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable} ${bagelFatOne.variable}`} suppressHydrationWarning>
+      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable} ${bagelFatOne.variable} ${oiFont.variable}`} suppressHydrationWarning>
         <LenisProvider>
           <ScrollProgress />
           <ScrollObserver />
