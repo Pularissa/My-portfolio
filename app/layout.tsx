@@ -3,6 +3,7 @@ import { Space_Grotesk, Manrope, IBM_Plex_Mono, Bagel_Fat_One, Oi } from "next/f
 import ScrollProgress from "../components/ScrollProgress";
 import ScrollObserver from "../components/ScrollObserver";
 import LenisProvider  from "../components/LenisProvider";
+import BubbleCursor   from "../components/BubbleCursor";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${spaceGrotesk.variable} ${manrope.variable} ${ibmMono.variable} ${bagelFatOne.variable} ${oiFont.variable}`} suppressHydrationWarning>
         <LenisProvider>
+          <BubbleCursor />
           <ScrollProgress />
           <ScrollObserver />
           {children}
