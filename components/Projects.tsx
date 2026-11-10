@@ -12,7 +12,7 @@ const projects = [
     description: 'A digital platform connecting Rwandan smallholder farmers directly with buyers — improving market access with AI-powered farming advice, live market prices, and digital payment support.',
     techs: ['Next.js', 'React', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
     image: '/images/umuhinzilink.png',
-    link: '#',
+    link: 'https://github.com/Pularissa',
   },
   {
     number: '02',
@@ -42,7 +42,7 @@ const projects = [
     description: 'An embedded smart-farming solution that monitors temperature, humidity, and soil conditions, with an LCD display and Wi-Fi connectivity.',
     techs: ['Arduino', 'C++', 'DHT11', 'LCD', 'ESP8266'],
     image: '/images/smartgarden.png',
-    link: '#',
+    link: 'https://github.com/Pularissa',
   },
   {
     number: '05',
@@ -52,7 +52,7 @@ const projects = [
     description: 'An interactive learning platform helping learner drivers prepare for Rwanda driving theory exams with practice and quiz modes.',
     techs: ['React', 'JavaScript', 'CSS'],
     image: '/images/traffic.png',
-    link: '#',
+    link: 'https://github.com/Pularissa',
   },
   {
     number: '06',
@@ -127,8 +127,6 @@ type Project = (typeof projects)[number];
 
 function ProjectCard({ project }: { project: Project }) {
   const [ref, isVisible] = useScrollReveal<HTMLElement>({ threshold: 0.12 });
-  const hasProjectLink = project.link !== '#';
-
   return (
     <article ref={ref} className={`project-card${isVisible ? ' is-visible' : ''}`}>
       <span className="project-index" aria-label={`Project ${project.number}`}>
@@ -143,16 +141,12 @@ function ProjectCard({ project }: { project: Project }) {
         <p className="project-card-description">{project.description}</p>
         <div className="project-card-meta">
           <span>{project.techs.slice(0, 3).join(' · ')}</span>
-          {hasProjectLink ? (
-            <a className="project-card-link" href={project.link} target="_blank" rel="noreferrer">
-              View project
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M7 17 17 7M7 7h10v10" />
-              </svg>
-            </a>
-          ) : (
-            <span className="project-card-link project-card-link-unavailable">Project preview</span>
-          )}
+          <a className="project-card-link" href={project.link} target="_blank" rel="noreferrer">
+            View project
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
         </div>
       </div>
       <div className="project-card-image">
