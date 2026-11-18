@@ -67,7 +67,7 @@ const projects = [
   {
     number: '07',
     category: 'Main',
-    title: 'pBeFree',
+    title: 'BeFree',
     subtitle: 'Drug Prevention App',
     description: 'A youth-focused platform for drug-prevention education, peer support, AI-powered counseling, and access to healthy activities.',
     techs: ['React.js', 'Node.js', 'MongoDB', 'Firebase'],

@@ -582,113 +582,339 @@ main > * {
 @media (max-width: 768px) { .experience-inner { padding: 0 24px; } .timeline-item { padding-left: 68px; gap: 20px; } .timeline-node { width: 46px; height: 46px; font-size: 0.85rem; } .timeline-card { padding: 22px 24px; } }
 
 /* ============================================================
-   TESTIMONIALS SECTION
+   TESTIMONIALS / RECOMMENDATIONS SECTION
 ============================================================ */
-.testimonials-section { background: var(--black); padding: 120px 0; }
-.testimonials-inner { max-width: 1320px; margin: 0 auto; padding: 0 72px; }
-.testimonials-header { margin-bottom: 68px; }
-.recommendations-intro { margin-top: 12px; max-width: 500px; color: var(--white-dim); font-size: 0.9rem; line-height: 1.75; }
+.testimonials-section {
+  position: relative;
+  background: var(--black);
+  padding: 120px 0 140px;
+  overflow: hidden;
+}
+.testimonials-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  z-index: 2;
+}
+.testimonials-header {
+  margin-bottom: 76px;
+}
+.recommendations-intro {
+  margin-top: 14px;
+  max-width: 520px;
+  color: var(--white-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* 6-Column Grid Layout: 3 cards on top (span 2 each), 2 cards on bottom (cols 2 & 4) */
 .recommendations-grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(6, 1fr);
+  gap: 56px 36px;
+  padding: 24px 8px 32px;
   align-items: stretch;
-  gap: 36px 24px;
-  padding: 12px 0;
 }
+
+/* Card Wrapper with authentic multi-layer drop shadow that hugs the torn edges */
+.recommendation-card-wrapper {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.42)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
+}
+.recommendation-card-wrapper:hover {
+  transform: translateY(-8px) scale(1.015) rotate(0deg) !important;
+  filter: drop-shadow(0 26px 42px rgba(0, 0, 0, 0.62)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.38));
+  z-index: 10;
+}
+
+/* Washi Tape at top of card */
+.recommendation-tape {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  width: 116px;
+  height: 32px;
+  z-index: 5;
+  background: linear-gradient(175deg, rgba(248, 142, 118, 0.95) 0%, rgba(235, 118, 92, 0.88) 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(1px);
+  pointer-events: none;
+  clip-path: polygon(
+    0% 0%, 100% 0%,
+    97% 10%, 100% 20%, 97% 30%, 100% 40%, 97% 50%, 100% 60%, 97% 70%, 100% 80%, 97% 90%, 100% 100%,
+    0% 100%,
+    3% 90%, 0% 80%, 3% 70%, 0% 60%, 3% 50%, 0% 40%, 3% 30%, 0% 20%, 3% 10%
+  );
+}
+
+/* Distinct tape rotations per card */
+.recommendation-tape-1 { transform: translateX(-50%) rotate(-2.8deg); }
+.recommendation-tape-2 { transform: translateX(-50%) rotate(1.2deg); }
+.recommendation-tape-3 { transform: translateX(-50%) rotate(-1.6deg); }
+.recommendation-tape-4 { transform: translateX(-50%) rotate(2.4deg); }
+.recommendation-tape-5 { transform: translateX(-50%) rotate(-1.5deg); }
+
+/* Card Element - Warm Paper Surface */
 .recommendation-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  min-height: 310px;
-  padding: 34px 32px 28px;
-  color: var(--black);
-  background: linear-gradient(145deg, #f5f5f5, #e9e9e9);
-  border: 1px solid rgba(255,255,255,0.65);
-  box-shadow: 0 20px 44px rgba(0,0,0,0.32);
-  transition: transform var(--transition), box-shadow var(--transition);
+  justify-content: space-between;
+  width: 100%;
+  min-height: 350px;
+  padding: 34px 30px 42px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 75%, #F4EFE9 100%);
+  color: #111111;
+  box-sizing: border-box;
 }
-.recommendation-card::before {
-  content: "";
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  width: 112px;
-  height: 28px;
-  background: rgba(245,245,245,0.34);
-  border: 1px solid rgba(255,255,255,0.24);
-  transform: translateX(-50%) rotate(-3deg);
+
+/* Realistic organic torn paper bottom edges for each card */
+.recommendation-card-1 {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 14px),
+    98% calc(100% - 7px), 96% calc(100% - 15px), 93% calc(100% - 9px), 90% calc(100% - 16px), 87% calc(100% - 8px),
+    84% calc(100% - 14px), 80% calc(100% - 7px), 77% calc(100% - 15px), 73% calc(100% - 9px), 70% calc(100% - 16px),
+    66% calc(100% - 8px), 63% calc(100% - 14px), 59% calc(100% - 9px), 56% calc(100% - 17px), 52% calc(100% - 8px),
+    48% calc(100% - 13px), 44% calc(100% - 7px), 41% calc(100% - 16px), 37% calc(100% - 9px), 33% calc(100% - 14px),
+    30% calc(100% - 7px), 26% calc(100% - 15px), 22% calc(100% - 8px), 18% calc(100% - 16px), 14% calc(100% - 7px),
+    11% calc(100% - 14px), 7% calc(100% - 8px), 4% calc(100% - 15px), 0% calc(100% - 9px)
+  );
 }
-.recommendation-card:nth-child(3n + 1) { transform: rotate(-1deg); }
-.recommendation-card:nth-child(3n + 2) { transform: rotate(0.7deg); }
-.recommendation-card:nth-child(3n) { transform: rotate(-0.4deg); }
-.recommendation-card:nth-child(4) { grid-column: 2 / span 5; }
-.recommendation-card:nth-child(5) { grid-column: 7 / span 5; }
-.recommendation-card:hover {
-  z-index: 1;
-  transform: translateY(-7px) rotate(0);
-  box-shadow: 0 28px 56px rgba(0,0,0,0.42);
+.recommendation-card-2 {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 9px),
+    97% calc(100% - 16px), 94% calc(100% - 8px), 91% calc(100% - 14px), 87% calc(100% - 7px), 83% calc(100% - 16px),
+    80% calc(100% - 9px), 76% calc(100% - 13px), 72% calc(100% - 8px), 68% calc(100% - 17px), 65% calc(100% - 10px),
+    61% calc(100% - 14px), 57% calc(100% - 7px), 54% calc(100% - 15px), 50% calc(100% - 9px), 46% calc(100% - 14px),
+    42% calc(100% - 7px), 38% calc(100% - 16px), 35% calc(100% - 10px), 31% calc(100% - 14px), 27% calc(100% - 7px),
+    23% calc(100% - 15px), 19% calc(100% - 8px), 15% calc(100% - 14px), 12% calc(100% - 8px), 8% calc(100% - 16px),
+    4% calc(100% - 9px), 0% calc(100% - 14px)
+  );
 }
+.recommendation-card-3 {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 15px),
+    97% calc(100% - 8px), 94% calc(100% - 14px), 90% calc(100% - 7px), 87% calc(100% - 15px), 83% calc(100% - 9px),
+    79% calc(100% - 16px), 76% calc(100% - 8px), 72% calc(100% - 13px), 68% calc(100% - 7px), 64% calc(100% - 16px),
+    61% calc(100% - 9px), 57% calc(100% - 14px), 53% calc(100% - 8px), 50% calc(100% - 17px), 46% calc(100% - 10px),
+    42% calc(100% - 15px), 38% calc(100% - 7px), 35% calc(100% - 14px), 31% calc(100% - 9px), 27% calc(100% - 16px),
+    24% calc(100% - 8px), 20% calc(100% - 13px), 16% calc(100% - 7px), 12% calc(100% - 15px), 8% calc(100% - 9px),
+    4% calc(100% - 14px), 0% calc(100% - 8px)
+  );
+}
+.recommendation-card-4 {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 8px),
+    98% calc(100% - 14px), 95% calc(100% - 7px), 91% calc(100% - 15px), 88% calc(100% - 9px), 84% calc(100% - 14px),
+    81% calc(100% - 7px), 77% calc(100% - 16px), 73% calc(100% - 9px), 69% calc(100% - 13px), 66% calc(100% - 8px),
+    62% calc(100% - 16px), 58% calc(100% - 10px), 55% calc(100% - 15px), 51% calc(100% - 7px), 47% calc(100% - 14px),
+    43% calc(100% - 9px), 40% calc(100% - 16px), 36% calc(100% - 8px), 32% calc(100% - 13px), 29% calc(100% - 7px),
+    25% calc(100% - 15px), 21% calc(100% - 9px), 17% calc(100% - 14px), 13% calc(100% - 8px), 9% calc(100% - 16px),
+    5% calc(100% - 9px), 0% calc(100% - 13px)
+  );
+}
+.recommendation-card-5 {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 13px),
+    97% calc(100% - 7px), 94% calc(100% - 15px), 90% calc(100% - 9px), 86% calc(100% - 14px), 83% calc(100% - 8px),
+    79% calc(100% - 16px), 75% calc(100% - 10px), 71% calc(100% - 14px), 67% calc(100% - 7px), 64% calc(100% - 15px),
+    60% calc(100% - 9px), 56% calc(100% - 13px), 52% calc(100% - 7px), 49% calc(100% - 16px), 45% calc(100% - 10px),
+    41% calc(100% - 14px), 37% calc(100% - 8px), 34% calc(100% - 15px), 30% calc(100% - 9px), 26% calc(100% - 13px),
+    22% calc(100% - 7px), 19% calc(100% - 16px), 15% calc(100% - 9px), 11% calc(100% - 14px), 7% calc(100% - 8px),
+    4% calc(100% - 15px), 0% calc(100% - 9px)
+  );
+}
+
+/* Card Header with Double Horizontal Rule */
 .recommendation-meta {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(13,13,13,0.3);
-  color: rgba(13,13,13,0.72);
+  padding-bottom: 8px;
+  border-bottom: 3px double rgba(17, 17, 17, 0.42);
+}
+.recommendation-no {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #111111;
+}
+.recommendation-tag {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
   font-weight: 500;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #222222;
+  text-align: right;
 }
-.recommendation-meta span:last-child { text-align: right; }
+
+/* Quote Body Area */
+.recommendation-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 .recommendation-quote-mark {
-  height: 52px;
-  margin-top: 12px;
-  color: var(--black);
-  font-family: var(--font-serif);
-  font-size: 4.5rem;
-  font-weight: 700;
-  line-height: 1;
+  width: 24px;
+  height: 18px;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  color: #111111;
+  flex-shrink: 0;
 }
 .recommendation-quote {
   flex: 1;
-  color: var(--black);
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+  font-family: var(--font-sans);
+  font-size: clamp(0.96rem, 1.15vw, 1.12rem);
   font-weight: 600;
-  line-height: 1.38;
+  line-height: 1.45;
+  color: #111111;
+  letter-spacing: -0.012em;
+  margin: 0;
+  padding: 0;
 }
-.recommendation-divider { height: 1px; margin: 22px 0 16px; background: rgba(13,13,13,0.16); }
-.recommendation-author { display: flex; align-items: center; gap: 14px; }
+
+/* Thin divider */
+.recommendation-divider {
+  height: 1px;
+  background: rgba(17, 17, 17, 0.12);
+  margin: 22px 0 16px 0;
+  width: 100%;
+}
+
+/* Author Section with monochrome portrait avatar */
+.recommendation-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .recommendation-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 5px;
+  background: #181818;
+  color: #F5F5F5;
   display: grid;
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
   place-items: center;
-  color: var(--white);
-  background: var(--surface-2);
-  border: 1px solid rgba(13,13,13,0.18);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+.recommendation-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(115%);
+}
+.recommendation-avatar-initials {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+.recommendation-author-info {
+  display: flex;
+  flex-direction: column;
+}
+.recommendation-name {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.25;
+}
+.recommendation-role {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
   font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #666666;
 }
-.recommendation-name { color: var(--black); font-family: var(--font-sans); font-size: 0.92rem; font-weight: 700; }
-.recommendation-role { margin-top: 3px; color: rgba(13,13,13,0.62); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.04em; text-transform: uppercase; }
-@media (max-width: 900px) {
-  .testimonials-inner { padding: 0 28px; }
-  .recommendations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
-  .recommendation-card:nth-child(n) { grid-column: auto; }
-  .recommendation-card { min-height: 300px; padding: 32px 26px 26px; }
+
+/* Responsive Grid and Rotations */
+@media (min-width: 992px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .recommendation-card-wrapper:nth-child(1) {
+    grid-column: 1 / span 2;
+    transform: rotate(-1.8deg);
+  }
+  .recommendation-card-wrapper:nth-child(2) {
+    grid-column: 3 / span 2;
+    transform: rotate(0.5deg);
+  }
+  .recommendation-card-wrapper:nth-child(3) {
+    grid-column: 5 / span 2;
+    transform: rotate(1.8deg);
+  }
+  .recommendation-card-wrapper:nth-child(4) {
+    grid-column: 2 / span 2;
+    transform: rotate(-1.4deg);
+  }
+  .recommendation-card-wrapper:nth-child(5) {
+    grid-column: 4 / span 2;
+    transform: rotate(1.4deg);
+  }
 }
-@media (max-width: 600px) {
-  .testimonials-section { padding: 88px 0; }
-  .testimonials-header { margin-bottom: 48px; }
-  .recommendations-grid { grid-template-columns: 1fr; gap: 28px; }
-  .recommendation-card:nth-child(n) { transform: none; }
-  .recommendation-card:hover { transform: translateY(-4px); }
-  .recommendation-card { min-height: 0; padding: 30px 24px 24px; }
+
+@media (min-width: 641px) and (max-width: 991px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px 24px;
+  }
+  .recommendation-card-wrapper:nth-child(1) { transform: rotate(-1.2deg); }
+  .recommendation-card-wrapper:nth-child(2) { transform: rotate(1deg); }
+  .recommendation-card-wrapper:nth-child(3) { transform: rotate(0.8deg); }
+  .recommendation-card-wrapper:nth-child(4) { transform: rotate(-1deg); }
+  .recommendation-card-wrapper:nth-child(5) {
+    grid-column: 1 / span 2;
+    max-width: 540px;
+    margin: 0 auto;
+    width: 100%;
+    transform: rotate(0.4deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .testimonials-section {
+    padding: 80px 0;
+  }
+  .testimonials-inner {
+    padding: 0 20px;
+  }
+  .testimonials-header {
+    margin-bottom: 40px;
+  }
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 20px 0;
+  }
+  .recommendation-card-wrapper:nth-child(n) {
+    transform: none;
+  }
+  .recommendation-card-wrapper:hover {
+    transform: translateY(-4px) !important;
+  }
+  .recommendation-card {
+    min-height: 0;
+    padding: 30px 24px 36px;
+  }
 }
 
 /* ============================================================
