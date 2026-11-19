@@ -499,59 +499,103 @@ main > * {
 }
 
 /* ============================================================
-   PROJECTS SECTION — STICKY STACKING CARDS SCROLL EFFECT
+   PROJECTS SECTION — PINNED SCROLL STACKING CARDS
 ============================================================ */
 .projects-section {
   position: relative;
   background: var(--black);
-  padding: 120px 0 160px;
-  scroll-snap-align: none !important; /* Allows free smooth scrolling through stacked cards */
+  height: calc(100vh + 560vh); /* Provides 70vh scroll distance per card */
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
+
+/* Sticky viewport that stays pinned at the top while scrolling */
+.projects-sticky-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .projects-inner {
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .projects-header {
-  margin-bottom: 72px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
-.projects-intro {
-  margin-top: 14px;
-  max-width: 520px;
-  color: var(--white-dim);
-  font-size: 0.95rem;
-  line-height: 1.7;
+.projects-header .section-label {
+  margin-bottom: 12px;
 }
 
-/* Container for all stacked cards */
-.projects-stack {
-  position: relative;
+.projects-header-main {
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-/* Each slot gives scroll distance so cards travel up and stack */
-.project-card-slot {
+.projects-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+
+.projects-counter-current {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.projects-counter-divider {
+  color: var(--white-dim);
+  opacity: 0.4;
+}
+
+.projects-counter-total {
+  color: var(--white-dim);
+  opacity: 0.6;
+}
+
+/* The Stage where cards are layered */
+.projects-stage {
   position: relative;
   width: 100%;
-  margin-bottom: 90px;
+  flex: 1;
+  min-height: 480px;
+  max-height: 590px;
 }
 
-.project-card-slot:last-child {
-  margin-bottom: 0;
-}
-
-/* Sticky card container */
-.project-card-sticky {
-  position: sticky;
+/* Individual card layer container */
+.project-card-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
   transform-origin: top center;
-  transition: transform 0.15s ease-out, filter 0.2s ease-out;
-  will-change: transform, filter;
+  will-change: transform, filter, opacity;
+  box-sizing: border-box;
 }
 
 /* The card itself */
@@ -561,12 +605,13 @@ main > * {
   grid-template-columns: 1fr 1.35fr;
   gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
-  min-height: 500px;
-  padding: clamp(32px, 4vw, 52px);
+  width: 100%;
+  height: 100%;
+  padding: clamp(32px, 3.5vw, 48px);
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
-  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.65), 0 24px 60px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.7), 0 24px 60px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -576,7 +621,8 @@ main > * {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
+  height: 100%;
 }
 
 .project-card-top {
@@ -588,7 +634,7 @@ main > * {
 
 .project-card-num {
   font-family: var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
-  font-size: clamp(3rem, 5vw, 4.4rem);
+  font-size: clamp(3rem, 5vw, 4.2rem);
   font-weight: 800;
   line-height: 1;
   color: #ffffff;
@@ -607,12 +653,12 @@ main > * {
 .project-card-bottom {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .project-card-title {
   font-family: var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
-  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+  font-size: clamp(1.7rem, 2.4vw, 2.4rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.15;
@@ -621,7 +667,7 @@ main > * {
 
 .project-card-subtitle {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -630,10 +676,9 @@ main > * {
 
 .project-card-desc {
   color: var(--white-dim);
-  font-size: 0.92rem;
-  line-height: 1.65;
+  font-size: 0.9rem;
+  line-height: 1.6;
   max-width: 520px;
-  margin-top: 4px;
 }
 
 .project-card-footer {
@@ -641,8 +686,8 @@ main > * {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 16px;
-  padding-top: 18px;
+  margin-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   flex-wrap: wrap;
 }
@@ -654,7 +699,7 @@ main > * {
 }
 
 .project-card-tech-tag {
-  padding: 5px 12px;
+  padding: 4px 12px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50px;
@@ -667,7 +712,7 @@ main > * {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
+  padding: 7px 18px;
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -698,7 +743,7 @@ main > * {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 380px;
+  min-height: 340px;
   border-radius: 20px;
   overflow: hidden;
   background: #1a1a1a;
@@ -718,61 +763,76 @@ main > * {
 /* Responsive Breakpoints */
 @media (max-width: 960px) {
   .projects-inner {
-    padding: 0 28px;
+    padding: 0 24px;
+    height: 94vh;
+  }
+  .projects-stage {
+    min-height: 440px;
+    max-height: 540px;
   }
   .project-card {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 32px 28px;
-    min-height: 0;
+    gap: 20px;
+    padding: 26px 24px;
   }
   .project-card-image-wrap {
-    min-height: 280px;
-    aspect-ratio: 16 / 10;
-  }
-  .project-card-slot {
-    margin-bottom: 60px;
+    min-height: 220px;
+    aspect-ratio: 16 / 9;
   }
 }
 
 @media (max-width: 640px) {
-  .projects-section {
-    padding: 80px 0 120px;
-  }
   .projects-inner {
-    padding: 0 18px;
+    padding: 0 16px;
+    height: 96vh;
   }
   .projects-header {
-    margin-bottom: 40px;
+    margin-bottom: 12px;
+  }
+  .projects-stage {
+    min-height: 420px;
+    max-height: 500px;
   }
   .project-card {
-    padding: 24px 20px;
-    border-radius: 22px;
+    padding: 20px 18px;
+    border-radius: 20px;
+    gap: 16px;
   }
   .project-card-num {
-    font-size: 2.6rem;
+    font-size: 2.4rem;
   }
   .project-card-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+  }
+  .project-card-desc {
+    display: none;
   }
   .project-card-image-wrap {
-    min-height: 200px;
+    min-height: 180px;
     border-radius: 14px;
-  }
-  .project-card-slot {
-    margin-bottom: 40px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-card-sticky {
+  .projects-section {
+    height: auto;
+  }
+  .projects-sticky-viewport {
+    position: static;
+    height: auto;
+  }
+  .projects-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: auto;
+    max-height: none;
+  }
+  .project-card-wrapper {
     position: static;
     transform: none !important;
     filter: none !important;
-  }
-  .project-card-image-img,
-  .project-card-link svg {
-    transition: none;
+    opacity: 1 !important;
   }
 }
 

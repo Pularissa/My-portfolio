@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 const projects = [
@@ -97,90 +97,125 @@ const projects = [
 ];
 
 export default function Projects() {
+  const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const cards = cardRefs.current;
-      const total = cards.length;
-      if (!total) return;
+    const updateCards = () => {
+      const sec = sectionRef.current;
+      if (!sec) return;
+
+      const rect = sec.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const totalDist = sec.offsetHeight - vh;
+      if (totalDist <= 0) return;
+
+      // When rect.top <= 0, the section is pinned at viewport top
+      const scrolled = -rect.top;
+      const progress = Math.min(Math.max(scrolled / totalDist, 0), 1);
+
+      const total = projects.length;
+      const numTransitions = total - 1;
+
+      const currentIdx = Math.min(Math.floor(progress * total), total - 1);
+      setActiveIndex(currentIdx);
 
       const isMobile = window.innerWidth <= 768;
-      const baseTop = isMobile ? 70 : 88;
-      const stepTop = isMobile ? 16 : 28;
+      const stepOffset = isMobile ? 14 : 24;
 
-      cards.forEach((card, i) => {
-        if (!card) return;
+      cardRefs.current.forEach((cardEl, i) => {
+        if (!cardEl) return;
 
-        if (i < total - 1) {
-          const nextCard = cards[i + 1];
-          if (!nextCard) return;
+        if (i === 0) {
+          const nextStart = 0;
+          const nextEnd = 1 / numTransitions;
+          const p = Math.min(Math.max((progress - nextStart) / (nextEnd - nextStart), 0), 1);
+          const scale = 1 - p * 0.05 - (progress > nextEnd ? (progress - nextEnd) * 0.04 : 0);
+          const brightness = 1 - p * 0.2 - (progress > nextEnd ? (progress - nextEnd) * 0.12 : 0);
 
-          const nextRect = nextCard.getBoundingClientRect();
-          const targetTop = baseTop + (i + 1) * stepTop;
-          const travelDist = Math.max(window.innerHeight * 0.55, 340);
+          cardEl.style.transform = `translate3d(0, 0px, 0) scale(${Math.max(scale, 0.88).toFixed(4)})`;
+          cardEl.style.filter = `brightness(${Math.max(brightness, 0.65).toFixed(3)})`;
+          cardEl.style.opacity = '1';
+          return;
+        }
 
-          const distFromTarget = nextRect.top - targetTop;
-          const progress = Math.min(Math.max((travelDist - distFromTarget) / travelDist, 0), 1);
+        const start = (i - 1) / numTransitions;
+        const end = i / numTransitions;
+        const finalY = i * stepOffset;
 
-          const scale = 1 - progress * 0.05;
-          const brightness = 1 - progress * 0.22;
+        if (progress <= start) {
+          cardEl.style.transform = `translate3d(0, ${vh}px, 0) scale(1)`;
+          cardEl.style.filter = 'brightness(1)';
+          cardEl.style.opacity = '0';
+        } else if (progress < end) {
+          const t = (progress - start) / (end - start);
+          const ease = 1 - Math.pow(1 - t, 3);
+          const y = (1 - ease) * vh * 0.95 + ease * finalY;
 
-          card.style.transform = `scale(${scale.toFixed(4)})`;
-          card.style.filter = `brightness(${brightness.toFixed(3)})`;
+          cardEl.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(1)`;
+          cardEl.style.filter = 'brightness(1)';
+          cardEl.style.opacity = '1';
         } else {
-          card.style.transform = 'scale(1)';
-          card.style.filter = 'brightness(1)';
+          const futureP = (progress - end) / (1 - end || 1);
+          const scale = 1 - futureP * 0.05;
+          const brightness = 1 - futureP * 0.2;
+
+          cardEl.style.transform = `translate3d(0, ${finalY}px, 0) scale(${Math.max(scale, 0.88).toFixed(4)})`;
+          cardEl.style.filter = `brightness(${Math.max(brightness, 0.65).toFixed(3)})`;
+          cardEl.style.opacity = '1';
         }
       });
     };
 
-    handleScroll();
+    updateCards();
 
-    const onLenisScroll = () => handleScroll();
-    window.addEventListener('lenis:scroll', onLenisScroll);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
+    const onLenis = () => updateCards();
+    window.addEventListener('lenis:scroll', onLenis);
+    window.addEventListener('scroll', updateCards, { passive: true });
+    window.addEventListener('resize', updateCards);
 
     return () => {
-      window.removeEventListener('lenis:scroll', onLenisScroll);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('lenis:scroll', onLenis);
+      window.removeEventListener('scroll', updateCards);
+      window.removeEventListener('resize', updateCards);
     };
   }, []);
 
   return (
-    <section id="projects" className="projects-section">
-      <div className="projects-inner">
-        <div className="projects-header reveal">
-          <div className="section-label">
-            <span className="section-label-line" />
-            <span className="section-label-text">My Work</span>
+    <section id="projects" ref={sectionRef} className="projects-section">
+      <div className="projects-sticky-viewport">
+        <div className="projects-inner">
+          <div className="projects-header">
+            <div className="section-label">
+              <span className="section-label-line" />
+              <span className="section-label-text">My Work</span>
+            </div>
+            <div className="projects-header-main">
+              <div className="clip-wrap">
+                <h2 className="section-heading reveal-clip">Real <em>Projects</em></h2>
+              </div>
+              <div className="projects-counter">
+                <span className="projects-counter-current">
+                  {String(activeIndex + 1).padStart(2, '0')}
+                </span>
+                <span className="projects-counter-divider">/</span>
+                <span className="projects-counter-total">
+                  {String(projects.length).padStart(2, '0')}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="clip-wrap">
-            <h2 className="section-heading reveal-clip">Real <em>Projects</em></h2>
-          </div>
-          <p className="projects-intro">
-            A selection of personal and academic work built to solve real problems.
-          </p>
-        </div>
 
-        <div className="projects-stack">
-          {projects.map((project, index) => (
-            <div
-              key={project.number}
-              className="project-card-slot"
-              style={{
-                zIndex: index + 1,
-              }}
-            >
+          <div className="projects-stage">
+            {projects.map((project, index) => (
               <div
+                key={project.number}
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
-                className={`project-card-sticky project-card-sticky-${project.number}`}
+                className={`project-card-wrapper project-card-layer-${project.number}`}
                 style={{
-                  top: `calc(${88 + index * 28}px)`,
                   zIndex: index + 1,
                 }}
               >
@@ -246,8 +281,8 @@ export default function Projects() {
                   </div>
                 </article>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
