@@ -529,36 +529,36 @@ main > * {
   line-height: 1.7;
 }
 
-/* ── Scroll track: tall enough for 9 cards ── */
+/* ── Scroll track: 500px per-card transition after first ── */
 .projects-scroll-track {
   position: relative;
-  /* 100vh per card so each card gets its own full scroll slot */
-  height: calc(9 * 100vh);
+  /* First card anchors at 100vh; each additional card = 500px of scroll */
+  height: calc(100vh + 8 * 500px);
 }
 
-/* ── Each card wrapper is sticky ── */
+/* ── Each card wrapper: 500px scroll slot, card absolutely fills viewport ── */
 .projects-card-wrapper {
   position: sticky;
   /* top set inline per card index */
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 clamp(16px, 4vw, 48px);
-  box-sizing: border-box;
+  height: 500px;
+  overflow: visible; /* let card extend beyond wrapper */
 }
 
-/* ── The card itself ── */
+/* ── The card itself — absolutely positioned to fill the visible viewport ── */
 .project-card {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: clamp(16px, 4vw, 48px);
+  right: clamp(16px, 4vw, 48px);
   display: grid;
   grid-template-columns: 1fr 1.35fr;
   gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
-  width: 100%;
-  max-width: 1200px;
-  min-height: 480px;
-  padding: clamp(32px, 3.5vw, 48px);
+  /* Fill viewport minus the sticky top offset */
+  height: calc(100vh - 160px);
+  min-height: 420px;
+  max-height: 700px;
+  padding: clamp(28px, 3vw, 44px);
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
@@ -718,19 +718,25 @@ main > * {
   .projects-inner {
     padding: 80px 24px 48px;
   }
+  .projects-scroll-track {
+    height: calc(100vh + 8 * 420px);
+  }
+  .projects-card-wrapper {
+    height: 420px;
+  }
   .project-card {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 26px 24px;
-    min-height: 0;
+    height: auto;
+    max-height: none;
+    min-height: 500px;
+    left: 16px;
+    right: 16px;
   }
   .project-card-image-wrap {
     min-height: 220px;
     aspect-ratio: 16 / 9;
-  }
-  .projects-card-wrapper {
-    align-items: flex-start;
-    padding-top: 20px;
   }
 }
 
@@ -741,10 +747,19 @@ main > * {
   .projects-header {
     margin-bottom: 36px;
   }
+  .projects-scroll-track {
+    height: calc(100vh + 8 * 380px);
+  }
+  .projects-card-wrapper {
+    height: 380px;
+  }
   .project-card {
+    left: 12px;
+    right: 12px;
     padding: 20px 18px;
     border-radius: 20px;
     gap: 16px;
+    min-height: 460px;
   }
   .project-card-num {
     font-size: 2.4rem;
@@ -759,13 +774,24 @@ main > * {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .projects-scroll-track {
+    height: auto;
+  }
   .projects-card-wrapper {
     position: relative;
     height: auto;
+    overflow: visible;
   }
   .project-card {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
     transform: none !important;
     opacity: 1 !important;
+    height: auto;
+    max-height: none;
+    margin-bottom: 32px;
   }
 }
 

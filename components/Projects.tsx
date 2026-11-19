@@ -183,10 +183,9 @@ function StackCard({
   const opacity = useTransform(progress, range, [1, index === total - 1 ? 1 : 0.75]);
 
   return (
-    // Each sticky wrapper is 100vh tall so cards pin one at a time
     <div
       className="projects-card-wrapper"
-      style={{ top: `calc(80px + ${index * 24}px)` }}
+      style={{ top: `calc(80px + ${index * 20}px)` }}
     >
       <motion.article
         ref={cardRef}
