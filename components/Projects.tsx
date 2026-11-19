@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 const projects = [
@@ -97,192 +97,149 @@ const projects = [
 ];
 
 export default function Projects() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    const updateCards = () => {
-      const sec = sectionRef.current;
-      if (!sec) return;
-
-      const rect = sec.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const totalDist = sec.offsetHeight - vh;
-      if (totalDist <= 0) return;
-
-      // When rect.top <= 0, the section is pinned at viewport top
-      const scrolled = -rect.top;
-      const progress = Math.min(Math.max(scrolled / totalDist, 0), 1);
-
-      const total = projects.length;
-      const numTransitions = total - 1;
-
-      const currentIdx = Math.min(Math.floor(progress * total), total - 1);
-      setActiveIndex(currentIdx);
+    const updateScales = () => {
+      const cards = cardRefs.current;
+      if (!cards.length) return;
 
       const isMobile = window.innerWidth <= 768;
-      const stepOffset = isMobile ? 14 : 24;
+      const baseTop = isMobile ? 70 : 80;
+      const step = isMobile ? 12 : 20;
 
-      cardRefs.current.forEach((cardEl, i) => {
-        if (!cardEl) return;
+      cards.forEach((card, i) => {
+        if (!card) return;
 
-        if (i === 0) {
-          const nextStart = 0;
-          const nextEnd = 1 / numTransitions;
-          const p = Math.min(Math.max((progress - nextStart) / (nextEnd - nextStart), 0), 1);
-          const scale = 1 - p * 0.05 - (progress > nextEnd ? (progress - nextEnd) * 0.04 : 0);
-          const brightness = 1 - p * 0.2 - (progress > nextEnd ? (progress - nextEnd) * 0.12 : 0);
+        if (i < cards.length - 1) {
+          const nextCard = cards[i + 1];
+          if (!nextCard) return;
 
-          cardEl.style.transform = `translate3d(0, 0px, 0) scale(${Math.max(scale, 0.88).toFixed(4)})`;
-          cardEl.style.filter = `brightness(${Math.max(brightness, 0.65).toFixed(3)})`;
-          cardEl.style.opacity = '1';
-          return;
-        }
+          const nextRect = nextCard.getBoundingClientRect();
+          const nextTargetTop = baseTop + (i + 1) * step;
+          const triggerDist = 320;
 
-        const start = (i - 1) / numTransitions;
-        const end = i / numTransitions;
-        const finalY = i * stepOffset;
+          const dist = nextRect.top - nextTargetTop;
+          const progress = Math.min(Math.max((triggerDist - dist) / triggerDist, 0), 1);
 
-        if (progress <= start) {
-          cardEl.style.transform = `translate3d(0, ${vh}px, 0) scale(1)`;
-          cardEl.style.filter = 'brightness(1)';
-          cardEl.style.opacity = '0';
-        } else if (progress < end) {
-          const t = (progress - start) / (end - start);
-          const ease = 1 - Math.pow(1 - t, 3);
-          const y = (1 - ease) * vh * 0.95 + ease * finalY;
+          const scale = 1 - progress * 0.04;
+          const brightness = 1 - progress * 0.18;
 
-          cardEl.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(1)`;
-          cardEl.style.filter = 'brightness(1)';
-          cardEl.style.opacity = '1';
+          card.style.transform = `scale(${scale.toFixed(4)})`;
+          card.style.filter = `brightness(${brightness.toFixed(3)})`;
         } else {
-          const futureP = (progress - end) / (1 - end || 1);
-          const scale = 1 - futureP * 0.05;
-          const brightness = 1 - futureP * 0.2;
-
-          cardEl.style.transform = `translate3d(0, ${finalY}px, 0) scale(${Math.max(scale, 0.88).toFixed(4)})`;
-          cardEl.style.filter = `brightness(${Math.max(brightness, 0.65).toFixed(3)})`;
-          cardEl.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+          card.style.filter = 'brightness(1)';
         }
       });
     };
 
-    updateCards();
-
-    const onLenis = () => updateCards();
-    window.addEventListener('lenis:scroll', onLenis);
-    window.addEventListener('scroll', updateCards, { passive: true });
-    window.addEventListener('resize', updateCards);
+    updateScales();
+    window.addEventListener('scroll', updateScales, { passive: true });
+    window.addEventListener('lenis:scroll', updateScales);
+    window.addEventListener('resize', updateScales);
 
     return () => {
-      window.removeEventListener('lenis:scroll', onLenis);
-      window.removeEventListener('scroll', updateCards);
-      window.removeEventListener('resize', updateCards);
+      window.removeEventListener('scroll', updateScales);
+      window.removeEventListener('lenis:scroll', updateScales);
+      window.removeEventListener('resize', updateScales);
     };
   }, []);
 
   return (
-    <section id="projects" ref={sectionRef} className="projects-section">
-      <div className="projects-sticky-viewport">
-        <div className="projects-inner">
-          <div className="projects-header">
-            <div className="section-label">
-              <span className="section-label-line" />
-              <span className="section-label-text">My Work</span>
-            </div>
-            <div className="projects-header-main">
-              <div className="clip-wrap">
-                <h2 className="section-heading reveal-clip">Real <em>Projects</em></h2>
-              </div>
-              <div className="projects-counter">
-                <span className="projects-counter-current">
-                  {String(activeIndex + 1).padStart(2, '0')}
-                </span>
-                <span className="projects-counter-divider">/</span>
-                <span className="projects-counter-total">
-                  {String(projects.length).padStart(2, '0')}
-                </span>
-              </div>
-            </div>
+    <section id="projects" className="projects-section">
+      <div className="projects-inner">
+        <div className="projects-header reveal">
+          <div className="section-label">
+            <span className="section-label-line" />
+            <span className="section-label-text">My Work</span>
           </div>
+          <div className="clip-wrap">
+            <h2 className="section-heading reveal-clip">Real <em>Projects</em></h2>
+          </div>
+          <p className="projects-intro">
+            A selection of personal and academic work built to solve real problems.
+          </p>
+        </div>
 
-          <div className="projects-stage">
-            {projects.map((project, index) => (
-              <div
-                key={project.number}
+        <div className="projects-stack">
+          {projects.map((project, index) => (
+            <div
+              key={project.number}
+              className="project-card-slot"
+              style={{
+                top: `calc(${80 + index * 20}px)`,
+                zIndex: index + 1,
+              }}
+            >
+              <article
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
-                className={`project-card-wrapper project-card-layer-${project.number}`}
-                style={{
-                  zIndex: index + 1,
-                }}
+                className="project-card"
               >
-                <article className="project-card">
-                  <div className="project-card-content">
-                    <div className="project-card-top">
-                      <span className="project-card-num" aria-label={`Project ${project.number}`}>
-                        {project.number}
-                      </span>
-                      <span className="project-card-category">
-                        {project.category} project
-                      </span>
-                    </div>
+                <div className="project-card-content">
+                  <div className="project-card-top">
+                    <span className="project-card-num" aria-label={`Project ${project.number}`}>
+                      {project.number}
+                    </span>
+                    <span className="project-card-category">
+                      {project.category} project
+                    </span>
+                  </div>
 
-                    <div className="project-card-bottom">
-                      <h3 className="project-card-title">{project.title}</h3>
-                      <p className="project-card-subtitle">{project.subtitle}</p>
-                      <p className="project-card-desc">{project.description}</p>
+                  <div className="project-card-bottom">
+                    <h3 className="project-card-title">{project.title}</h3>
+                    <p className="project-card-subtitle">{project.subtitle}</p>
+                    <p className="project-card-desc">{project.description}</p>
 
-                      <div className="project-card-footer">
-                        <div className="project-card-techs">
-                          {project.techs.slice(0, 3).map((tech) => (
-                            <span key={tech} className="project-card-tech-tag">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                        {project.link !== '#' && (
-                          <a
-                            className="project-card-link"
-                            href={project.link}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <span>View project</span>
-                            <svg
-                              aria-hidden="true"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M7 17 17 7M7 7h10v10" />
-                            </svg>
-                          </a>
-                        )}
+                    <div className="project-card-footer">
+                      <div className="project-card-techs">
+                        {project.techs.slice(0, 3).map((tech) => (
+                          <span key={tech} className="project-card-tech-tag">
+                            {tech}
+                          </span>
+                        ))}
                       </div>
+                      {project.link !== '#' && (
+                        <a
+                          className="project-card-link"
+                          href={project.link}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <span>View project</span>
+                          <svg
+                            aria-hidden="true"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 17 17 7M7 7h10v10" />
+                          </svg>
+                        </a>
+                      )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="project-card-image-wrap">
-                    <Image
-                      src={project.image}
-                      alt={`${project.title} project`}
-                      fill
-                      sizes="(max-width: 960px) 100vw, 55vw"
-                      className="project-card-image-img"
-                    />
-                  </div>
-                </article>
-              </div>
-            ))}
-          </div>
+                <div className="project-card-image-wrap">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} project`}
+                    fill
+                    sizes="(max-width: 960px) 100vw, 55vw"
+                    className="project-card-image-img"
+                  />
+                </div>
+              </article>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -499,103 +499,51 @@ main > * {
 }
 
 /* ============================================================
-   PROJECTS SECTION — PINNED SCROLL STACKING CARDS
+   PROJECTS SECTION — STICKY STACKING CARDS SCROLL EFFECT
 ============================================================ */
 .projects-section {
   position: relative;
   background: var(--black);
-  height: calc(100vh + 560vh); /* Provides 70vh scroll distance per card */
+  padding: 120px 0 140px;
   scroll-snap-align: none !important;
   scroll-snap-stop: normal !important;
 }
 
-/* Sticky viewport that stays pinned at the top while scrolling */
-.projects-sticky-viewport {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
 .projects-inner {
-  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 48px;
-  display: flex;
-  flex-direction: column;
-  height: 90vh;
-  justify-content: space-between;
-  box-sizing: border-box;
 }
 
 .projects-header {
-  margin-bottom: 20px;
-  flex-shrink: 0;
+  margin-bottom: 64px;
 }
 
-.projects-header .section-label {
-  margin-bottom: 12px;
-}
-
-.projects-header-main {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.projects-counter {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  letter-spacing: 0.08em;
-}
-
-.projects-counter-current {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.4rem;
-}
-
-.projects-counter-divider {
+.projects-intro {
+  margin-top: 14px;
+  max-width: 520px;
   color: var(--white-dim);
-  opacity: 0.4;
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
-.projects-counter-total {
-  color: var(--white-dim);
-  opacity: 0.6;
-}
-
-/* The Stage where cards are layered */
-.projects-stage {
+/* Container for all stacked cards */
+.projects-stack {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  flex: 1;
-  min-height: 480px;
-  max-height: 590px;
 }
 
-/* Individual card layer container */
-.project-card-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
+/* Each slot sticks to top with staggered offset */
+.project-card-slot {
+  position: sticky;
   width: 100%;
-  height: 100%;
-  transform-origin: top center;
-  will-change: transform, filter, opacity;
-  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+
+.project-card-slot:last-child {
+  margin-bottom: 0;
 }
 
 /* The card itself */
@@ -605,15 +553,17 @@ main > * {
   grid-template-columns: 1fr 1.35fr;
   gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
-  width: 100%;
-  height: 100%;
+  min-height: 480px;
   padding: clamp(32px, 3.5vw, 48px);
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
-  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.7), 0 24px 60px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7), 0 20px 50px rgba(0, 0, 0, 0.85);
   overflow: hidden;
   box-sizing: border-box;
+  transform-origin: top center;
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+  will-change: transform, filter;
 }
 
 /* Left Content Area */
@@ -622,7 +572,6 @@ main > * {
   flex-direction: column;
   justify-content: space-between;
   gap: 20px;
-  height: 100%;
 }
 
 .project-card-top {
@@ -764,34 +713,31 @@ main > * {
 @media (max-width: 960px) {
   .projects-inner {
     padding: 0 24px;
-    height: 94vh;
-  }
-  .projects-stage {
-    min-height: 440px;
-    max-height: 540px;
   }
   .project-card {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 26px 24px;
+    min-height: 0;
   }
   .project-card-image-wrap {
     min-height: 220px;
     aspect-ratio: 16 / 9;
   }
+  .project-card-slot {
+    margin-bottom: 30px;
+  }
 }
 
 @media (max-width: 640px) {
+  .projects-section {
+    padding: 80px 0 100px;
+  }
   .projects-inner {
     padding: 0 16px;
-    height: 96vh;
   }
   .projects-header {
-    margin-bottom: 12px;
-  }
-  .projects-stage {
-    min-height: 420px;
-    max-height: 500px;
+    margin-bottom: 36px;
   }
   .project-card {
     padding: 20px 18px;
@@ -804,35 +750,22 @@ main > * {
   .project-card-title {
     font-size: 1.5rem;
   }
-  .project-card-desc {
-    display: none;
-  }
   .project-card-image-wrap {
     min-height: 180px;
     border-radius: 14px;
   }
+  .project-card-slot {
+    margin-bottom: 24px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .projects-section {
-    height: auto;
-  }
-  .projects-sticky-viewport {
+  .project-card-slot {
     position: static;
-    height: auto;
   }
-  .projects-stage {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    height: auto;
-    max-height: none;
-  }
-  .project-card-wrapper {
-    position: static;
+  .project-card {
     transform: none !important;
     filter: none !important;
-    opacity: 1 !important;
   }
 }
 
