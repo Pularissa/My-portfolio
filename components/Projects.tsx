@@ -1,7 +1,7 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useScrollReveal } from './useScrollReveal';
 
 const projects = [
   {
@@ -97,6 +97,58 @@ const projects = [
 ];
 
 export default function Projects() {
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const cards = cardRefs.current;
+      const total = cards.length;
+      if (!total) return;
+
+      const isMobile = window.innerWidth <= 768;
+      const baseTop = isMobile ? 70 : 88;
+      const stepTop = isMobile ? 16 : 28;
+
+      cards.forEach((card, i) => {
+        if (!card) return;
+
+        if (i < total - 1) {
+          const nextCard = cards[i + 1];
+          if (!nextCard) return;
+
+          const nextRect = nextCard.getBoundingClientRect();
+          const targetTop = baseTop + (i + 1) * stepTop;
+          const travelDist = Math.max(window.innerHeight * 0.55, 340);
+
+          const distFromTarget = nextRect.top - targetTop;
+          const progress = Math.min(Math.max((travelDist - distFromTarget) / travelDist, 0), 1);
+
+          const scale = 1 - progress * 0.05;
+          const brightness = 1 - progress * 0.22;
+
+          card.style.transform = `scale(${scale.toFixed(4)})`;
+          card.style.filter = `brightness(${brightness.toFixed(3)})`;
+        } else {
+          card.style.transform = 'scale(1)';
+          card.style.filter = 'brightness(1)';
+        }
+      });
+    };
+
+    handleScroll();
+
+    const onLenisScroll = () => handleScroll();
+    window.addEventListener('lenis:scroll', onLenisScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('lenis:scroll', onLenisScroll);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
   return (
     <section id="projects" className="projects-section">
       <div className="projects-inner">
@@ -113,50 +165,91 @@ export default function Projects() {
           </p>
         </div>
 
-        <div className="projects-list">
-          {projects.map((project) => (
-            <ProjectCard key={project.number} project={project} />
+        <div className="projects-stack">
+          {projects.map((project, index) => (
+            <div
+              key={project.number}
+              className="project-card-slot"
+              style={{
+                zIndex: index + 1,
+              }}
+            >
+              <div
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
+                className={`project-card-sticky project-card-sticky-${project.number}`}
+                style={{
+                  top: `calc(${88 + index * 28}px)`,
+                  zIndex: index + 1,
+                }}
+              >
+                <article className="project-card">
+                  <div className="project-card-content">
+                    <div className="project-card-top">
+                      <span className="project-card-num" aria-label={`Project ${project.number}`}>
+                        {project.number}
+                      </span>
+                      <span className="project-card-category">
+                        {project.category} project
+                      </span>
+                    </div>
+
+                    <div className="project-card-bottom">
+                      <h3 className="project-card-title">{project.title}</h3>
+                      <p className="project-card-subtitle">{project.subtitle}</p>
+                      <p className="project-card-desc">{project.description}</p>
+
+                      <div className="project-card-footer">
+                        <div className="project-card-techs">
+                          {project.techs.slice(0, 3).map((tech) => (
+                            <span key={tech} className="project-card-tech-tag">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        {project.link !== '#' && (
+                          <a
+                            className="project-card-link"
+                            href={project.link}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <span>View project</span>
+                            <svg
+                              aria-hidden="true"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M7 17 17 7M7 7h10v10" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="project-card-image-wrap">
+                    <Image
+                      src={project.image}
+                      alt={`${project.title} project`}
+                      fill
+                      sizes="(max-width: 960px) 100vw, 55vw"
+                      className="project-card-image-img"
+                    />
+                  </div>
+                </article>
+              </div>
+            </div>
           ))}
         </div>
       </div>
     </section>
-  );
-}
-
-type Project = (typeof projects)[number];
-
-function ProjectCard({ project }: { project: Project }) {
-  const [ref, isVisible] = useScrollReveal<HTMLElement>({ threshold: 0.12 });
-  return (
-    <article ref={ref} className={`project-card${isVisible ? ' is-visible' : ''}`}>
-      <span className="project-index" aria-label={`Project ${project.number}`}>
-        {project.number}
-      </span>
-      <div className="project-card-content">
-        <p className="project-category">{project.category} project</p>
-        <h3 className="project-card-heading">
-          <span>{project.title}</span>
-          <em>{project.subtitle}</em>
-        </h3>
-        <p className="project-card-description">{project.description}</p>
-        <div className="project-card-meta">
-          <span>{project.techs.slice(0, 3).join(' · ')}</span>
-          <a className="project-card-link" href={project.link} target="_blank" rel="noreferrer">
-            View project
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-          </a>
-        </div>
-      </div>
-      <div className="project-card-image">
-        <Image
-          src={project.image}
-          alt={`${project.title} project`}
-          fill
-          sizes="(max-width: 760px) 100vw, 48vw"
-        />
-      </div>
-    </article>
   );
 }
